@@ -1,0 +1,265 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: Inter, "Geist", system-ui, Segoe UI, Roboto, Arial, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+  --font-heading: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   DARK THEME — VentaSimple Panel
+   Forzado siempre oscuro (no respetar prefers-color-scheme)
+   ══════════════════════════════════════════════════════════════ */
+:root {
+  /* Tokens de diseño */
+  --vs-bg:          #0b1020;
+  --vs-bg2:         #0f162e;
+  --vs-surface:     #0b1220;
+  --vs-card:        #0f172a;
+  --vs-border:      rgba(255,255,255,.10);
+  --vs-muted:       #a3acc3;
+  --vs-text:        #e6e8ef;
+  --vs-primary:     #6d5dfc;
+  --vs-primary-2:   #51c6ff;
+  --vs-success:     #22c55e;
+  --vs-danger:      #ef4444;
+  --vs-warning:     #f59e0b;
+  --vs-shadow:      0 12px 34px rgba(0,0,0,.35);
+  --vs-radius:      14px;
+  --vs-radius-sm:   10px;
+  --vs-container:   1140px;
+
+  /* shadcn/ui vars — dark override */
+  --background:           oklch(0.113 0.025 262);
+  --foreground:           oklch(0.93 0.01 255);
+  --card:                 oklch(0.145 0.025 260);
+  --card-foreground:      oklch(0.93 0.01 255);
+  --popover:              oklch(0.145 0.025 260);
+  --popover-foreground:   oklch(0.93 0.01 255);
+  --primary:              oklch(0.58 0.25 278);
+  --primary-foreground:   oklch(0.98 0 0);
+  --secondary:            oklch(0.19 0.025 260);
+  --secondary-foreground: oklch(0.93 0.01 255);
+  --muted:                oklch(0.19 0.025 260);
+  --muted-foreground:     oklch(0.63 0.03 255);
+  --accent:               oklch(0.19 0.025 260);
+  --accent-foreground:    oklch(0.93 0.01 255);
+  --destructive:          oklch(0.577 0.245 27.325);
+  --border:               oklch(1 0 0 / 10%);
+  --input:                oklch(1 0 0 / 12%);
+  --ring:                 oklch(0.58 0.25 278 / 50%);
+  --chart-1:              oklch(0.58 0.25 278);
+  --chart-2:              oklch(0.72 0.15 210);
+  --chart-3:              oklch(0.65 0.18 148);
+  --chart-4:              oklch(0.75 0.18 65);
+  --chart-5:              oklch(0.6 0.22 25);
+  --radius:               0.75rem;
+
+  /* Sidebar */
+  --sidebar:                      oklch(0.12 0.028 262);
+  --sidebar-foreground:           oklch(0.85 0.01 255);
+  --sidebar-primary:              oklch(0.58 0.25 278);
+  --sidebar-primary-foreground:   oklch(0.98 0 0);
+  --sidebar-accent:               oklch(0.19 0.025 260);
+  --sidebar-accent-foreground:    oklch(0.93 0.01 255);
+  --sidebar-border:               oklch(1 0 0 / 8%);
+  --sidebar-ring:                 oklch(0.58 0.25 278 / 50%);
+}
+
+/* Resetear dark class para que no interfiera — el tema es siempre oscuro */
+.dark {
+  --background:           oklch(0.113 0.025 262);
+  --foreground:           oklch(0.93 0.01 255);
+  --card:                 oklch(0.145 0.025 260);
+  --card-foreground:      oklch(0.93 0.01 255);
+  --primary:              oklch(0.58 0.25 278);
+  --primary-foreground:   oklch(0.98 0 0);
+  --secondary:            oklch(0.19 0.025 260);
+  --secondary-foreground: oklch(0.93 0.01 255);
+  --muted:                oklch(0.19 0.025 260);
+  --muted-foreground:     oklch(0.63 0.03 255);
+  --border:               oklch(1 0 0 / 10%);
+  --input:                oklch(1 0 0 / 12%);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    box-sizing: border-box;
+  }
+
+  html {
+    @apply font-sans;
+    height: 100%;
+  }
+
+  body {
+    @apply text-foreground;
+    min-height: 100%;
+    margin: 0;
+    background:
+      radial-gradient(900px 500px at 15% -10%, rgba(109,93,252,.20), transparent 50%),
+      radial-gradient(800px 450px at 90% -10%, rgba(81,198,255,.14), transparent 50%),
+      linear-gradient(180deg, var(--vs-bg), #0a0f25 60%, #0a0f25);
+  }
+
+  #__next, #root { min-height: 100vh; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   UTILIDADES GLOBALES VENTASIMPLE
+   ══════════════════════════════════════════════════════════════ */
+
+/* Gradiente de texto — "simple" y "sincronizada" en la landing */
+.grad-text {
+  background: linear-gradient(135deg, var(--vs-primary), #b3a7ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.grad-text-2 {
+  background: linear-gradient(135deg, var(--vs-primary-2), #a8e8ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Chip/badge small */
+.vs-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.05);
+  color: #cbd5e1;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* Card VS con fondo degradado oscuro */
+.vs-card {
+  background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: var(--vs-radius);
+  box-shadow: var(--vs-shadow);
+}
+
+/* Highlight card (plan recomendado) */
+.vs-card-highlight {
+  background: linear-gradient(180deg, rgba(109,93,252,.18), rgba(81,198,255,.12));
+  border-color: rgba(109,93,252,.4);
+}
+
+/* Divider sutil */
+.vs-hr {
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.12), transparent);
+  margin: 10px 0;
+}
+
+/* Stat card */
+.vs-stat {
+  background: rgba(11,18,32,.8);
+  border: 1px solid #27344e;
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+/* Container */
+.vs-container {
+  max-width: var(--vs-container);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Landing nav */
+.vs-nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  background: rgba(9,13,31,.75);
+  backdrop-filter: saturate(160%) blur(10px);
+}
+
+/* Kbd tag */
+.vs-kbd {
+  font-family: ui-monospace, Menlo, monospace;
+  background: #0d1433;
+  border: 1px solid rgba(255,255,255,.1);
+  padding: 2px 7px;
+  border-radius: 6px;
+  color: #c8d0e7;
+  font-size: 12px;
+}
+
+/* FAQ details/summary — quitar marker nativo en todos los browsers */
+details > summary { list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+details[open] > summary span:last-child { transform: rotate(45deg); display: inline-block; }
+
+/* Recharts override para dark */
+.recharts-tooltip-wrapper .recharts-default-tooltip {
+  background: #0f172a !important;
+  border-color: rgba(255,255,255,.12) !important;
+  color: #e6e8ef !important;
+  border-radius: 8px !important;
+}
+.recharts-cartesian-axis-tick-value {
+  fill: #a3acc3 !important;
+}
+
+/* Feature-ico */
+.vs-feature-ico {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.1);
+  flex-shrink: 0;
+}
