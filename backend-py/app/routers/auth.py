@@ -1,7 +1,7 @@
 import logging
 from datetime import timedelta
 
-from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
+from fastapi import APIRouter, Depends, HTTPException, status
 from jose import JWTError, jwt
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
@@ -68,7 +68,7 @@ def login(body: LoginRequest, db: Session = Depends(get_db)):
 # ── Register ──────────────────────────────────────────────────────────────────
 
 @router.post("/register", status_code=201)
-def register(body: RegisterRequest, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
+def register(body: RegisterRequest, db: Session = Depends(get_db)):
     existing = db.execute(
         text("SELECT id, email_verified FROM tenants WHERE email = :email"),
         {"email": body.email},
@@ -77,7 +77,7 @@ def register(body: RegisterRequest, background_tasks: BackgroundTasks, db: Sessi
     if existing:
         if not existing["email_verified"]:
             # Cuenta sin verificar: reenviar email de verificación
-            _send_verification_email(background_tasks, body.email, body.nombre_negocio)
+            _send_verification_email(body.email, body.nombre_negocio)
             raise HTTPException(
                 status_code=409,
                 detail="EMAIL_PENDING_VERIFICATION",
@@ -112,12 +112,12 @@ def register(body: RegisterRequest, background_tasks: BackgroundTasks, db: Sessi
         )
     db.commit()
 
-    _send_verification_email(background_tasks, body.email, body.nombre_negocio)
+    _send_verification_email(body.email, body.nombre_negocio)
 
     return {"message": "Cuenta creada. Revisá tu email para verificar tu cuenta.", "tenant_id": str(tenant_id)}
 
 
-def _send_verification_email(background_tasks: BackgroundTasks, email: str, nombre: str):
+def _send_verification_email(email: str, nombre: str):
     settings = get_settings()
     token = create_access_token(
         {"sub": email, "type": "email_verification"},
@@ -125,15 +125,10 @@ def _send_verification_email(background_tasks: BackgroundTasks, email: str, nomb
     )
     verify_url = f"{settings.frontend_url}/verify-email?token={token}"
     from ..utils.email import send_verification
-    background_tasks.add_task(_safe_send, send_verification, email, nombre, verify_url)
-
-
-def _safe_send(fn, *args, **kwargs):
-    """Ejecuta fn y loguea cualquier error en lugar de tragarlo."""
     try:
-        fn(*args, **kwargs)
+        send_verification(email, nombre, verify_url)
     except Exception as exc:
-        logger.error("Error enviando email [%s]: %s", fn.__name__, exc, exc_info=True)
+        logger.error("Error enviando email de verificación a %s: %s", email, exc, exc_info=True)
 
 
 # ── Verificar email ───────────────────────────────────────────────────────────
@@ -203,14 +198,14 @@ class ResendVerificationIn(BaseModel):
     email: str
 
 @router.post("/resend-verification", status_code=200)
-def resend_verification(body: ResendVerificationIn, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
+def resend_verification(body: ResendVerificationIn, db: Session = Depends(get_db)):
     tenant = db.execute(
         text("SELECT email, nombre_negocio, email_verified FROM tenants WHERE email = :email AND activo = TRUE"),
         {"email": body.email},
     ).mappings().fetchone()
 
     if tenant and not tenant["email_verified"]:
-        _send_verification_email(background_tasks, tenant["email"], tenant["nombre_negocio"])
+        _send_verification_email(tenant["email"], tenant["nombre_negocio"])
 
     return {"message": "Si el email existe y no está verificado, recibirás el link nuevamente."}
 
@@ -226,7 +221,7 @@ class ResetPasswordIn(BaseModel):
 
 
 @router.post("/forgot-password", status_code=200)
-def forgot_password(body: ForgotPasswordIn, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
+def forgot_password(body: ForgotPasswordIn, db: Session = Depends(get_db)):
     settings = get_settings()
 
     admin = db.execute(
@@ -248,7 +243,10 @@ def forgot_password(body: ForgotPasswordIn, background_tasks: BackgroundTasks, d
         )
         reset_url = f"{settings.frontend_url}/reset-password?token={reset_token}"
         from ..utils.email import send_password_reset
-        background_tasks.add_task(_safe_send, send_password_reset, body.email, nombre, reset_url)
+        try:
+            send_password_reset(body.email, nombre, reset_url)
+        except Exception as exc:
+            logger.error("Error enviando email de reset a %s: %s", body.email, exc, exc_info=True)
 
     return {"message": "Si el email existe, recibirás las instrucciones en breve."}
 
