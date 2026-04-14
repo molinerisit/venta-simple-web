@@ -52,6 +52,9 @@ def debug_email():
     from_email = settings.from_email
     frontend_url = settings.frontend_url
 
+    key = key.strip()
+    from_email = from_email.strip()
+
     if not key:
         return {"error": "RESEND_API_KEY vacío", "from_email": from_email, "frontend_url": frontend_url}
 

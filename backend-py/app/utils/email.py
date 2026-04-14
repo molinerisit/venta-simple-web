@@ -5,16 +5,18 @@ import resend
 from ..config import get_settings
 
 
-def _init():
-    key = get_settings().resend_api_key
+def _init() -> str:
+    """Inicializa resend y devuelve el from_email limpio."""
+    settings = get_settings()
+    key = settings.resend_api_key.strip()
     if not key:
         raise RuntimeError("RESEND_API_KEY no configurado")
     resend.api_key = key
+    return settings.from_email.strip()
 
 
 def send_verification(to_email: str, nombre: str, verify_url: str) -> None:
-    _init()
-    settings = get_settings()
+    from_email = _init()
     html = f"""
 <!DOCTYPE html>
 <html lang="es">
@@ -67,7 +69,7 @@ def send_verification(to_email: str, nombre: str, verify_url: str) -> None:
 </html>
 """
     resend.Emails.send({
-        "from": settings.from_email,
+        "from": from_email,
         "to": [to_email],
         "subject": "Verificá tu email — Venta Simple",
         "html": html,
@@ -76,8 +78,7 @@ def send_verification(to_email: str, nombre: str, verify_url: str) -> None:
 
 def send_plan_activated(to_email: str, nombre: str, plan: str, renews_at: str, cuenta_url: str) -> None:
     """Email moderno: plan activado, fecha de renovación, link a la cuenta. Sin clave."""
-    _init()
-    settings = get_settings()
+    from_email = _init()
     plan_label = {"FREE": "Free", "BASIC": "Básico", "PRO": "Pro", "ENTERPRISE": "Enterprise"}.get(plan, plan)
     html = f"""
 <!DOCTYPE html>
@@ -142,7 +143,7 @@ def send_plan_activated(to_email: str, nombre: str, plan: str, renews_at: str, c
 </html>
 """
     resend.Emails.send({
-        "from": settings.from_email,
+        "from": from_email,
         "to": [to_email],
         "subject": f"Plan {plan_label} activado — Venta Simple",
         "html": html,
@@ -150,10 +151,10 @@ def send_plan_activated(to_email: str, nombre: str, plan: str, renews_at: str, c
 
 
 def send_license_activated(to_email: str, nombre: str, clave: str, plan: str, download_url: str) -> None:
-    _init()
+    from_email = _init()
     settings = get_settings()
     plan_label = {"FREE": "Free", "BASIC": "Básico", "PRO": "Pro", "ENTERPRISE": "Enterprise"}.get(plan, plan)
-    login_url = f"{settings.frontend_url}/login"
+    login_url = f"{settings.frontend_url.strip()}/login"
     html = f"""
 <!DOCTYPE html>
 <html lang="es">
@@ -236,7 +237,7 @@ def send_license_activated(to_email: str, nombre: str, clave: str, plan: str, do
 """
     subject = "Tu licencia de Venta Simple" if plan == "FREE" else f"Plan {plan_label} activado — Venta Simple"
     resend.Emails.send({
-        "from": settings.from_email,
+        "from": from_email,
         "to": [to_email],
         "subject": subject,
         "html": html,
@@ -244,8 +245,7 @@ def send_license_activated(to_email: str, nombre: str, clave: str, plan: str, do
 
 
 def send_password_reset(to_email: str, nombre: str, reset_url: str) -> None:
-    _init()
-    settings = get_settings()
+    from_email = _init()
     html = f"""
 <!DOCTYPE html>
 <html lang="es">
@@ -300,7 +300,7 @@ def send_password_reset(to_email: str, nombre: str, reset_url: str) -> None:
 </html>
 """
     resend.Emails.send({
-        "from": settings.from_email,
+        "from": from_email,
         "to": [to_email],
         "subject": "Restablecer contraseña — Venta Simple",
         "html": html,
@@ -308,9 +308,9 @@ def send_password_reset(to_email: str, nombre: str, reset_url: str) -> None:
 
 
 def send_welcome(to_email: str, nombre: str) -> None:
-    _init()
+    from_email = _init()
     settings = get_settings()
-    login_url = f"{settings.frontend_url}/login"
+    login_url = f"{settings.frontend_url.strip()}/login"
     html = f"""
 <!DOCTYPE html>
 <html lang="es">
@@ -365,7 +365,7 @@ def send_welcome(to_email: str, nombre: str) -> None:
 </html>
 """
     resend.Emails.send({
-        "from": settings.from_email,
+        "from": from_email,
         "to": [to_email],
         "subject": "¡Bienvenido a Venta Simple!",
         "html": html,
