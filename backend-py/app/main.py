@@ -41,3 +41,28 @@ def root():
 @app.get("/health")
 def health():
     return {"status": "healthy"}
+
+
+@app.get("/debug/email")
+def debug_email():
+    """Diagnóstico temporal — eliminar después de confirmar que el email funciona."""
+    import resend as _resend
+    settings = get_settings()
+    key = settings.resend_api_key
+    from_email = settings.from_email
+    frontend_url = settings.frontend_url
+
+    if not key:
+        return {"error": "RESEND_API_KEY vacío", "from_email": from_email, "frontend_url": frontend_url}
+
+    _resend.api_key = key
+    try:
+        r = _resend.Emails.send({
+            "from": from_email,
+            "to": ["delivered@resend.dev"],
+            "subject": "VentaSimple — test diagnóstico",
+            "html": "<p>Test desde Vercel</p>",
+        })
+        return {"ok": True, "resend_id": str(r), "from_email": from_email, "key_prefix": key[:8] + "..."}
+    except Exception as exc:
+        return {"ok": False, "error": str(exc), "from_email": from_email, "key_prefix": key[:8] + "..."}
