@@ -9,7 +9,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Plus, Search, RefreshCw, Pencil, Trash2 } from "lucide-react";
+import { Plus, Search, RefreshCw, Pencil, Trash2, Lock, Zap } from "lucide-react";
+import { getSuscripcionEstado } from "@/lib/api";
+import Link from "next/link";
 
 const EMPTY: ProveedorCreate = { nombre: "", email: "", telefono: "", direccion: "", cuit: "", notas: "" };
 
@@ -17,12 +19,15 @@ export default function ProveedoresPage() {
   const [items, setItems] = useState<Proveedor[]>([]);
   const [filtered, setFiltered] = useState<Proveedor[]>([]);
   const [loading, setLoading] = useState(true);
+  const [plan, setPlan] = useState<string>("FREE");
   const [q, setQ] = useState("");
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Proveedor | null>(null);
   const [form, setForm] = useState<ProveedorCreate>(EMPTY);
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState("");
+
+  const isFree = plan === "FREE";
 
   async function load() {
     setLoading(true);
@@ -32,6 +37,10 @@ export default function ProveedoresPage() {
       setFiltered(data);
     } finally { setLoading(false); }
   }
+
+  useEffect(() => {
+    getSuscripcionEstado().then(r => setPlan(r.data.plan ?? "FREE")).catch(() => {});
+  }, []);
 
   useEffect(() => { load(); }, []);
   useEffect(() => {
@@ -66,6 +75,26 @@ export default function ProveedoresPage() {
 
   return (
     <div className="space-y-5 max-w-5xl">
+      {/* Banner plan FREE */}
+      {isFree && (
+        <div className="flex items-start gap-3 px-4 py-3 rounded-xl border border-amber-200 bg-amber-50 dark:bg-amber-950/20 dark:border-amber-800">
+          <Lock size={16} className="text-amber-600 mt-0.5 shrink-0" />
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-amber-800 dark:text-amber-400">
+              La creación de proveedores requiere un plan pago
+            </p>
+            <p className="text-xs text-amber-700 dark:text-amber-500 mt-0.5">
+              Podés ver los proveedores sincronizados desde la app, pero no crear ni editar desde el panel web en el plan gratuito.
+            </p>
+          </div>
+          <Link href="/cuenta">
+            <Button size="sm" className="shrink-0 gap-1.5 text-xs h-7">
+              <Zap size={11} /> Upgradear
+            </Button>
+          </Link>
+        </div>
+      )}
+
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Proveedores</h1>
@@ -75,7 +104,10 @@ export default function ProveedoresPage() {
           <Button variant="outline" size="sm" onClick={load} disabled={loading}>
             <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
           </Button>
-          <Button size="sm" onClick={openNew}><Plus size={14} className="mr-1" /> Nuevo</Button>
+          <Button size="sm" onClick={openNew} disabled={isFree}>
+            <Plus size={14} className="mr-1" /> Nuevo
+            {isFree && <Lock size={11} className="ml-1 opacity-60" />}
+          </Button>
         </div>
       </div>
 

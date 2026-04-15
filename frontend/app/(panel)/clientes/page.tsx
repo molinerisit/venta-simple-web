@@ -11,7 +11,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Plus, Search, RefreshCw, Pencil, Trash2 } from "lucide-react";
+import { Plus, Search, RefreshCw, Pencil, Trash2, Lock, Zap } from "lucide-react";
+import { getSuscripcionEstado } from "@/lib/api";
+import Link from "next/link";
 
 const EMPTY: ClienteCreate = { nombre: "", email: "", telefono: "", direccion: "", dni: "", deuda: 0, notas: "" };
 
@@ -23,6 +25,7 @@ export default function ClientesPage() {
   const [items, setItems] = useState<Cliente[]>([]);
   const [filtered, setFiltered] = useState<Cliente[]>([]);
   const [loading, setLoading] = useState(true);
+  const [plan, setPlan] = useState<string>("FREE");
   const [q, setQ] = useState("");
   const [soloDeuda, setSoloDeuda] = useState(false);
   const [open, setOpen] = useState(false);
@@ -30,6 +33,8 @@ export default function ClientesPage() {
   const [form, setForm] = useState<ClienteCreate>(EMPTY);
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState("");
+
+  const isFree = plan === "FREE";
 
   async function load() {
     setLoading(true);
@@ -39,6 +44,10 @@ export default function ClientesPage() {
       setFiltered(data);
     } finally { setLoading(false); }
   }
+
+  useEffect(() => {
+    getSuscripcionEstado().then(r => setPlan(r.data.plan ?? "FREE")).catch(() => {});
+  }, []);
 
   useEffect(() => { load(); }, [soloDeuda]);
   useEffect(() => {
@@ -74,6 +83,26 @@ export default function ClientesPage() {
 
   return (
     <div className="space-y-5 max-w-5xl">
+      {/* Banner plan FREE */}
+      {isFree && (
+        <div className="flex items-start gap-3 px-4 py-3 rounded-xl border border-amber-200 bg-amber-50 dark:bg-amber-950/20 dark:border-amber-800">
+          <Lock size={16} className="text-amber-600 mt-0.5 shrink-0" />
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-amber-800 dark:text-amber-400">
+              La creación de clientes requiere un plan pago
+            </p>
+            <p className="text-xs text-amber-700 dark:text-amber-500 mt-0.5">
+              Podés ver los clientes sincronizados desde la app, pero no crear ni editar desde el panel web en el plan gratuito.
+            </p>
+          </div>
+          <Link href="/cuenta">
+            <Button size="sm" className="shrink-0 gap-1.5 text-xs h-7">
+              <Zap size={11} /> Upgradear
+            </Button>
+          </Link>
+        </div>
+      )}
+
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Clientes</h1>
@@ -86,7 +115,10 @@ export default function ClientesPage() {
           <Button variant="outline" size="sm" onClick={load} disabled={loading}>
             <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
           </Button>
-          <Button size="sm" onClick={openNew}><Plus size={14} className="mr-1" /> Nuevo</Button>
+          <Button size="sm" onClick={openNew} disabled={isFree}>
+            <Plus size={14} className="mr-1" /> Nuevo
+            {isFree && <Lock size={11} className="ml-1 opacity-60" />}
+          </Button>
         </div>
       </div>
 

@@ -46,11 +46,69 @@
 }
 
 /* ══════════════════════════════════════════════════════════════
-   DARK THEME — VentaSimple Panel
-   Forzado siempre oscuro (no respetar prefers-color-scheme)
+   LIGHT THEME (por defecto) — VentaSimple Panel
    ══════════════════════════════════════════════════════════════ */
 :root {
-  /* Tokens de diseño */
+  /* VS tokens — modo claro */
+  --vs-bg:          #F8F7F4;
+  --vs-bg2:         #EDECE8;
+  --vs-surface:     #FFFFFF;
+  --vs-card:        #FFFFFF;
+  --vs-border:      rgba(0,0,0,.09);
+  --vs-muted:       #706B65;
+  --vs-text:        #1A1816;
+  --vs-primary:     #6d5dfc;
+  --vs-primary-2:   #3b82f6;
+  --vs-success:     #059669;
+  --vs-danger:      #dc2626;
+  --vs-warning:     #d97706;
+  --vs-shadow:      0 2px 12px rgba(0,0,0,.08);
+  --vs-radius:      14px;
+  --vs-radius-sm:   10px;
+  --vs-container:   1140px;
+
+  /* shadcn/ui vars — light */
+  --background:           oklch(1 0 0);
+  --foreground:           oklch(0.145 0 0);
+  --card:                 oklch(1 0 0);
+  --card-foreground:      oklch(0.145 0 0);
+  --popover:              oklch(1 0 0);
+  --popover-foreground:   oklch(0.145 0 0);
+  --primary:              oklch(0.58 0.25 278);
+  --primary-foreground:   oklch(0.98 0 0);
+  --secondary:            oklch(0.96 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted:                oklch(0.96 0 0);
+  --muted-foreground:     oklch(0.49 0 0);
+  --accent:               oklch(0.96 0 0);
+  --accent-foreground:    oklch(0.205 0 0);
+  --destructive:          oklch(0.577 0.245 27.325);
+  --border:               oklch(0.91 0 0);
+  --input:                oklch(0.91 0 0);
+  --ring:                 oklch(0.58 0.25 278 / 40%);
+  --chart-1:              oklch(0.58 0.25 278);
+  --chart-2:              oklch(0.55 0.18 210);
+  --chart-3:              oklch(0.55 0.18 148);
+  --chart-4:              oklch(0.65 0.18 65);
+  --chart-5:              oklch(0.55 0.22 25);
+  --radius:               0.75rem;
+
+  /* Sidebar — light */
+  --sidebar:                      oklch(0.97 0 0);
+  --sidebar-foreground:           oklch(0.2 0 0);
+  --sidebar-primary:              oklch(0.58 0.25 278);
+  --sidebar-primary-foreground:   oklch(0.98 0 0);
+  --sidebar-accent:               oklch(0.94 0 0);
+  --sidebar-accent-foreground:    oklch(0.2 0 0);
+  --sidebar-border:               oklch(0.91 0 0);
+  --sidebar-ring:                 oklch(0.58 0.25 278 / 40%);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   DARK THEME — activado con .dark en <html>
+   ══════════════════════════════════════════════════════════════ */
+.dark {
+  /* VS tokens — modo oscuro */
   --vs-bg:          #0b1020;
   --vs-bg2:         #0f162e;
   --vs-surface:     #0b1220;
@@ -64,11 +122,8 @@
   --vs-danger:      #ef4444;
   --vs-warning:     #f59e0b;
   --vs-shadow:      0 12px 34px rgba(0,0,0,.35);
-  --vs-radius:      14px;
-  --vs-radius-sm:   10px;
-  --vs-container:   1140px;
 
-  /* shadcn/ui vars — dark override */
+  /* shadcn/ui vars — dark */
   --background:           oklch(0.113 0.025 262);
   --foreground:           oklch(0.93 0.01 255);
   --card:                 oklch(0.145 0.025 260);
@@ -92,9 +147,8 @@
   --chart-3:              oklch(0.65 0.18 148);
   --chart-4:              oklch(0.75 0.18 65);
   --chart-5:              oklch(0.6 0.22 25);
-  --radius:               0.75rem;
 
-  /* Sidebar */
+  /* Sidebar — dark */
   --sidebar:                      oklch(0.12 0.028 262);
   --sidebar-foreground:           oklch(0.85 0.01 255);
   --sidebar-primary:              oklch(0.58 0.25 278);
@@ -103,22 +157,6 @@
   --sidebar-accent-foreground:    oklch(0.93 0.01 255);
   --sidebar-border:               oklch(1 0 0 / 8%);
   --sidebar-ring:                 oklch(0.58 0.25 278 / 50%);
-}
-
-/* Resetear dark class para que no interfiera — el tema es siempre oscuro */
-.dark {
-  --background:           oklch(0.113 0.025 262);
-  --foreground:           oklch(0.93 0.01 255);
-  --card:                 oklch(0.145 0.025 260);
-  --card-foreground:      oklch(0.93 0.01 255);
-  --primary:              oklch(0.58 0.25 278);
-  --primary-foreground:   oklch(0.98 0 0);
-  --secondary:            oklch(0.19 0.025 260);
-  --secondary-foreground: oklch(0.93 0.01 255);
-  --muted:                oklch(0.19 0.025 260);
-  --muted-foreground:     oklch(0.63 0.03 255);
-  --border:               oklch(1 0 0 / 10%);
-  --input:                oklch(1 0 0 / 12%);
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -266,6 +304,11 @@
     @apply text-foreground;
     min-height: 100%;
     margin: 0;
+    background: var(--background);
+  }
+
+  /* Fondo con gradiente solo en modo oscuro */
+  .dark body {
     background:
       radial-gradient(900px 500px at 15% -10%, rgba(109,93,252,.20), transparent 50%),
       radial-gradient(800px 450px at 90% -10%, rgba(81,198,255,.14), transparent 50%),
