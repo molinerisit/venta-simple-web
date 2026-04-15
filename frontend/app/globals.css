@@ -121,6 +121,136 @@
   --input:                oklch(1 0 0 / 12%);
 }
 
+/* ══════════════════════════════════════════════════════════════
+   LANDING LIGHT — Sistema de diseño editorial
+   Solo se aplica dentro de .vs-landing
+   ══════════════════════════════════════════════════════════════ */
+.vs-landing {
+  /* Paleta cálida */
+  --l-bg:        #F8F7F4;
+  --l-bg-alt:    #EDECE8;
+  --l-surface:   #FFFFFF;
+  --l-border:    #E2E0DA;
+  --l-text:      #1A1816;
+  --l-muted:     #706B65;
+  --l-light:     #A39D97;
+  --l-blue:      #1B4FD8;
+  --l-blue-dark: #163DAC;
+  --l-blue-bg:   #EEF2FE;
+  --l-green:     #0A6E45;
+  --l-green-bg:  #ECFDF5;
+  --l-green-bdr: #A7F3D0;
+  --l-red-bg:    #FDF2F2;
+  --l-red-bdr:   #FECACA;
+  --l-red-text:  #B91C1C;
+
+  background: var(--l-bg);
+  color: var(--l-text);
+  min-height: 100vh;
+  font-feature-settings: "kern" 1, "liga" 1;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Nav landing */
+.l-nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(248,247,244,0.92);
+  border-bottom: 1px solid var(--l-border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Contenedor */
+.l-container {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Label de sección */
+.l-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--l-light);
+}
+
+/* Card claro */
+.l-card {
+  background: var(--l-surface);
+  border: 1px solid var(--l-border);
+  border-radius: 14px;
+  box-shadow: 0 1px 3px rgba(26,24,22,.05), 0 14px 32px rgba(26,24,22,.05);
+}
+
+/* Botón primario */
+.l-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 13px 26px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: background .15s, transform .1s;
+}
+.l-btn-primary {
+  background: var(--l-blue);
+  color: #fff;
+}
+.l-btn-primary:hover { background: var(--l-blue-dark); }
+.l-btn-secondary {
+  background: var(--l-surface);
+  color: var(--l-text);
+  border: 1.5px solid var(--l-border);
+}
+.l-btn-secondary:hover { background: var(--l-bg-alt); }
+
+/* Divisor sutil */
+.l-hr {
+  height: 1px;
+  background: var(--l-border);
+  border: none;
+  margin: 0;
+}
+
+/* Tag / chip claro */
+.l-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--l-bg-alt);
+  border: 1px solid var(--l-border);
+  color: var(--l-muted);
+}
+
+/* Feature icon container */
+.l-feature-ico {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+/* FAQ */
+.l-details > summary { list-style: none; cursor: pointer; }
+.l-details > summary::-webkit-details-marker { display: none; }
+.l-details[open] .l-faq-icon { transform: rotate(45deg); }
+.l-faq-icon { transition: transform .2s; display: inline-block; }
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

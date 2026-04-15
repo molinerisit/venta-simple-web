@@ -9,23 +9,23 @@ export default function PrivacidadPage() {
   const lastUpdate = "15 de abril de 2026";
 
   return (
-    <div style={{ minHeight: "100vh", background: "var(--vs-bg)" }}>
+    <div className="vs-landing">
       {/* Nav */}
-      <nav className="vs-nav">
-        <div className="vs-container" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: 62 }}>
-          <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
-            <div style={{ width: 34, height: 34, borderRadius: 10, background: "linear-gradient(135deg,#6d5dfc,#51c6ff)", display: "grid", placeItems: "center", fontWeight: 900, fontSize: 14, color: "#fff" }}>VS</div>
-            <span style={{ fontWeight: 800, fontSize: 16, color: "var(--vs-text)" }}>Venta Simple</span>
+      <nav className="l-nav">
+        <div className="l-container" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: 64 }}>
+          <Link href="/" style={{ display: "flex", alignItems: "center", gap: 9, textDecoration: "none" }}>
+            <div style={{ width: 32, height: 32, borderRadius: 8, background: "#1B4FD8", display: "grid", placeItems: "center", fontWeight: 900, fontSize: 13, color: "#fff" }}>VS</div>
+            <span style={{ fontWeight: 800, fontSize: 15, color: "#1A1816", letterSpacing: "-0.02em" }}>Venta Simple</span>
           </Link>
-          <Link href="/" style={{ fontSize: 13, color: "var(--vs-muted)", textDecoration: "none" }}>← Volver al inicio</Link>
+          <Link href="/" style={{ fontSize: 13, color: "#706B65", textDecoration: "none" }}>← Volver al inicio</Link>
         </div>
       </nav>
 
-      <div className="vs-container" style={{ maxWidth: 760, margin: "0 auto", padding: "56px 0 80px" }}>
-        <h1 style={{ fontSize: "clamp(26px, 4vw, 40px)", fontWeight: 900, color: "var(--vs-text)", marginBottom: 8 }}>
+      <div className="l-container" style={{ maxWidth: 760, margin: "0 auto", padding: "56px 0 80px" }}>
+        <h1 style={{ fontSize: "clamp(26px, 4vw, 40px)", fontWeight: 900, letterSpacing: "-0.03em", color: "#1A1816", marginBottom: 8 }}>
           Política de Privacidad
         </h1>
-        <p style={{ fontSize: 13, color: "var(--vs-muted)", marginBottom: 40 }}>
+        <p style={{ fontSize: 13, color: "#A39D97", marginBottom: 40 }}>
           Última actualización: {lastUpdate}
         </p>
 
@@ -119,10 +119,10 @@ export default function PrivacidadPage() {
 function LegalSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section style={{ marginBottom: 36 }}>
-      <h2 style={{ fontSize: 18, fontWeight: 700, color: "var(--vs-text)", marginBottom: 14, paddingBottom: 10, borderBottom: "1px solid rgba(255,255,255,.07)" }}>
+      <h2 style={{ fontSize: 18, fontWeight: 700, letterSpacing: "-0.02em", color: "#1A1816", marginBottom: 14, paddingBottom: 10, borderBottom: "1px solid #E2E0DA" }}>
         {title}
       </h2>
-      <div style={{ fontSize: 14, color: "var(--vs-muted)", lineHeight: 1.8, display: "grid", gap: 10 }}>
+      <div style={{ fontSize: 14, color: "#706B65", lineHeight: 1.8, display: "grid", gap: 10 }}>
         {children}
       </div>
     </section>
