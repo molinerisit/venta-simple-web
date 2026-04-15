@@ -13,7 +13,17 @@ from ..schemas.auth import TokenPayload
 
 router = APIRouter(prefix="/api/sync", tags=["sync"])
 
-ALLOWED_TABLES = {"productos", "proveedores", "clientes", "ventas"}
+# Tablas que puede sincronizar cada plan
+ALL_TABLES  = {"productos", "proveedores", "clientes", "ventas"}
+FREE_TABLES = {"productos", "ventas"}   # FREE solo sube stock + ventas
+
+
+def _get_plan(db: Session, tenant_id: str) -> str:
+    row = db.execute(
+        text("SELECT plan FROM tenants WHERE id = :tid AND activo = TRUE"),
+        {"tid": tenant_id},
+    ).mappings().fetchone()
+    return (row["plan"] if row else "FREE") or "FREE"
 
 
 @router.post("/push")
@@ -27,9 +37,10 @@ async def push(
         raise HTTPException(403, "Acceso denegado")
 
     tenant_id = current_user.tenant_id
-    body_bytes = await request.body()
+    plan = _get_plan(db, tenant_id)
+    allowed = FREE_TABLES if plan == "FREE" else ALL_TABLES
 
-    # Descomprimir si viene gzip
+    body_bytes = await request.body()
     if request.headers.get("content-encoding") == "gzip":
         body_bytes = gzip.decompress(body_bytes)
 
@@ -44,13 +55,16 @@ async def push(
         local_id  = item.get("local_id")
         server_id = item.get("server_id")
 
-        if tabla not in ALLOWED_TABLES:
+        if tabla not in ALL_TABLES:
             results.append({"local_id": local_id, "error": "tabla no permitida"})
+            continue
+
+        if tabla not in allowed:
+            results.append({"local_id": local_id, "error": "REQUIRES_LICENSE", "tabla": tabla})
             continue
 
         try:
             new_server_id = _apply_change(db, tenant_id, tabla, operacion, datos, local_id, server_id)
-            # Registrar en sync_log
             db.execute(
                 text("""
                     INSERT INTO sync_log (tenant_id, tabla, registro_id, local_id, operacion, datos, origen)
@@ -120,13 +134,17 @@ def pull(
     if current_user.rol not in ("owner", "superadmin"):
         raise HTTPException(403, "Acceso denegado")
     tenant_id = current_user.tenant_id
+    plan = _get_plan(db, tenant_id)
+    allowed = FREE_TABLES if plan == "FREE" else ALL_TABLES
+
     rows = db.execute(
         text("""
             SELECT tabla, registro_id, local_id, operacion, datos, aplicado_at
             FROM sync_log
             WHERE tenant_id = :tid AND origen = 'web' AND aplicado_at > :since
+              AND tabla = ANY(:tablas)
             ORDER BY aplicado_at ASC LIMIT 500
         """),
-        {"tid": tenant_id, "since": since},
+        {"tid": tenant_id, "since": since, "tablas": list(allowed)},
     ).mappings().fetchall()
     return [dict(r) for r in rows]
