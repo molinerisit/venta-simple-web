@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import { CheckCircle, RefreshCw } from "lucide-react";
+import Image from "next/image";
 
 function RegistroForm() {
   const searchParams = useSearchParams();
@@ -67,14 +68,9 @@ function RegistroForm() {
     <div className="min-h-screen flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-sm">
         {/* Logo */}
-        <div className="flex items-center justify-center gap-3 mb-8">
-          <div style={{
-            width: 40, height: 40, borderRadius: 12,
-            background: "linear-gradient(135deg, #1E3A8A, #51c6ff)",
-            display: "grid", placeItems: "center",
-            fontWeight: 900, fontSize: 16, color: "#fff",
-          }}>VS</div>
-          <span style={{ fontWeight: 800, fontSize: 18, color: "var(--vs-text)" }}>Venta Simple</span>
+        <div className="flex items-center justify-center mb-8">
+          <Image src="/brand/logotexto.png" alt="Venta Simple" width={160} height={44}
+            style={{ height: 34, width: "auto", objectFit: "contain" }} priority />
         </div>
 
         <Card>

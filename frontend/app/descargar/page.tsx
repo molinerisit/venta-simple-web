@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getUser } from "@/lib/auth";
 import Link from "next/link";
+import Image from "next/image";
 import {
   Download, Monitor, Shield, Zap, Loader2,
   ChevronDown, AlertTriangle, CheckCircle2, Info, ExternalLink,
@@ -200,9 +201,9 @@ export default function DescargarPage() {
       {/* Nav */}
       <nav className="border-b bg-background/90 backdrop-blur sticky top-0 z-50" style={{ borderColor: "var(--border)" }}>
         <div style={{ maxWidth: 960, margin: "0 auto", padding: "0 24px", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <Link href="/" style={{ display: "flex", alignItems: "center", gap: 9, textDecoration: "none" }}>
-            <div style={{ width: 32, height: 32, borderRadius: 8, background: "#1E3A8A", display: "grid", placeItems: "center", fontWeight: 900, fontSize: 13, color: "#fff" }}>VS</div>
-            <span className="font-bold text-sm text-foreground" style={{ letterSpacing: "-0.02em" }}>Venta Simple</span>
+          <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center" }}>
+            <Image src="/brand/logotexto.png" alt="Venta Simple" width={140} height={38}
+              style={{ height: 26, width: "auto", objectFit: "contain" }} priority />
           </Link>
           <Link href="/dashboard" style={{
             fontSize: 13, fontWeight: 600, padding: "7px 16px", borderRadius: 8,

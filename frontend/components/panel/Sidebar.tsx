@@ -10,6 +10,7 @@ import {
   BarChart2, Key, CreditCard, Shield, LogOut, Sun, Moon, Zap,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 const OWNER_NAV = [
   { href: "/dashboard",   label: "Dashboard",   icon: LayoutDashboard },
@@ -93,30 +94,43 @@ export default function Sidebar() {
 
       {/* ── Logo / perfil ── */}
       <div style={{
-        display: "flex", alignItems: "center", gap: 10,
-        padding: "18px 16px 16px",
+        padding: "14px 16px 12px",
         borderBottom: "1px solid var(--sidebar-border)",
       }}>
-        <div style={{
-          width: 34, height: 34, borderRadius: 10,
-          background: "#1E3A8A",
-          display: "grid", placeItems: "center",
-          fontWeight: 900, fontSize: 13, color: "#fff",
-          flexShrink: 0,
-          boxShadow: "0 2px 8px rgba(30,58,138,.35)",
-        }}>VS</div>
-        <div style={{ minWidth: 0 }}>
-          <p style={{
-            fontSize: 13, fontWeight: 700, lineHeight: 1.2,
-            color: "var(--sidebar-foreground)",
-            whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
-            letterSpacing: "-0.01em",
+        {/* Logo */}
+        <div style={{ marginBottom: 10 }}>
+          <Image
+            src="/brand/logotexto.png"
+            alt="Venta Simple"
+            width={130}
+            height={36}
+            style={{ objectFit: "contain", objectPosition: "left", height: 28, width: "auto" }}
+            priority
+          />
+        </div>
+        {/* Usuario */}
+        <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+          <div style={{
+            width: 26, height: 26, borderRadius: 6, flexShrink: 0,
+            background: "rgba(30,58,138,.1)",
+            border: "1px solid rgba(30,58,138,.18)",
+            display: "grid", placeItems: "center",
+            fontSize: 10, fontWeight: 800, color: "#1E3A8A",
           }}>
-            {user?.nombre ?? "Panel"}
-          </p>
-          <p style={{ fontSize: 11, color: "var(--vs-muted)", marginTop: 1 }}>
-            {isSuperAdmin ? "Superadmin" : "Mi negocio"}
-          </p>
+            {(user?.nombre ?? "U")[0].toUpperCase()}
+          </div>
+          <div style={{ minWidth: 0 }}>
+            <p style={{
+              fontSize: 12, fontWeight: 600, lineHeight: 1.2,
+              color: "var(--sidebar-foreground)",
+              whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+            }}>
+              {user?.nombre ?? "Panel"}
+            </p>
+            <p style={{ fontSize: 10, color: "var(--vs-muted)", marginTop: 1 }}>
+              {isSuperAdmin ? "Superadmin" : "Mi negocio"}
+            </p>
+          </div>
         </div>
       </div>
 

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 const PRICE_BASIC = 2999;
 const PRICE_PRO   = 4499;
@@ -50,11 +51,9 @@ export default function LandingPage() {
         <div className="l-container" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: 64 }}>
 
           {/* Logo */}
-          <Link href="/" style={{ display: "flex", alignItems: "center", gap: 9, textDecoration: "none" }}>
-            <div style={{ width: 32, height: 32, borderRadius: 8, background: C.blue, display: "grid", placeItems: "center", fontWeight: 900, fontSize: 13, color: "#fff", letterSpacing: "-0.02em" }}>
-              VS
-            </div>
-            <span style={{ fontWeight: 800, fontSize: 15, color: C.text, letterSpacing: "-0.02em" }}>Venta Simple</span>
+          <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center" }}>
+            <Image src="/brand/logotexto.png" alt="Venta Simple" width={148} height={40}
+              style={{ height: 30, width: "auto", objectFit: "contain" }} priority />
           </Link>
 
           {/* Links */}
