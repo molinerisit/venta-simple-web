@@ -664,6 +664,8 @@ export default function LandingPage() {
             <a href="#pricing"       style={{ fontSize: 13, color: "var(--vs-muted)", textDecoration: "none" }}>Precios</a>
             <a href="#faq"           style={{ fontSize: 13, color: "var(--vs-muted)", textDecoration: "none" }}>FAQ</a>
             <Link href="/login"      style={{ fontSize: 13, color: "var(--vs-muted)", textDecoration: "none" }}>Ingresar</Link>
+            <Link href="/privacidad" style={{ fontSize: 13, color: "var(--vs-muted)", textDecoration: "none" }}>Privacidad</Link>
+            <Link href="/terminos"   style={{ fontSize: 13, color: "var(--vs-muted)", textDecoration: "none" }}>Términos</Link>
             <a href="mailto:ventas@ventasimple.app" style={{ fontSize: 13, color: "#b3a7ff", textDecoration: "none" }}>Contacto</a>
           </div>
         </div>
