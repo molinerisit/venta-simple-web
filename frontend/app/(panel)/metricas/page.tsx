@@ -5,7 +5,9 @@ import { getMetricas, type Metricas } from "@/lib/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { RefreshCw, TrendingUp, ShoppingCart, Users, Package, AlertTriangle } from "lucide-react";
+import { RefreshCw, TrendingUp, ShoppingCart, Users, Package, AlertTriangle, BarChart2 } from "lucide-react";
+import { EmptyState } from "@/components/panel/EmptyState";
+import Link from "next/link";
 import {
   AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell,
   XAxis, YAxis, Tooltip, ResponsiveContainer,
@@ -89,8 +91,21 @@ export default function MetricasPage() {
         </div>
       </div>
 
-      {loading || !data ? (
+      {loading ? (
         <p className="text-sm text-muted-foreground py-12 text-center">Cargando métricas…</p>
+      ) : !data || (data.ventas.cantidad === 0 && (data.totales?.total_productos ?? 0) === 0) ? (
+        <EmptyState
+          icon={BarChart2}
+          title="Todavía no hay actividad para mostrar"
+          description="Cuando registres ventas, acá vas a ver evolución, ticket promedio y productos más vendidos."
+          action={
+            <Link href="/ventas">
+              <Button size="sm" variant="outline" className="gap-1.5">
+                <ShoppingCart size={13} /> Ir a ventas
+              </Button>
+            </Link>
+          }
+        />
       ) : (
         <>
           {/* KPI cards */}

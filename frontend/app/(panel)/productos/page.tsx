@@ -157,10 +157,15 @@ export default function ProductosPage() {
            filtered.length === 0 ? (
             <EmptyState
               icon={Package}
-              title={q || catFilter !== "_all" ? "Sin resultados" : "Sin productos"}
+              title={q || catFilter !== "_all" ? "Sin resultados" : "Todavía no cargaste productos"}
               description={q || catFilter !== "_all"
                 ? "No hay productos que coincidan con los filtros aplicados."
-                : "Todavía no tenés productos cargados. Creá el primero desde la app de escritorio o usá el botón Nuevo."}
+                : "Creá tu primer producto para empezar a vender, controlar stock y ver métricas."}
+              action={!q && catFilter === "_all" ? (
+                <Button size="sm" onClick={openNew} className="gap-1.5">
+                  <Plus size={13} /> Crear producto
+                </Button>
+              ) : undefined}
             />
           ) : (
             <table className="w-full text-sm">

@@ -86,19 +86,33 @@ export default function ClientesPage() {
     <div className="space-y-6 max-w-5xl">
       {/* Banner plan FREE */}
       {isFree && (
-        <div className="flex items-start gap-3 px-4 py-3 rounded-xl border border-amber-200 bg-amber-50 dark:bg-amber-950/20 dark:border-amber-800">
-          <Lock size={16} className="text-amber-600 mt-0.5 shrink-0" />
-          <div className="flex-1">
-            <p className="text-sm font-semibold text-amber-800 dark:text-amber-400">
-              La creación de clientes requiere un plan pago
+        <div style={{
+          display: "flex", alignItems: "flex-start", gap: 14,
+          padding: "14px 18px", borderRadius: 14,
+          background: "#FFF7ED",
+          border: "1px solid #FED7AA",
+        }}
+          className="dark:bg-[rgba(249,115,22,.08)] dark:border-[rgba(249,115,22,.25)]"
+        >
+          <div style={{
+            width: 34, height: 34, borderRadius: 10, flexShrink: 0,
+            background: "rgba(249,115,22,.12)",
+            display: "grid", placeItems: "center",
+          }}>
+            <Lock size={15} color="#F97316" />
+          </div>
+          <div style={{ flex: 1 }}>
+            <p className="text-sm font-semibold text-foreground mb-0.5">
+              Clientes disponible en planes pagos
             </p>
-            <p className="text-xs text-amber-700 dark:text-amber-500 mt-0.5">
-              Podés ver los clientes sincronizados desde la app, pero no crear ni editar desde el panel web en el plan gratuito.
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              En el plan gratuito podés ver clientes sincronizados desde la app.
+              Para crear, editar y gestionar deuda desde el panel web necesitás un plan pago.
             </p>
           </div>
-          <Link href="/cuenta">
-            <Button size="sm" className="shrink-0 gap-1.5 text-xs h-7">
-              <Zap size={11} /> Upgradear
+          <Link href="/cuenta" style={{ flexShrink: 0 }}>
+            <Button size="sm" variant="accent" className="gap-1.5">
+              <Zap size={11} fill="currentColor" /> Ver planes
             </Button>
           </Link>
         </div>
@@ -140,10 +154,21 @@ export default function ClientesPage() {
            filtered.length === 0 ? (
             <EmptyState
               icon={Users}
-              title={q || soloDeuda ? "Sin resultados" : "Sin clientes"}
+              title={q || soloDeuda ? "Sin resultados" : "Todavía no tenés clientes"}
               description={q || soloDeuda
                 ? "No hay clientes que coincidan con la búsqueda."
-                : "Todavía no hay clientes registrados. Podés agregarlos desde la app de escritorio."}
+                : "Cuando agregues clientes vas a poder registrar compras, deuda y seguimiento."}
+              action={!q && !soloDeuda && !isFree ? (
+                <Button size="sm" onClick={openNew} className="gap-1.5">
+                  <Plus size={13} /> Crear cliente
+                </Button>
+              ) : !q && !soloDeuda && isFree ? (
+                <Link href="/cuenta">
+                  <Button size="sm" variant="accent" className="gap-1.5">
+                    <Zap size={13} fill="currentColor" /> Ver planes
+                  </Button>
+                </Link>
+              ) : undefined}
             />
           ) : (
             <table className="w-full text-sm">
@@ -197,7 +222,7 @@ export default function ClientesPage() {
               <div className="col-span-2 space-y-1"><Label>Dirección</Label><Input value={form.direccion ?? ""} onChange={e => set("direccion", e.target.value)} /></div>
               <div className="col-span-2 space-y-1"><Label>Notas</Label><Input value={form.notas ?? ""} onChange={e => set("notas", e.target.value)} /></div>
             </div>
-            {err && <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">{err}</p>}
+            {err && <p className="vs-alert vs-alert-error text-sm">{err}</p>}
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => setOpen(false)}>Cancelar</Button>
               <Button type="submit" disabled={saving}>{saving ? "Guardando…" : "Guardar"}</Button>
