@@ -99,9 +99,9 @@ export default function Sidebar() {
         <Image
           src="/brand/logotexto-nb.png"
           alt="Venta Simple"
-          width={180}
-          height={52}
-          style={{ objectFit: "contain", objectPosition: "left", height: 40, width: "auto" }}
+          width={2760}
+          height={1504}
+          style={{ objectFit: "contain", objectPosition: "left", height: 56, width: "auto", maxWidth: "100%" }}
           priority
         />
 
