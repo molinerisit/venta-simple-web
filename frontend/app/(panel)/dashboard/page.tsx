@@ -71,21 +71,14 @@ function OnboardingPanel({ licenciaActiva }: { licenciaActiva: boolean }) {
   return (
     <div className="space-y-6 max-w-2xl">
       {/* Hero */}
-      <div className="rounded-2xl p-6" style={{
-        background: "linear-gradient(135deg, rgba(109,93,252,.12), rgba(81,198,255,.06))",
-        border: "1px solid rgba(109,93,252,.2)",
-      }}>
-        <div style={{
-          width: 48, height: 48, borderRadius: 14,
-          background: "linear-gradient(135deg, #6d5dfc, #51c6ff)",
-          display: "grid", placeItems: "center", marginBottom: 16,
-        }}>
+      <div className="rounded-2xl p-6 bg-primary/5 border border-primary/20">
+        <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center mb-4">
           <Monitor size={24} color="#fff" />
         </div>
         <h2 className="text-xl font-bold text-foreground mb-1">
           Configurá tu sistema de ventas
         </h2>
-        <p className="text-sm text-slate-400 leading-relaxed">
+        <p className="text-sm text-muted-foreground leading-relaxed">
           Seguí estos pasos para instalar la app de escritorio y empezar a registrar ventas.
           Funciona sin internet y se sincroniza automáticamente cuando hay conexión.
         </p>
@@ -97,34 +90,31 @@ function OnboardingPanel({ licenciaActiva }: { licenciaActiva: boolean }) {
           const isLast = i === PASOS.length - 1;
           const unlocked = paso.done || i <= (licenciaActiva ? 2 : 1);
           return (
-            <div key={paso.n} className="flex gap-4 items-start" style={{
-              background: "#16181f",
-              border: "1px solid rgba(255,255,255,.07)",
-              borderRadius: 14,
-              padding: "16px 20px",
-              opacity: isLast && !licenciaActiva ? 0.5 : 1,
-            }}>
+            <div
+              key={paso.n}
+              className="flex gap-4 items-start rounded-2xl border bg-card"
+              style={{
+                padding: "16px 20px",
+                opacity: isLast && !licenciaActiva ? 0.45 : 1,
+              }}
+            >
               {/* Número / check */}
               <div style={{
                 width: 32, height: 32, borderRadius: "50%", flexShrink: 0,
-                background: paso.done
-                  ? "rgba(34,197,94,.15)"
-                  : "rgba(109,93,252,.15)",
-                border: paso.done
-                  ? "1px solid rgba(34,197,94,.3)"
-                  : "1px solid rgba(109,93,252,.3)",
+                background: paso.done ? "rgba(5,150,105,.12)" : "rgba(109,93,252,.12)",
+                border: paso.done ? "1px solid rgba(5,150,105,.35)" : "1px solid rgba(109,93,252,.3)",
                 display: "grid", placeItems: "center",
               }}>
                 {paso.done
-                  ? <CheckCircle2 size={16} style={{ color: "#86efac" }} />
-                  : <span style={{ fontWeight: 800, fontSize: 13, color: "#b3a7ff" }}>{paso.n}</span>
+                  ? <CheckCircle2 size={16} className="text-emerald-600" />
+                  : <span style={{ fontWeight: 800, fontSize: 13, color: "#6d5dfc" }}>{paso.n}</span>
                 }
               </div>
 
               {/* Contenido */}
               <div className="flex-1 min-w-0">
                 <p className="font-semibold text-foreground text-sm mb-0.5">{paso.titulo}</p>
-                <p className="text-xs text-slate-400 leading-relaxed">{paso.desc}</p>
+                <p className="text-xs text-muted-foreground leading-relaxed">{paso.desc}</p>
                 {paso.action && unlocked && (
                   <Link href={paso.action.href} className="inline-flex items-center gap-1 mt-2">
                     <Button size="sm" variant={i === 1 ? "default" : "outline"} className="h-7 text-xs gap-1.5">
@@ -142,9 +132,9 @@ function OnboardingPanel({ licenciaActiva }: { licenciaActiva: boolean }) {
       </div>
 
       {/* CTA secundario */}
-      <p className="text-xs text-slate-500 text-center">
+      <p className="text-xs text-muted-foreground text-center">
         ¿Necesitás ayuda?{" "}
-        <Link href="/descargar" className="underline" style={{ color: "#b3a7ff" }}>
+        <Link href="/descargar" className="underline text-primary">
           Ver guía de instalación
         </Link>
       </p>
