@@ -291,7 +291,7 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
     box-sizing: border-box;
   }
 
@@ -316,6 +316,16 @@
   }
 
   #__next, #root { min-height: 100vh; }
+
+  /* ── Focus states — anillo azul/violeta consistente ── */
+  *:focus-visible {
+    outline: 2px solid #6d5dfc;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  *:focus:not(:focus-visible) {
+    outline: none;
+  }
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -435,4 +445,53 @@ details[open] > summary span:last-child { transform: rotate(45deg); display: inl
   background: rgba(255,255,255,.07);
   border: 1px solid rgba(255,255,255,.1);
   flex-shrink: 0;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PANEL — mejoras UI globales
+   ══════════════════════════════════════════════════════════════ */
+
+/* Hover de filas de tabla — funciona en ambos temas */
+.vs-table-row {
+  transition: background .1s;
+}
+.vs-table-row:hover {
+  background: rgba(109,93,252,.04);
+}
+.dark .vs-table-row:hover {
+  background: rgba(255,255,255,.04);
+}
+
+/* Card panel — sombra sutil en modo claro */
+.vs-panel-card {
+  box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.04);
+}
+.dark .vs-panel-card {
+  box-shadow: none;
+}
+
+/* Inputs — borde más visible en light */
+input, select, textarea {
+  transition: border-color .15s, box-shadow .15s;
+}
+
+/* Recharts override para light mode */
+:root .recharts-tooltip-wrapper .recharts-default-tooltip {
+  background: #ffffff !important;
+  border-color: rgba(0,0,0,.1) !important;
+  color: #1A1816 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 16px rgba(0,0,0,.1) !important;
+}
+:root .recharts-cartesian-axis-tick-value {
+  fill: #706B65 !important;
+}
+/* dark override */
+.dark .recharts-tooltip-wrapper .recharts-default-tooltip {
+  background: #0f172a !important;
+  border-color: rgba(255,255,255,.12) !important;
+  color: #e6e8ef !important;
+}
+.dark .recharts-cartesian-axis-tick-value {
+  fill: #a3acc3 !important;
 }

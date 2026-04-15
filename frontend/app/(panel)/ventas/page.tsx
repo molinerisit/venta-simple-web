@@ -7,7 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { RefreshCw, Ban } from "lucide-react";
+import { RefreshCw, Ban, ShoppingCart } from "lucide-react";
+import { EmptyState, LoadingState } from "@/components/panel/EmptyState";
 
 function fmt(n: number) {
   return new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(n);
@@ -47,11 +48,11 @@ export default function VentasPage() {
   const cantidad = items.filter(v => v.estado === "completada").length;
 
   return (
-    <div className="space-y-5 max-w-5xl">
+    <div className="space-y-6 max-w-5xl">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Ventas</h1>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-muted-foreground">
             {cantidad} ventas · total: <span className="font-semibold text-blue-600">{fmt(total)}</span>
           </p>
         </div>
@@ -73,39 +74,45 @@ export default function VentasPage() {
         <Button size="sm" onClick={load} disabled={loading}>Filtrar</Button>
       </div>
 
-      <Card>
+      <Card className="vs-panel-card">
         <CardContent className="p-0">
-          {loading ? <p className="px-4 py-8 text-sm text-slate-400 text-center">Cargando…</p> :
-           items.length === 0 ? <p className="px-4 py-8 text-sm text-slate-400 text-center">Sin ventas en el período.</p> : (
+          {loading ? <LoadingState /> :
+           items.length === 0 ? (
+            <EmptyState
+              icon={ShoppingCart}
+              title="Sin ventas en el período"
+              description="No se encontraron ventas en el rango de fechas seleccionado. Probá ampliando el período."
+            />
+          ) : (
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b text-xs text-slate-400">
-                  <th className="text-left px-4 py-2">Fecha</th>
-                  <th className="text-left px-4 py-2">Cliente</th>
-                  <th className="text-left px-4 py-2">Método</th>
-                  <th className="text-right px-4 py-2">Total</th>
-                  <th className="text-center px-4 py-2">Estado</th>
-                  <th className="text-left px-4 py-2"></th>
+                <tr className="border-b text-xs text-muted-foreground">
+                  <th className="text-left px-4 py-3">Fecha</th>
+                  <th className="text-left px-4 py-3">Cliente</th>
+                  <th className="text-left px-4 py-3">Método</th>
+                  <th className="text-right px-4 py-3">Total</th>
+                  <th className="text-center px-4 py-3">Estado</th>
+                  <th className="text-left px-4 py-3"></th>
                 </tr>
               </thead>
               <tbody>
                 {items.map(v => (
-                  <tr key={v.id} className={`border-b last:border-0 hover:bg-white/5 ${v.estado === "anulada" ? "opacity-50" : ""}`}>
-                    <td className="px-4 py-2.5 text-xs text-slate-500">
+                  <tr key={v.id} className={`border-b last:border-0 vs-table-row ${v.estado === "anulada" ? "opacity-50" : ""}`}>
+                    <td className="px-4 py-3 text-xs text-muted-foreground">
                       {new Date(v.fecha).toLocaleString("es-AR", { day: "2-digit", month: "2-digit", year: "2-digit", hour: "2-digit", minute: "2-digit" })}
                     </td>
-                    <td className="px-4 py-2.5 text-slate-700">{v.cliente_nombre ?? <span className="text-slate-300">—</span>}</td>
-                    <td className="px-4 py-2.5">
+                    <td className="px-4 py-3 text-foreground">{v.cliente_nombre ?? <span className="text-muted-foreground">—</span>}</td>
+                    <td className="px-4 py-3">
                       <Badge variant="outline" className="text-xs">{v.metodo_pago}</Badge>
                     </td>
-                    <td className="px-4 py-2.5 text-right font-semibold">
+                    <td className="px-4 py-3 text-right font-semibold">
                       {fmt(v.total)}
-                      {v.descuento > 0 && <span className="text-xs text-slate-400 ml-1">(-{fmt(v.descuento)})</span>}
+                      {v.descuento > 0 && <span className="text-xs text-muted-foreground ml-1">(-{fmt(v.descuento)})</span>}
                     </td>
-                    <td className="px-4 py-2.5 text-center">
+                    <td className="px-4 py-3 text-center">
                       <Badge variant={estadoColor(v.estado)}>{v.estado}</Badge>
                     </td>
-                    <td className="px-4 py-2.5">
+                    <td className="px-4 py-3">
                       {v.estado === "completada" && (
                         <Button variant="ghost" size="sm" className="h-7 px-2 text-red-500 hover:text-red-700"
                           onClick={() => handleAnular(v)} title="Anular venta">

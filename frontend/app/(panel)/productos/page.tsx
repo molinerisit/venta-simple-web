@@ -17,7 +17,8 @@ import {
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { Plus, Search, RefreshCw, Pencil, Trash2, ArrowUpDown } from "lucide-react";
+import { Plus, Search, RefreshCw, Pencil, Trash2, ArrowUpDown, Package } from "lucide-react";
+import { EmptyState, LoadingState } from "@/components/panel/EmptyState";
 
 const EMPTY: ProductoCreate = {
   nombre: "", codigo: "", precio: 0, precio_costo: 0,
@@ -116,11 +117,11 @@ export default function ProductosPage() {
   const set = (k: keyof ProductoCreate, v: string | number) => setForm(f => ({ ...f, [k]: v }));
 
   return (
-    <div className="space-y-5 max-w-6xl">
+    <div className="space-y-6 max-w-6xl">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Productos</h1>
-          <p className="text-sm text-slate-500">{items.length} productos</p>
+          <p className="text-sm text-muted-foreground">{items.length} productos</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" onClick={load} disabled={loading}>
@@ -150,39 +151,47 @@ export default function ProductosPage() {
       </div>
 
       {/* Tabla */}
-      <Card>
+      <Card className="vs-panel-card">
         <CardContent className="p-0">
-          {loading ? <p className="px-4 py-8 text-sm text-slate-400 text-center">Cargando…</p> :
-           filtered.length === 0 ? <p className="px-4 py-8 text-sm text-slate-400 text-center">Sin resultados.</p> : (
+          {loading ? <LoadingState /> :
+           filtered.length === 0 ? (
+            <EmptyState
+              icon={Package}
+              title={q || catFilter !== "_all" ? "Sin resultados" : "Sin productos"}
+              description={q || catFilter !== "_all"
+                ? "No hay productos que coincidan con los filtros aplicados."
+                : "Todavía no tenés productos cargados. Creá el primero desde la app de escritorio o usá el botón Nuevo."}
+            />
+          ) : (
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b text-xs text-slate-400">
-                  <th className="text-left px-4 py-2">Nombre</th>
-                  <th className="text-left px-4 py-2">Código</th>
-                  <th className="text-right px-4 py-2">Precio</th>
-                  <th className="text-right px-4 py-2">Costo</th>
-                  <th className="text-center px-4 py-2">Stock</th>
-                  <th className="text-left px-4 py-2">Categoría</th>
-                  <th className="text-left px-4 py-2"></th>
+                <tr className="border-b text-xs text-muted-foreground">
+                  <th className="text-left px-4 py-3">Nombre</th>
+                  <th className="text-left px-4 py-3">Código</th>
+                  <th className="text-right px-4 py-3">Precio</th>
+                  <th className="text-right px-4 py-3">Costo</th>
+                  <th className="text-center px-4 py-3">Stock</th>
+                  <th className="text-left px-4 py-3">Categoría</th>
+                  <th className="text-left px-4 py-3"></th>
                 </tr>
               </thead>
               <tbody>
                 {filtered.map(p => (
-                  <tr key={p.id} className="border-b last:border-0 hover:bg-white/5">
-                    <td className="px-4 py-2.5">
+                  <tr key={p.id} className="border-b last:border-0 vs-table-row">
+                    <td className="px-4 py-3">
                       <p className="font-medium text-foreground">{p.nombre}</p>
-                      <p className="text-xs text-slate-400">{p.unidad}</p>
+                      <p className="text-xs text-muted-foreground">{p.unidad}</p>
                     </td>
-                    <td className="px-4 py-2.5 font-mono text-xs text-slate-500">{p.codigo ?? "—"}</td>
-                    <td className="px-4 py-2.5 text-right font-medium">${p.precio.toLocaleString("es-AR")}</td>
-                    <td className="px-4 py-2.5 text-right text-slate-400">${(p.precio_costo ?? 0).toLocaleString("es-AR")}</td>
-                    <td className="px-4 py-2.5 text-center">
+                    <td className="px-4 py-3 font-mono text-xs text-muted-foreground">{p.codigo ?? "—"}</td>
+                    <td className="px-4 py-3 text-right font-medium">${p.precio.toLocaleString("es-AR")}</td>
+                    <td className="px-4 py-3 text-right text-muted-foreground">${(p.precio_costo ?? 0).toLocaleString("es-AR")}</td>
+                    <td className="px-4 py-3 text-center">
                       <Badge variant={p.stock <= p.stock_minimo ? "destructive" : p.stock < p.stock_minimo * 2 ? "outline" : "secondary"}>
                         {p.stock}
                       </Badge>
                     </td>
-                    <td className="px-4 py-2.5 text-slate-400 text-xs">{p.categoria ?? "—"}</td>
-                    <td className="px-4 py-2.5">
+                    <td className="px-4 py-3 text-muted-foreground text-xs">{p.categoria ?? "—"}</td>
+                    <td className="px-4 py-3">
                       <div className="flex gap-1">
                         <Button variant="ghost" size="sm" className="h-7 px-2"
                           onClick={() => { setStockDialog(p); setStockDelta(0); }}>

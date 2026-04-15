@@ -11,9 +11,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Plus, Search, RefreshCw, Pencil, Trash2, Lock, Zap } from "lucide-react";
+import { Plus, Search, RefreshCw, Pencil, Trash2, Lock, Zap, Users } from "lucide-react";
 import { getSuscripcionEstado } from "@/lib/api";
 import Link from "next/link";
+import { EmptyState, LoadingState } from "@/components/panel/EmptyState";
 
 const EMPTY: ClienteCreate = { nombre: "", email: "", telefono: "", direccion: "", dni: "", deuda: 0, notas: "" };
 
@@ -82,7 +83,7 @@ export default function ClientesPage() {
   const totalDeuda = items.reduce((s, c) => s + (c.deuda ?? 0), 0);
 
   return (
-    <div className="space-y-5 max-w-5xl">
+    <div className="space-y-6 max-w-5xl">
       {/* Banner plan FREE */}
       {isFree && (
         <div className="flex items-start gap-3 px-4 py-3 rounded-xl border border-amber-200 bg-amber-50 dark:bg-amber-950/20 dark:border-amber-800">
@@ -106,7 +107,7 @@ export default function ClientesPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Clientes</h1>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-muted-foreground">
             {items.length} clientes
             {totalDeuda > 0 && <span className="text-red-500 ml-2">· Deuda total: {fmt(totalDeuda)}</span>}
           </p>
@@ -124,44 +125,52 @@ export default function ClientesPage() {
 
       <div className="flex gap-3 flex-wrap items-center">
         <div className="relative flex-1 min-w-48">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
           <Input placeholder="Buscar por nombre, teléfono…" className="pl-8" value={q} onChange={e => setQ(e.target.value)} />
         </div>
-        <label className="flex items-center gap-2 text-sm text-slate-600 cursor-pointer">
+        <label className="flex items-center gap-2 text-sm text-muted-foreground cursor-pointer">
           <Switch checked={soloDeuda} onCheckedChange={setSoloDeuda} />
           Solo con deuda
         </label>
       </div>
 
-      <Card>
+      <Card className="vs-panel-card">
         <CardContent className="p-0">
-          {loading ? <p className="px-4 py-8 text-sm text-slate-400 text-center">Cargando…</p> :
-           filtered.length === 0 ? <p className="px-4 py-8 text-sm text-slate-400 text-center">Sin resultados.</p> : (
+          {loading ? <LoadingState /> :
+           filtered.length === 0 ? (
+            <EmptyState
+              icon={Users}
+              title={q || soloDeuda ? "Sin resultados" : "Sin clientes"}
+              description={q || soloDeuda
+                ? "No hay clientes que coincidan con la búsqueda."
+                : "Todavía no hay clientes registrados. Podés agregarlos desde la app de escritorio."}
+            />
+          ) : (
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b text-xs text-slate-400">
-                  <th className="text-left px-4 py-2">Nombre</th>
-                  <th className="text-left px-4 py-2">Teléfono</th>
-                  <th className="text-left px-4 py-2">DNI</th>
-                  <th className="text-right px-4 py-2">Deuda</th>
-                  <th className="text-left px-4 py-2"></th>
+                <tr className="border-b text-xs text-muted-foreground">
+                  <th className="text-left px-4 py-3">Nombre</th>
+                  <th className="text-left px-4 py-3">Teléfono</th>
+                  <th className="text-left px-4 py-3">DNI</th>
+                  <th className="text-right px-4 py-3">Deuda</th>
+                  <th className="text-left px-4 py-3"></th>
                 </tr>
               </thead>
               <tbody>
                 {filtered.map(c => (
-                  <tr key={c.id} className="border-b last:border-0 hover:bg-white/5">
-                    <td className="px-4 py-2.5">
+                  <tr key={c.id} className="border-b last:border-0 vs-table-row">
+                    <td className="px-4 py-3">
                       <p className="font-medium text-foreground">{c.nombre}</p>
-                      {c.email && <p className="text-xs text-slate-400">{c.email}</p>}
+                      {c.email && <p className="text-xs text-muted-foreground">{c.email}</p>}
                     </td>
-                    <td className="px-4 py-2.5 text-slate-500">{c.telefono ?? "—"}</td>
-                    <td className="px-4 py-2.5 font-mono text-xs text-slate-400">{c.dni ?? "—"}</td>
-                    <td className="px-4 py-2.5 text-right">
+                    <td className="px-4 py-3 text-muted-foreground">{c.telefono ?? "—"}</td>
+                    <td className="px-4 py-3 font-mono text-xs text-muted-foreground">{c.dni ?? "—"}</td>
+                    <td className="px-4 py-3 text-right">
                       {c.deuda > 0
                         ? <Badge variant="destructive">{fmt(c.deuda)}</Badge>
-                        : <span className="text-slate-300 text-xs">$0</span>}
+                        : <span className="text-muted-foreground text-xs">$0</span>}
                     </td>
-                    <td className="px-4 py-2.5">
+                    <td className="px-4 py-3">
                       <div className="flex gap-1">
                         <Button variant="ghost" size="sm" className="h-7 px-2" onClick={() => openEdit(c)}><Pencil size={12} /></Button>
                         <Button variant="ghost" size="sm" className="h-7 px-2 text-red-500" onClick={() => handleDelete(c)}><Trash2 size={12} /></Button>

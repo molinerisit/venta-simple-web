@@ -9,9 +9,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Plus, Search, RefreshCw, Pencil, Trash2, Lock, Zap } from "lucide-react";
+import { Plus, Search, RefreshCw, Pencil, Trash2, Lock, Zap, Truck } from "lucide-react";
 import { getSuscripcionEstado } from "@/lib/api";
 import Link from "next/link";
+import { EmptyState, LoadingState } from "@/components/panel/EmptyState";
 
 const EMPTY: ProveedorCreate = { nombre: "", email: "", telefono: "", direccion: "", cuit: "", notas: "" };
 
@@ -74,7 +75,7 @@ export default function ProveedoresPage() {
   const set = (k: keyof ProveedorCreate, v: string) => setForm(f => ({ ...f, [k]: v }));
 
   return (
-    <div className="space-y-5 max-w-5xl">
+    <div className="space-y-6 max-w-5xl">
       {/* Banner plan FREE */}
       {isFree && (
         <div className="flex items-start gap-3 px-4 py-3 rounded-xl border border-amber-200 bg-amber-50 dark:bg-amber-950/20 dark:border-amber-800">
@@ -98,7 +99,7 @@ export default function ProveedoresPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Proveedores</h1>
-          <p className="text-sm text-slate-500">{items.length} proveedores</p>
+          <p className="text-sm text-muted-foreground">{items.length} proveedores</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" onClick={load} disabled={loading}>
@@ -112,35 +113,43 @@ export default function ProveedoresPage() {
       </div>
 
       <div className="relative">
-        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
         <Input placeholder="Buscar proveedor…" className="pl-8" value={q} onChange={e => setQ(e.target.value)} />
       </div>
 
-      <Card>
+      <Card className="vs-panel-card">
         <CardContent className="p-0">
-          {loading ? <p className="px-4 py-8 text-sm text-slate-400 text-center">Cargando…</p> :
-           filtered.length === 0 ? <p className="px-4 py-8 text-sm text-slate-400 text-center">Sin resultados.</p> : (
+          {loading ? <LoadingState /> :
+           filtered.length === 0 ? (
+            <EmptyState
+              icon={Truck}
+              title={q ? "Sin resultados" : "Sin proveedores"}
+              description={q
+                ? "No hay proveedores que coincidan con la búsqueda."
+                : "Todavía no hay proveedores registrados. Podés agregarlos desde la app de escritorio."}
+            />
+          ) : (
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b text-xs text-slate-400">
-                  <th className="text-left px-4 py-2">Nombre</th>
-                  <th className="text-left px-4 py-2">Teléfono</th>
-                  <th className="text-left px-4 py-2">Email</th>
-                  <th className="text-left px-4 py-2">CUIT</th>
-                  <th className="text-left px-4 py-2"></th>
+                <tr className="border-b text-xs text-muted-foreground">
+                  <th className="text-left px-4 py-3">Nombre</th>
+                  <th className="text-left px-4 py-3">Teléfono</th>
+                  <th className="text-left px-4 py-3">Email</th>
+                  <th className="text-left px-4 py-3">CUIT</th>
+                  <th className="text-left px-4 py-3"></th>
                 </tr>
               </thead>
               <tbody>
                 {filtered.map(p => (
-                  <tr key={p.id} className="border-b last:border-0 hover:bg-white/5">
-                    <td className="px-4 py-2.5">
+                  <tr key={p.id} className="border-b last:border-0 vs-table-row">
+                    <td className="px-4 py-3">
                       <p className="font-medium text-foreground">{p.nombre}</p>
-                      {p.direccion && <p className="text-xs text-slate-400">{p.direccion}</p>}
+                      {p.direccion && <p className="text-xs text-muted-foreground">{p.direccion}</p>}
                     </td>
-                    <td className="px-4 py-2.5 text-slate-500">{p.telefono ?? "—"}</td>
-                    <td className="px-4 py-2.5 text-slate-500">{p.email ?? "—"}</td>
-                    <td className="px-4 py-2.5 font-mono text-xs text-slate-400">{p.cuit ?? "—"}</td>
-                    <td className="px-4 py-2.5">
+                    <td className="px-4 py-3 text-muted-foreground">{p.telefono ?? "—"}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{p.email ?? "—"}</td>
+                    <td className="px-4 py-3 font-mono text-xs text-muted-foreground">{p.cuit ?? "—"}</td>
+                    <td className="px-4 py-3">
                       <div className="flex gap-1">
                         <Button variant="ghost" size="sm" className="h-7 px-2" onClick={() => openEdit(p)}><Pencil size={12} /></Button>
                         <Button variant="ghost" size="sm" className="h-7 px-2 text-red-500" onClick={() => handleDelete(p)}><Trash2 size={12} /></Button>

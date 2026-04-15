@@ -9,7 +9,6 @@ import {
   LayoutDashboard, Monitor, Package, Truck, Users, ShoppingCart,
   BarChart2, Key, CreditCard, Shield, LogOut, Sun, Moon, Zap,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 
 const OWNER_NAV = [
@@ -45,8 +44,8 @@ export default function Sidebar() {
   const router   = useRouter();
   const { theme, toggle } = useTheme();
 
-  const [user,  setUser]  = useState<{ nombre: string; rol: string } | null>(null);
-  const [plan,  setPlan]  = useState<string>("FREE");
+  const [user,     setUser]     = useState<{ nombre: string; rol: string } | null>(null);
+  const [plan,     setPlan]     = useState<string>("FREE");
   const [daysLeft, setDaysLeft] = useState<number | null>(null);
 
   useEffect(() => {
@@ -82,76 +81,110 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="w-56 shrink-0 flex flex-col h-full" style={{
+    <aside style={{
+      width: 232,
+      flexShrink: 0,
+      display: "flex",
+      flexDirection: "column",
+      height: "100%",
       background: "var(--sidebar)",
       borderRight: "1px solid var(--sidebar-border)",
     }}>
 
-      {/* Logo */}
-      <div className="flex items-center gap-2.5 px-4 py-4" style={{ borderBottom: "1px solid var(--sidebar-border)" }}>
+      {/* ── Logo / perfil ── */}
+      <div style={{
+        display: "flex", alignItems: "center", gap: 10,
+        padding: "18px 16px 16px",
+        borderBottom: "1px solid var(--sidebar-border)",
+      }}>
         <div style={{
-          width: 32, height: 32, borderRadius: 9,
+          width: 34, height: 34, borderRadius: 10,
           background: "#6d5dfc",
           display: "grid", placeItems: "center",
-          fontWeight: 900, fontSize: 13, color: "#fff", flexShrink: 0,
+          fontWeight: 900, fontSize: 13, color: "#fff",
+          flexShrink: 0,
+          boxShadow: "0 2px 8px rgba(109,93,252,.35)",
         }}>VS</div>
-        <div className="min-w-0">
-          <p className="text-sm font-semibold leading-none truncate" style={{ color: "var(--sidebar-foreground)" }}>
+        <div style={{ minWidth: 0 }}>
+          <p style={{
+            fontSize: 13, fontWeight: 700, lineHeight: 1.2,
+            color: "var(--sidebar-foreground)",
+            whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+            letterSpacing: "-0.01em",
+          }}>
             {user?.nombre ?? "Panel"}
           </p>
-          <p className="text-xs mt-0.5" style={{ color: "var(--vs-muted)" }}>
+          <p style={{ fontSize: 11, color: "var(--vs-muted)", marginTop: 1 }}>
             {isSuperAdmin ? "Superadmin" : "Mi negocio"}
           </p>
         </div>
       </div>
 
-      {/* Plan + trial (solo owners) */}
+      {/* ── Plan badge (solo owners) ── */}
       {!isSuperAdmin && (
-        <div className="px-3 pt-3 pb-1">
+        <div style={{ padding: "12px 12px 4px" }}>
           {plan === "FREE" ? (
-            <Link href="/cuenta" style={{ textDecoration: "none" }}>
+            <Link href="/cuenta" style={{ textDecoration: "none", display: "block" }}>
               <div style={{
-                padding: "9px 12px", borderRadius: 10,
+                padding: "10px 12px", borderRadius: 10,
                 background: isDark ? "rgba(239,68,68,.08)" : "#FEF2F2",
                 border: `1px solid ${isDark ? "rgba(239,68,68,.2)" : "#FECACA"}`,
+                cursor: "pointer",
               }}>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
-                  <span style={{ fontSize: 11, fontWeight: 700, color: "#9CA3AF", letterSpacing: "0.05em" }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 5 }}>
+                  <span style={{ fontSize: 10, fontWeight: 800, color: "#9CA3AF", letterSpacing: "0.06em" }}>
                     PLAN GRATUITO
                   </span>
-                  <span style={{ fontSize: 10, fontWeight: 700, color: "#EF4444" }}>
-                    {daysLeft !== null ? `${daysLeft}d` : "—"}
-                  </span>
+                  {daysLeft !== null && (
+                    <span style={{
+                      fontSize: 10, fontWeight: 700,
+                      color: daysLeft <= 5 ? "#EF4444" : daysLeft <= 10 ? "#F59E0B" : "#6d5dfc",
+                    }}>
+                      {daysLeft}d
+                    </span>
+                  )}
                 </div>
                 {daysLeft !== null && (
                   <>
-                    {/* Barra de progreso */}
-                    <div style={{ height: 4, borderRadius: 99, background: isDark ? "rgba(255,255,255,.1)" : "#FEE2E2", marginBottom: 5, overflow: "hidden" }}>
+                    <div style={{ height: 3, borderRadius: 99, background: isDark ? "rgba(255,255,255,.08)" : "#FEE2E2", marginBottom: 5, overflow: "hidden" }}>
                       <div style={{
                         height: "100%", borderRadius: 99,
                         width: `${Math.round((daysLeft / FREE_TRIAL_DAYS) * 100)}%`,
                         background: daysLeft <= 5 ? "#EF4444" : daysLeft <= 10 ? "#F59E0B" : "#6d5dfc",
-                        transition: "width .3s",
+                        transition: "width .4s",
                       }} />
                     </div>
-                    <p style={{ fontSize: 10, color: "#B91C1C", margin: 0, lineHeight: 1.4 }}>
+                    <p style={{ fontSize: 10, color: isDark ? "#FCA5A5" : "#B91C1C", margin: 0, lineHeight: 1.4 }}>
                       {daysLeft === 0
-                        ? "Prueba vencida · Upgradeá para continuar"
-                        : `${daysLeft} días de prueba restantes`}
+                        ? "Prueba vencida · Upgradeá"
+                        : `${daysLeft} días restantes`}
                     </p>
                   </>
                 )}
-                <div style={{ display: "flex", alignItems: "center", gap: 4, marginTop: 6 }}>
-                  <Zap size={10} color="#6d5dfc" />
-                  <span style={{ fontSize: 10, fontWeight: 600, color: "#6d5dfc" }}>Upgradear →</span>
+                <div style={{ display: "flex", alignItems: "center", gap: 4, marginTop: 7 }}>
+                  <Zap size={9} color="#6d5dfc" />
+                  <span style={{ fontSize: 10, fontWeight: 700, color: "#6d5dfc" }}>Upgradear plan →</span>
                 </div>
               </div>
             </Link>
           ) : (
-            <div style={{ padding: "7px 12px", borderRadius: 10, background: isDark ? "rgba(109,93,252,.1)" : "#F0EFFE", border: "1px solid rgba(109,93,252,.2)" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                <span style={{ width: 6, height: 6, borderRadius: "50%", background: planColor[plan] ?? "#6d5dfc", display: "inline-block", flexShrink: 0 }} />
-                <span style={{ fontSize: 11, fontWeight: 700, color: planColor[plan] ?? "#6d5dfc", letterSpacing: "0.04em" }}>
+            <div style={{
+              padding: "8px 12px", borderRadius: 10,
+              background: isDark ? "rgba(109,93,252,.1)" : "rgba(109,93,252,.07)",
+              border: "1px solid rgba(109,93,252,.18)",
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                <span style={{
+                  width: 7, height: 7, borderRadius: "50%",
+                  background: planColor[plan] ?? "#6d5dfc",
+                  display: "inline-block", flexShrink: 0,
+                  boxShadow: `0 0 0 2px ${(planColor[plan] ?? "#6d5dfc")}33`,
+                }} />
+                <span style={{
+                  fontSize: 11, fontWeight: 700,
+                  color: planColor[plan] ?? "#6d5dfc",
+                  letterSpacing: "0.04em",
+                }}>
                   {planLabel[plan] ?? plan}
                 </span>
               </div>
@@ -160,8 +193,8 @@ export default function Sidebar() {
         </div>
       )}
 
-      {/* Nav */}
-      <nav className="flex-1 px-3 py-2 space-y-0.5 overflow-y-auto">
+      {/* ── Nav ── */}
+      <nav style={{ flex: 1, padding: "8px 10px", overflowY: "auto", display: "flex", flexDirection: "column", gap: 1 }}>
         {nav.map(({ href, label, icon: Icon }) => {
           const active = pathname === href || (href !== "/dashboard" && pathname.startsWith(href + "/"));
           const isLocked = plan === "FREE" && !isSuperAdmin &&
@@ -170,19 +203,38 @@ export default function Sidebar() {
             <Link
               key={href}
               href={href}
-              className={cn("flex items-center gap-2.5 px-3 py-2 rounded-md text-sm font-medium transition-colors")}
-              style={active ? {
-                background: isDark ? "rgba(109,93,252,.18)" : "rgba(109,93,252,.10)",
-                color: "#6d5dfc",
-              } : {
-                color: "var(--sidebar-foreground)",
-                opacity: isLocked ? 0.45 : 0.75,
+              style={{
+                display: "flex", alignItems: "center", gap: 9,
+                padding: "9px 10px",
+                borderRadius: 8,
+                fontSize: 13,
+                fontWeight: active ? 600 : 500,
+                textDecoration: "none",
+                transition: "background .12s, color .12s",
+                color: active ? "#6d5dfc" : "var(--sidebar-foreground)",
+                background: active
+                  ? (isDark ? "rgba(109,93,252,.16)" : "rgba(109,93,252,.09)")
+                  : "transparent",
+                opacity: isLocked && !active ? 0.45 : 1,
+                position: "relative",
               }}
             >
-              <Icon size={15} />
-              <span className="flex-1">{label}</span>
+              {active && (
+                <span style={{
+                  position: "absolute", left: 0, top: "50%",
+                  transform: "translateY(-50%)",
+                  width: 3, height: 18, borderRadius: "0 3px 3px 0",
+                  background: "#6d5dfc",
+                }} />
+              )}
+              <Icon size={15} strokeWidth={active ? 2.2 : 1.8} />
+              <span style={{ flex: 1 }}>{label}</span>
               {isLocked && (
-                <span style={{ fontSize: 9, padding: "1px 5px", borderRadius: 99, background: "rgba(109,93,252,.15)", color: "#6d5dfc", fontWeight: 700, letterSpacing: "0.04em" }}>
+                <span style={{
+                  fontSize: 9, padding: "2px 6px", borderRadius: 99,
+                  background: "rgba(109,93,252,.14)",
+                  color: "#6d5dfc", fontWeight: 800, letterSpacing: "0.05em",
+                }}>
                   PRO
                 </span>
               )}
@@ -193,8 +245,11 @@ export default function Sidebar() {
         {/* Vista Tenant (superadmin) */}
         {isSuperAdmin && (
           <>
-            <div className="pt-4 pb-1 px-3">
-              <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--vs-muted)", opacity: 0.6 }}>
+            <div style={{ padding: "16px 10px 6px" }}>
+              <p style={{
+                fontSize: 10, fontWeight: 800, textTransform: "uppercase",
+                letterSpacing: "0.08em", color: "var(--vs-muted)", opacity: 0.55,
+              }}>
                 Vista Tenant
               </p>
             </div>
@@ -202,10 +257,15 @@ export default function Sidebar() {
               <Link
                 key={`owner-${href}`}
                 href={`${href}?superadmin=1`}
-                className="flex items-center gap-2.5 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                style={{ color: "var(--vs-muted)", opacity: 0.65 }}
+                style={{
+                  display: "flex", alignItems: "center", gap: 9,
+                  padding: "8px 10px", borderRadius: 8,
+                  fontSize: 13, fontWeight: 500,
+                  textDecoration: "none",
+                  color: "var(--vs-muted)", opacity: 0.65,
+                }}
               >
-                <Icon size={14} />
+                <Icon size={14} strokeWidth={1.7} />
                 {label}
               </Link>
             ))}
@@ -213,28 +273,39 @@ export default function Sidebar() {
         )}
       </nav>
 
-      {/* Footer: toggle tema + logout */}
-      <div className="px-3 pb-4 pt-2" style={{ borderTop: "1px solid var(--sidebar-border)" }}>
-        {/* Toggle tema */}
+      {/* ── Footer ── */}
+      <div style={{
+        padding: "10px 10px 16px",
+        borderTop: "1px solid var(--sidebar-border)",
+        display: "flex", flexDirection: "column", gap: 1,
+      }}>
         <button
           onClick={toggle}
-          className="flex items-center gap-2.5 px-3 py-2 rounded-md text-sm font-medium w-full transition-colors mb-1"
-          style={{ color: "var(--vs-muted)" }}
           title={isDark ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
+          style={{
+            display: "flex", alignItems: "center", gap: 9,
+            padding: "9px 10px", borderRadius: 8,
+            fontSize: 13, fontWeight: 500, width: "100%",
+            background: "none", border: "none", cursor: "pointer",
+            color: "var(--vs-muted)",
+            transition: "background .1s",
+          }}
         >
-          {isDark
-            ? <><Sun size={15} /><span>Modo claro</span></>
-            : <><Moon size={15} /><span>Modo oscuro</span></>
-          }
+          {isDark ? <><Sun size={15} strokeWidth={1.8} /><span>Modo claro</span></> : <><Moon size={15} strokeWidth={1.8} /><span>Modo oscuro</span></>}
         </button>
 
-        {/* Logout */}
         <button
           onClick={logout}
-          className="flex items-center gap-2.5 px-3 py-2 rounded-md text-sm font-medium w-full transition-colors"
-          style={{ color: "var(--vs-muted)" }}
+          style={{
+            display: "flex", alignItems: "center", gap: 9,
+            padding: "9px 10px", borderRadius: 8,
+            fontSize: 13, fontWeight: 500, width: "100%",
+            background: "none", border: "none", cursor: "pointer",
+            color: "var(--vs-muted)",
+            transition: "background .1s",
+          }}
         >
-          <LogOut size={15} />
+          <LogOut size={15} strokeWidth={1.8} />
           Cerrar sesión
         </button>
       </div>
