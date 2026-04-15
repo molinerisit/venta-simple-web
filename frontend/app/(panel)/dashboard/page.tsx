@@ -1,12 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getMetricas, getAdminStats, type Metricas, type AdminStats } from "@/lib/api";
+import { getMetricas, getAdminStats, getLicencia, type Metricas, type AdminStats } from "@/lib/api";
 import { getUser } from "@/lib/auth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { TrendingUp, Users, Package, ShoppingCart, Shield, Wifi, AlertCircle } from "lucide-react";
+import {
+  TrendingUp, Users, Package, ShoppingCart, Shield, Wifi,
+  AlertCircle, Download, Monitor, CheckCircle2, ArrowRight,
+} from "lucide-react";
 import {
   AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer,
 } from "recharts";
@@ -32,9 +36,128 @@ function StatCard({ title, value, sub, icon: Icon, color = "text-foreground" }: 
   );
 }
 
+// ── Onboarding — sin instancia desktop vinculada ──────────────────────────────
+
+const PASOS = [
+  {
+    n: 1,
+    titulo: "Cuenta creada y verificada",
+    desc: "Ya tenés acceso al panel web.",
+    done: true,
+  },
+  {
+    n: 2,
+    titulo: "Descargá la app de escritorio",
+    desc: "La app funciona sin internet y sincroniza automáticamente.",
+    action: { label: "Descargar Venta Simple", href: "/descargar" },
+    done: false,
+  },
+  {
+    n: 3,
+    titulo: "Activá la app desde Mi Cuenta",
+    desc: 'En Mi Cuenta → hacé clic en "Activar en desktop". La app se configura sola.',
+    action: { label: "Ir a Mi Cuenta", href: "/cuenta" },
+    done: false,
+  },
+  {
+    n: 4,
+    titulo: "¡Listo! Empezá a vender",
+    desc: "Tus ventas y stock se van a sincronizar automáticamente acá.",
+    done: false,
+  },
+];
+
+function OnboardingPanel({ licenciaActiva }: { licenciaActiva: boolean }) {
+  return (
+    <div className="space-y-6 max-w-2xl">
+      {/* Hero */}
+      <div className="rounded-2xl p-6" style={{
+        background: "linear-gradient(135deg, rgba(109,93,252,.12), rgba(81,198,255,.06))",
+        border: "1px solid rgba(109,93,252,.2)",
+      }}>
+        <div style={{
+          width: 48, height: 48, borderRadius: 14,
+          background: "linear-gradient(135deg, #6d5dfc, #51c6ff)",
+          display: "grid", placeItems: "center", marginBottom: 16,
+        }}>
+          <Monitor size={24} color="#fff" />
+        </div>
+        <h2 className="text-xl font-bold text-foreground mb-1">
+          Configurá tu sistema de ventas
+        </h2>
+        <p className="text-sm text-slate-400 leading-relaxed">
+          Seguí estos pasos para instalar la app de escritorio y empezar a registrar ventas.
+          Funciona sin internet y se sincroniza automáticamente cuando hay conexión.
+        </p>
+      </div>
+
+      {/* Pasos */}
+      <div className="space-y-3">
+        {PASOS.map((paso, i) => {
+          const isLast = i === PASOS.length - 1;
+          const unlocked = paso.done || i <= (licenciaActiva ? 2 : 1);
+          return (
+            <div key={paso.n} className="flex gap-4 items-start" style={{
+              background: "#16181f",
+              border: "1px solid rgba(255,255,255,.07)",
+              borderRadius: 14,
+              padding: "16px 20px",
+              opacity: isLast && !licenciaActiva ? 0.5 : 1,
+            }}>
+              {/* Número / check */}
+              <div style={{
+                width: 32, height: 32, borderRadius: "50%", flexShrink: 0,
+                background: paso.done
+                  ? "rgba(34,197,94,.15)"
+                  : "rgba(109,93,252,.15)",
+                border: paso.done
+                  ? "1px solid rgba(34,197,94,.3)"
+                  : "1px solid rgba(109,93,252,.3)",
+                display: "grid", placeItems: "center",
+              }}>
+                {paso.done
+                  ? <CheckCircle2 size={16} style={{ color: "#86efac" }} />
+                  : <span style={{ fontWeight: 800, fontSize: 13, color: "#b3a7ff" }}>{paso.n}</span>
+                }
+              </div>
+
+              {/* Contenido */}
+              <div className="flex-1 min-w-0">
+                <p className="font-semibold text-foreground text-sm mb-0.5">{paso.titulo}</p>
+                <p className="text-xs text-slate-400 leading-relaxed">{paso.desc}</p>
+                {paso.action && unlocked && (
+                  <Link href={paso.action.href} className="inline-flex items-center gap-1 mt-2">
+                    <Button size="sm" variant={i === 1 ? "default" : "outline"} className="h-7 text-xs gap-1.5">
+                      {i === 1 && <Download size={12} />}
+                      {i === 2 && <Monitor size={12} />}
+                      {paso.action.label}
+                      <ArrowRight size={11} />
+                    </Button>
+                  </Link>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* CTA secundario */}
+      <p className="text-xs text-slate-500 text-center">
+        ¿Necesitás ayuda?{" "}
+        <Link href="/descargar" className="underline" style={{ color: "#b3a7ff" }}>
+          Ver guía de instalación
+        </Link>
+      </p>
+    </div>
+  );
+}
+
+// ── Dashboard principal ───────────────────────────────────────────────────────
+
 export default function DashboardPage() {
   const [metricas, setMetricas] = useState<Metricas | null>(null);
   const [adminStats, setAdminStats] = useState<AdminStats | null>(null);
+  const [licenciaActiva, setLicenciaActiva] = useState(false);
   const [error, setError] = useState(false);
   const user = typeof window !== "undefined" ? getUser() : null;
   const isSuperAdmin = user?.rol === "superadmin";
@@ -45,8 +168,11 @@ export default function DashboardPage() {
         .then(r => setAdminStats(r.data))
         .catch(() => setError(true));
     } else {
-      getMetricas(30)
-        .then(r => setMetricas(r.data))
+      Promise.all([getMetricas(30), getLicencia()])
+        .then(([mRes, lRes]) => {
+          setMetricas(mRes.data);
+          setLicenciaActiva(!!lRes.data.licencia);
+        })
         .catch(() => setError(true));
     }
   }, [isSuperAdmin]);
@@ -56,12 +182,12 @@ export default function DashboardPage() {
       <div className="flex flex-col items-center justify-center h-64 gap-3 text-slate-500">
         <AlertCircle size={32} />
         <p className="text-sm">No se pudo conectar con el backend.</p>
-        <p className="text-xs text-slate-400">Verificá que la variable NEXT_PUBLIC_API_URL apunte al servidor correcto.</p>
+        <p className="text-xs text-slate-400">Verificá que NEXT_PUBLIC_API_URL apunte al servidor correcto.</p>
       </div>
     );
   }
 
-  // ── Dashboard Superadmin ──────────────────────────────────────
+  // ── Dashboard Superadmin ──────────────────────────────────────────────────
   if (isSuperAdmin) {
     return (
       <div className="space-y-6 max-w-5xl">
@@ -117,16 +243,28 @@ export default function DashboardPage() {
     );
   }
 
-  // ── Dashboard Owner ───────────────────────────────────────────
+  // ── Dashboard Owner ───────────────────────────────────────────────────────
+  const sinDatos =
+    metricas &&
+    metricas.ventas.cantidad === 0 &&
+    (metricas.totales?.total_productos ?? 0) === 0;
+
   return (
     <div className="space-y-6 max-w-5xl">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
-        <p className="text-sm text-slate-500 mt-0.5">Resumen de los últimos 30 días</p>
+        <h1 className="text-2xl font-bold text-foreground">
+          {sinDatos ? `Hola, ${user?.nombre ?? ""}` : "Dashboard"}
+        </h1>
+        <p className="text-sm text-slate-500 mt-0.5">
+          {sinDatos ? "Bienvenido a Venta Simple" : "Resumen de los últimos 30 días"}
+        </p>
       </div>
 
+      {/* Sin datos → mostrar onboarding */}
       {!metricas ? (
         <p className="text-sm text-slate-400 py-8 text-center">Cargando…</p>
+      ) : sinDatos ? (
+        <OnboardingPanel licenciaActiva={licenciaActiva} />
       ) : (
         <>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -153,7 +291,7 @@ export default function DashboardPage() {
                   </defs>
                   <XAxis dataKey="dia" tick={{ fontSize: 10 }} />
                   <YAxis tick={{ fontSize: 10 }} tickFormatter={v => `$${(v / 1000).toFixed(0)}k`} />
-                  <Tooltip formatter={(v) => typeof v === 'number' ? fmt(v) : ''} />
+                  <Tooltip formatter={(v) => typeof v === "number" ? fmt(v) : ""} />
                   <Area type="monotone" dataKey="total" stroke="#3b82f6" fill="url(#grad)" strokeWidth={2} />
                 </AreaChart>
               </ResponsiveContainer>
