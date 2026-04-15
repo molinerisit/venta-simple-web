@@ -1,23 +1,54 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getUser } from "@/lib/auth";
 import Link from "next/link";
-import { Download, Monitor, Shield, Zap } from "lucide-react";
+import { Download, Monitor, Shield, Zap, Loader2 } from "lucide-react";
 
-// URL del instalador — reemplazar con la URL real cuando esté disponible el .exe
-const DOWNLOAD_URL_WIN: string | null = null; // e.g. "https://releases.ventasimple.com/VentaSimple-Setup.exe"
-const VERSION = "1.0.0";
+const GITHUB_REPO = "molinerisit/venta-simple-pos";
+
+interface Release {
+  version: string;
+  downloadUrl: string | null;
+  publishedAt: string;
+  fileSize: string | null;
+}
+
+async function fetchLatestRelease(): Promise<Release> {
+  const res = await fetch(
+    `https://api.github.com/repos/${GITHUB_REPO}/releases/latest`,
+    { headers: { Accept: "application/vnd.github+json" }, next: { revalidate: 0 } }
+  );
+  if (!res.ok) throw new Error("No hay releases publicados aún");
+  const data = await res.json();
+
+  const asset = (data.assets as { name: string; browser_download_url: string; size: number }[])
+    .find(a => a.name.endsWith(".exe"));
+
+  return {
+    version: data.tag_name?.replace(/^v/, "") ?? "—",
+    downloadUrl: asset?.browser_download_url ?? null,
+    publishedAt: data.published_at ?? "",
+    fileSize: asset ? `${(asset.size / 1024 / 1024).toFixed(0)} MB` : null,
+  };
+}
 
 export default function DescargarPage() {
   const router = useRouter();
+  const [release, setRelease] = useState<Release | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const user = getUser();
     if (!user) {
       router.replace("/login?next=/descargar");
+      return;
     }
+    fetchLatestRelease()
+      .then(setRelease)
+      .catch(() => setRelease({ version: "—", downloadUrl: null, publishedAt: "", fileSize: null }))
+      .finally(() => setLoading(false));
   }, [router]);
 
   const user = typeof window !== "undefined" ? getUser() : null;
@@ -25,7 +56,7 @@ export default function DescargarPage() {
 
   return (
     <div style={{ background: "#0f1117", minHeight: "100vh" }}>
-      {/* Nav mínima */}
+      {/* Nav */}
       <nav style={{ borderBottom: "1px solid rgba(255,255,255,.06)", padding: "0 24px" }}>
         <div style={{ maxWidth: 960, margin: "0 auto", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
@@ -47,9 +78,8 @@ export default function DescargarPage() {
         </div>
       </nav>
 
-      {/* Hero descarga */}
+      {/* Hero */}
       <div style={{ maxWidth: 680, margin: "0 auto", padding: "80px 24px 60px", textAlign: "center" }}>
-        {/* Ícono */}
         <div style={{
           width: 80, height: 80, borderRadius: 22,
           background: "linear-gradient(135deg, #6d5dfc, #51c6ff)",
@@ -63,48 +93,55 @@ export default function DescargarPage() {
           Venta Simple para Windows
         </h1>
         <p style={{ margin: "0 0 36px", fontSize: 16, color: "#a3acbb", lineHeight: 1.6 }}>
-          La app de escritorio para gestionar ventas, stock y clientes sin depender de internet.
+          Gestioná ventas, stock y clientes sin depender de internet.
           Sincronización automática cuando hay conexión.
         </p>
 
-        {/* Botón principal */}
-        {DOWNLOAD_URL_WIN ? (
-          <a
-            href={DOWNLOAD_URL_WIN}
-            download
-            style={{
-              display: "inline-flex", alignItems: "center", gap: 10,
-              padding: "16px 36px", borderRadius: 12, fontWeight: 800, fontSize: 16,
-              background: "linear-gradient(135deg, #6d5dfc, #51c6ff)",
-              color: "#fff", textDecoration: "none",
-              boxShadow: "0 6px 30px rgba(109,93,252,.4)",
-            }}
-          >
-            <Download size={20} />
-            Descargar para Windows
-            <span style={{ fontSize: 11, fontWeight: 600, opacity: 0.75 }}>v{VERSION}</span>
-          </a>
+        {/* Botón de descarga */}
+        {loading ? (
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 10, color: "#5a6070", fontSize: 14 }}>
+            <Loader2 size={18} style={{ animation: "spin 1s linear infinite" }} />
+            Buscando versión más reciente…
+          </div>
+        ) : release?.downloadUrl ? (
+          <>
+            <a
+              href={release.downloadUrl}
+              download
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 10,
+                padding: "16px 36px", borderRadius: 12, fontWeight: 800, fontSize: 16,
+                background: "linear-gradient(135deg, #6d5dfc, #51c6ff)",
+                color: "#fff", textDecoration: "none",
+                boxShadow: "0 6px 30px rgba(109,93,252,.4)",
+              }}
+            >
+              <Download size={20} />
+              Descargar para Windows
+              <span style={{ fontSize: 11, fontWeight: 600, opacity: 0.75 }}>v{release.version}</span>
+            </a>
+            <p style={{ margin: "14px 0 0", fontSize: 12, color: "#5a6070" }}>
+              Windows 10 / 11 · 64-bit
+              {release.fileSize ? ` · ${release.fileSize}` : ""}
+              {release.publishedAt ? ` · Publicado el ${new Date(release.publishedAt).toLocaleDateString("es-AR")}` : ""}
+            </p>
+          </>
         ) : (
-          <div>
+          <>
             <div style={{
               display: "inline-flex", alignItems: "center", gap: 10,
               padding: "16px 36px", borderRadius: 12, fontWeight: 800, fontSize: 16,
-              background: "rgba(109,93,252,.15)", border: "1px solid rgba(109,93,252,.3)",
+              background: "rgba(109,93,252,.12)", border: "1px solid rgba(109,93,252,.25)",
               color: "#6d5dfc", cursor: "not-allowed",
             }}>
               <Download size={20} />
               Descarga disponible próximamente
-              <span style={{ fontSize: 11, fontWeight: 600, opacity: 0.75 }}>v{VERSION}</span>
             </div>
-            <p style={{ margin: "12px 0 0", fontSize: 12, color: "#5a6070" }}>
+            <p style={{ margin: "14px 0 0", fontSize: 12, color: "#5a6070" }}>
               El instalador estará disponible en breve. Te avisaremos por email.
             </p>
-          </div>
+          </>
         )}
-
-        <p style={{ margin: "14px 0 0", fontSize: 12, color: "#5a6070" }}>
-          Windows 10 / 11 · 64-bit · ~85 MB
-        </p>
       </div>
 
       {/* Features */}
@@ -123,6 +160,10 @@ export default function DescargarPage() {
           ))}
         </div>
       </div>
+
+      <style>{`
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+      `}</style>
     </div>
   );
 }
