@@ -69,8 +69,8 @@ function RegistroForm() {
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="flex items-center justify-center mb-8">
-          <Image src="/brand/logotexto.png" alt="Venta Simple" width={160} height={44}
-            style={{ height: 34, width: "auto", objectFit: "contain" }} priority />
+          <Image src="/brand/texto.png" alt="Venta Simple" width={320} height={100}
+            style={{ height: 56, width: "auto", objectFit: "contain" }} priority />
         </div>
 
         <Card>
@@ -96,7 +96,7 @@ function RegistroForm() {
                     border: "1px solid rgba(30,58,138,.25)",
                     display: "grid", placeItems: "center",
                   }}>
-                    <CheckCircle size={24} style={{ color: "#b3a7ff" }} />
+                    <CheckCircle size={24} style={{ color: "#1E3A8A" }} />
                   </div>
                   <p className="text-sm text-center" style={{ color: "#a3acbb" }}>
                     Revisá tu bandeja de entrada y hacé clic en el link para activar tu cuenta.
@@ -179,12 +179,12 @@ function RegistroForm() {
         {!done && (
           <p className="text-center text-xs mt-4" style={{ color: "var(--vs-muted)" }}>
             ¿Ya tenés cuenta?{" "}
-            <Link href="/login" style={{ color: "#b3a7ff" }}>Iniciar sesión</Link>
+            <Link href="/login" style={{ color: "#1E3A8A" }}>Iniciar sesión</Link>
           </p>
         )}
         {done && (
           <p className="text-center text-xs mt-4" style={{ color: "var(--vs-muted)" }}>
-            <Link href="/login" style={{ color: "#b3a7ff" }}>← Volver al inicio de sesión</Link>
+            <Link href="/login" style={{ color: "#1E3A8A" }}>← Volver al inicio de sesión</Link>
           </p>
         )}
       </div>

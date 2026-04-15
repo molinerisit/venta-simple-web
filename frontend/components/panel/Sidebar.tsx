@@ -7,7 +7,7 @@ import { getSuscripcionEstado, getLicencia } from "@/lib/api";
 import { useTheme } from "@/components/ThemeProvider";
 import {
   LayoutDashboard, Monitor, Package, Truck, Users, ShoppingCart,
-  BarChart2, Key, CreditCard, Shield, LogOut, Sun, Moon, Zap,
+  BarChart2, Key, CreditCard, Shield, LogOut, Sun, Moon, Zap, Download,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import Image from "next/image";
@@ -20,6 +20,7 @@ const OWNER_NAV = [
   { href: "/clientes",    label: "Clientes",    icon: Users },
   { href: "/ventas",      label: "Ventas",      icon: ShoppingCart },
   { href: "/cuenta",      label: "Mi cuenta",   icon: CreditCard },
+  { href: "/descargar",   label: "Descargas",   icon: Download },
 ];
 
 const ADMIN_NAV = [
@@ -43,8 +44,36 @@ function calcTrialDaysLeft(activadaAt: string | null): number | null {
 const planLabel: Record<string, string> = {
   FREE: "Plan Gratuito", BASIC: "Plan Básico", PRO: "Plan Pro", ENTERPRISE: "Enterprise",
 };
-const planDot: Record<string, string> = {
-  FREE: "#9CA3AF", BASIC: "#1E3A8A", PRO: "#0ea5e9", ENTERPRISE: "#f59e0b",
+
+// ── Paleta del sidebar — light (design system) / dark ─────────────────────────
+const S_LIGHT = {
+  bg:         "#F1F5F9",
+  borderR:    "#E5E7EB",
+  activeBg:   "#DBEAFE",
+  hoverBg:    "#E2E8F0",
+  divider:    "#E5E7EB",
+  text:       "#64748B",
+  textStrong: "#0F172A",
+  textActive: "#1E3A8A",
+  label:      "#94A3B8",
+  iconNormal: "#94A3B8",
+  iconActive: "#1E3A8A",
+  accent:     "#1E3A8A",
+};
+
+const S_DARK = {
+  bg:         "#0D1B38",
+  borderR:    "rgba(0,0,0,.35)",
+  activeBg:   "rgba(255,255,255,.10)",
+  hoverBg:    "rgba(255,255,255,.05)",
+  divider:    "rgba(255,255,255,.07)",
+  text:       "#7A9BC6",
+  textStrong: "#C4D5EC",
+  textActive: "#FFFFFF",
+  label:      "rgba(255,255,255,.28)",
+  iconNormal: "#4D6A90",
+  iconActive: "#FFFFFF",
+  accent:     "#60A5FA",
 };
 
 export default function Sidebar() {
@@ -74,6 +103,7 @@ export default function Sidebar() {
   const isSuperAdmin = user?.rol === "superadmin";
   const nav = isSuperAdmin ? ADMIN_NAV : OWNER_NAV;
   const isDark = theme === "dark";
+  const S = isDark ? S_DARK : S_LIGHT;
 
   function logout() {
     clearToken();
@@ -87,31 +117,32 @@ export default function Sidebar() {
       display: "flex",
       flexDirection: "column",
       height: "100%",
-      background: isDark ? "#0A1628" : "#FFFFFF",
-      borderRight: `1px solid ${isDark ? "rgba(255,255,255,.07)" : "#E5E7EB"}`,
+      background: S.bg,
+      borderRight: `1px solid ${S.borderR}`,
     }}>
 
-      {/* ── Logo ── */}
-      <div style={{
-        padding: "20px 18px 16px",
-        borderBottom: `1px solid ${isDark ? "rgba(255,255,255,.06)" : "#F1F5F9"}`,
-      }}>
-        <Image
-          src="/brand/logotexto-nb.png"
-          alt="Venta Simple"
-          width={2760}
-          height={1504}
-          style={{ objectFit: "contain", objectPosition: "left", height: 56, width: "auto", maxWidth: "100%" }}
-          priority
-        />
+      {/* ── Logo + usuario ── */}
+      <div style={{ padding: "22px 20px 16px" }}>
+        <div>
+          <Image
+            src="/brand/texto.png"
+            alt="VentaSimple"
+            width={320} height={100}
+            style={{
+              width: "100%", height: "auto", objectFit: "contain", objectPosition: "left",
+              filter: isDark ? "brightness(0) invert(1) opacity(.85)" : "none",
+            }}
+            priority
+          />
+        </div>
 
-        {/* User row */}
-        <div style={{ display: "flex", alignItems: "center", gap: 9, marginTop: 14 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 9, marginTop: 16 }}>
           <div style={{
-            width: 30, height: 30, borderRadius: 8, flexShrink: 0,
+            width: 32, height: 32, borderRadius: 9, flexShrink: 0,
             background: "#1E3A8A",
+            border: "1.5px solid rgba(96,165,250,.30)",
             display: "grid", placeItems: "center",
-            fontSize: 12, fontWeight: 800, color: "#fff",
+            fontSize: 13, fontWeight: 800, color: "#fff",
             letterSpacing: "0.01em",
           }}>
             {(user?.nombre ?? "U")[0].toUpperCase()}
@@ -119,12 +150,13 @@ export default function Sidebar() {
           <div style={{ minWidth: 0, flex: 1 }}>
             <p style={{
               fontSize: 13, fontWeight: 600, lineHeight: 1.2,
-              color: isDark ? "#E2E8F0" : "#0F172A",
+              color: S.textStrong,
               whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+              margin: 0,
             }}>
               {user?.nombre ?? "Panel"}
             </p>
-            <p style={{ fontSize: 11, color: isDark ? "#64748B" : "#94A3B8", marginTop: 2 }}>
+            <p style={{ fontSize: 11, color: S.text, marginTop: 2, margin: 0 }}>
               {isSuperAdmin ? "Superadmin" : "Propietario"}
             </p>
           </div>
@@ -133,18 +165,18 @@ export default function Sidebar() {
 
       {/* ── Plan badge ── */}
       {!isSuperAdmin && (
-        <div style={{ padding: "12px 12px 4px" }}>
+        <div style={{ padding: "0 12px 10px" }}>
           {plan === "FREE" ? (
             <Link href="/cuenta" style={{ textDecoration: "none", display: "block" }}>
               <div style={{
-                padding: "11px 13px", borderRadius: 10,
-                background: isDark ? "rgba(249,115,22,.10)" : "#FFF7ED",
-                border: `1px solid ${isDark ? "rgba(249,115,22,.22)" : "#FED7AA"}`,
+                padding: "10px 12px", borderRadius: 10,
+                background: isDark ? "rgba(249,115,22,.12)" : "#FFF7ED",
+                border: isDark ? "1px solid rgba(249,115,22,.25)" : "1px solid #FED7AA",
                 cursor: "pointer",
               }}>
                 {daysLeft !== null && (
                   <>
-                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 7 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
                       <span style={{ fontSize: 10, fontWeight: 800, color: "#F97316", letterSpacing: "0.08em", textTransform: "uppercase" }}>
                         Prueba gratuita
                       </span>
@@ -152,7 +184,7 @@ export default function Sidebar() {
                         {daysLeft}d
                       </span>
                     </div>
-                    <div style={{ height: 3, borderRadius: 99, background: isDark ? "rgba(249,115,22,.15)" : "#FED7AA", marginBottom: 8, overflow: "hidden" }}>
+                    <div style={{ height: 3, borderRadius: 99, background: "rgba(249,115,22,.18)", marginBottom: 7, overflow: "hidden" }}>
                       <div style={{
                         height: "100%", borderRadius: 99,
                         width: `${Math.round((daysLeft / FREE_TRIAL_DAYS) * 100)}%`,
@@ -165,28 +197,24 @@ export default function Sidebar() {
                 <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
                   <Zap size={11} color="#F97316" fill="#F97316" />
                   <span style={{ fontSize: 11, fontWeight: 700, color: "#F97316" }}>
-                    {daysLeft === 0 ? "Prueba vencida · Activar plan" : "Activar plan →"}
+                    {daysLeft === 0 ? "Prueba vencida · Activar" : "Activar plan →"}
                   </span>
                 </div>
               </div>
             </Link>
           ) : (
             <div style={{
-              padding: "8px 12px", borderRadius: 10,
-              background: isDark ? "rgba(30,58,138,.15)" : "#EFF6FF",
-              border: `1px solid ${isDark ? "rgba(30,58,138,.3)" : "#BFDBFE"}`,
+              padding: "7px 11px", borderRadius: 9,
+              background: isDark ? "rgba(96,165,250,.10)" : "#DBEAFE",
+              border: isDark ? "1px solid rgba(96,165,250,.22)" : "1px solid #BFDBFE",
               display: "flex", alignItems: "center", gap: 7,
             }}>
               <span style={{
-                width: 7, height: 7, borderRadius: "50%", flexShrink: 0,
-                background: planDot[plan] ?? "#1E3A8A",
-                boxShadow: `0 0 0 2.5px ${(planDot[plan] ?? "#1E3A8A")}33`,
+                width: 6, height: 6, borderRadius: "50%", flexShrink: 0,
+                background: isDark ? "#60A5FA" : "#1E3A8A",
+                boxShadow: isDark ? "0 0 0 2px rgba(96,165,250,.25)" : "0 0 0 2px rgba(30,58,138,.15)",
               }} />
-              <span style={{
-                fontSize: 11, fontWeight: 700,
-                color: planDot[plan] ?? "#1E3A8A",
-                letterSpacing: "0.03em",
-              }}>
+              <span style={{ fontSize: 11, fontWeight: 700, color: isDark ? "#93C5FD" : "#1E3A8A", letterSpacing: "0.03em" }}>
                 {planLabel[plan] ?? plan}
               </span>
             </div>
@@ -194,15 +222,17 @@ export default function Sidebar() {
         </div>
       )}
 
+      {/* ── Divider ── */}
+      <div style={{ height: 1, background: S.divider, margin: "0 12px 6px" }} />
+
       {/* ── Nav ── */}
-      <nav style={{ flex: 1, padding: "6px 10px", overflowY: "auto", display: "flex", flexDirection: "column", gap: 2 }}>
+      <nav style={{ flex: 1, padding: "4px 10px", overflowY: "auto", display: "flex", flexDirection: "column", gap: 1 }}>
 
         {!isSuperAdmin && (
           <p style={{
             fontSize: 9, fontWeight: 800, textTransform: "uppercase",
-            letterSpacing: "0.12em",
-            color: isDark ? "#334155" : "#CBD5E1",
-            padding: "10px 8px 5px",
+            letterSpacing: "0.12em", color: S.label,
+            padding: "8px 8px 4px", margin: 0,
           }}>
             Navegación
           </p>
@@ -213,41 +243,35 @@ export default function Sidebar() {
           const isLocked = plan === "FREE" && !isSuperAdmin &&
             (href === "/proveedores" || href === "/clientes" || href === "/metricas");
 
-          /* ── Colores según estado ── */
-          const bgColor  = active
-            ? (isDark ? "rgba(59,130,246,.18)" : "#1E3A8A")
-            : "transparent";
-          const txtColor = active
-            ? (isDark ? "#93C5FD" : "#FFFFFF")
-            : (isDark ? "#94A3B8" : "#4B5563");
-          const iconColor = active
-            ? (isDark ? "#93C5FD" : "#FFFFFF")
-            : (isDark ? "#64748B" : "#6B7280");
-
           return (
             <Link
               key={href}
               href={href}
+              className={active ? "" : "vs-sidebar-item"}
               style={{
                 display: "flex", alignItems: "center", gap: 10,
-                padding: "9px 11px",
-                borderRadius: 9,
+                paddingTop: "9px", paddingBottom: "9px",
+                paddingRight: "10px",
+                paddingLeft: active ? "8px" : "10px",
+                borderRadius: 8,
                 fontSize: 13.5,
                 fontWeight: active ? 600 : 500,
                 textDecoration: "none",
-                transition: "background .12s, color .12s",
-                color: txtColor,
-                background: bgColor,
-                opacity: isLocked && !active ? 0.4 : 1,
+                color: active ? S.textActive : S.text,
+                background: active ? S.activeBg : "transparent",
+                borderLeft: `2px solid ${active ? S.accent : "transparent"}`,
+                transition: "background .15s, color .15s",
+                opacity: isLocked && !active ? 0.45 : 1,
               }}
             >
-              <Icon size={15} strokeWidth={active ? 2.2 : 1.8} style={{ color: iconColor, flexShrink: 0 }} />
+              <Icon size={15} strokeWidth={active ? 2.2 : 1.8}
+                style={{ color: active ? S.iconActive : S.iconNormal, flexShrink: 0 }} />
               <span style={{ flex: 1 }}>{label}</span>
               {isLocked && (
                 <span style={{
                   fontSize: 9, padding: "2px 6px", borderRadius: 99,
-                  background: "rgba(249,115,22,.12)",
-                  color: "#F97316", fontWeight: 800, letterSpacing: "0.06em",
+                  background: "rgba(249,115,22,.15)",
+                  color: "#FB923C", fontWeight: 800, letterSpacing: "0.06em",
                 }}>
                   PRO
                 </span>
@@ -259,10 +283,10 @@ export default function Sidebar() {
         {/* Vista Tenant (superadmin) */}
         {isSuperAdmin && (
           <>
-            <div style={{ padding: "16px 8px 5px" }}>
+            <div style={{ padding: "14px 8px 4px" }}>
               <p style={{
                 fontSize: 9, fontWeight: 800, textTransform: "uppercase",
-                letterSpacing: "0.12em", color: isDark ? "#334155" : "#CBD5E1",
+                letterSpacing: "0.12em", color: S.label, margin: 0,
               }}>
                 Vista Tenant
               </p>
@@ -271,15 +295,16 @@ export default function Sidebar() {
               <Link
                 key={`owner-${href}`}
                 href={`${href}?superadmin=1`}
+                className="vs-sidebar-item"
                 style={{
                   display: "flex", alignItems: "center", gap: 10,
-                  padding: "8px 11px", borderRadius: 9,
+                  padding: "8px 10px", borderRadius: 8,
                   fontSize: 13, fontWeight: 500,
                   textDecoration: "none",
-                  color: isDark ? "#475569" : "#9CA3AF",
+                  color: S.text,
                 }}
               >
-                <Icon size={13} strokeWidth={1.7} />
+                <Icon size={13} strokeWidth={1.7} style={{ color: S.iconNormal }} />
                 {label}
               </Link>
             ))}
@@ -289,33 +314,37 @@ export default function Sidebar() {
 
       {/* ── Footer ── */}
       <div style={{
-        padding: "8px 10px 16px",
-        borderTop: `1px solid ${isDark ? "rgba(255,255,255,.06)" : "#F1F5F9"}`,
+        padding: "6px 10px 14px",
+        borderTop: `1px solid ${S.divider}`,
         display: "flex", flexDirection: "column", gap: 1,
       }}>
         <button
           onClick={toggle}
+          className="vs-sidebar-footer-btn"
           style={{
             display: "flex", alignItems: "center", gap: 9,
-            padding: "8px 11px", borderRadius: 8,
+            padding: "8px 10px", borderRadius: 8,
             fontSize: 12.5, fontWeight: 500, width: "100%",
             background: "none", border: "none", cursor: "pointer",
-            color: isDark ? "#475569" : "#9CA3AF",
-            transition: "color .12s",
+            color: S.text,
+            transition: "background .15s, color .15s",
           }}
         >
-          {isDark ? <><Sun size={14} strokeWidth={1.8} /><span>Modo claro</span></> : <><Moon size={14} strokeWidth={1.8} /><span>Modo oscuro</span></>}
+          {isDark
+            ? <><Sun size={14} strokeWidth={1.8} /><span>Modo claro</span></>
+            : <><Moon size={14} strokeWidth={1.8} /><span>Modo oscuro</span></>}
         </button>
 
         <button
           onClick={logout}
+          className="vs-sidebar-footer-btn"
           style={{
             display: "flex", alignItems: "center", gap: 9,
-            padding: "8px 11px", borderRadius: 8,
+            padding: "8px 10px", borderRadius: 8,
             fontSize: 12.5, fontWeight: 500, width: "100%",
             background: "none", border: "none", cursor: "pointer",
-            color: isDark ? "#475569" : "#9CA3AF",
-            transition: "color .12s",
+            color: S.text,
+            transition: "background .15s, color .15s",
           }}
         >
           <LogOut size={14} strokeWidth={1.8} />

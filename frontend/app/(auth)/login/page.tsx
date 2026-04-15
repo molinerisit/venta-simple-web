@@ -66,8 +66,8 @@ function LoginForm() {
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="flex items-center justify-center mb-8">
-          <Image src="/brand/logotexto.png" alt="Venta Simple" width={160} height={44}
-            style={{ height: 34, width: "auto", objectFit: "contain" }} priority />
+          <Image src="/brand/texto.png" alt="Venta Simple" width={320} height={100}
+            style={{ height: 56, width: "auto", objectFit: "contain" }} priority />
         </div>
 
         <Card>
@@ -141,7 +141,7 @@ function LoginForm() {
                       onClick={handleResend}
                       disabled={resending}
                       className="text-xs underline"
-                      style={{ color: "#b3a7ff", background: "none", border: "none", cursor: "pointer", padding: 0 }}
+                      style={{ color: "#1E3A8A", background: "none", border: "none", cursor: "pointer", padding: 0 }}
                     >
                       {resending ? "Reenviando…" : "Reenviar email de verificación"}
                     </button>
@@ -152,7 +152,7 @@ function LoginForm() {
                 {loading ? "Ingresando…" : "Ingresar"}
               </Button>
               <div className="text-center">
-                <Link href="/forgot-password" className="text-xs" style={{ color: "#b3a7ff" }}>
+                <Link href="/forgot-password" className="text-xs" style={{ color: "#1E3A8A" }}>
                   ¿Olvidaste tu contraseña?
                 </Link>
               </div>
@@ -162,7 +162,7 @@ function LoginForm() {
 
         <p className="text-center text-xs mt-4" style={{ color: "var(--vs-muted)" }}>
           ¿No tenés cuenta?{" "}
-          <Link href="/registro" style={{ color: "#b3a7ff" }}>Registrarse gratis</Link>
+          <Link href="/registro" style={{ color: "#1E3A8A" }}>Registrarse gratis</Link>
         </p>
         <p className="text-center text-xs mt-2" style={{ color: "rgba(163,172,195,.4)" }}>
           Superadmin: admin@ventasimple.com / ventasimple

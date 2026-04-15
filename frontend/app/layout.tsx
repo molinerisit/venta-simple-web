@@ -9,6 +9,10 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "VentaSimple · Panel Administrativo",
   description: "Gestioná tu negocio con VentaSimple. Panel web para sincronizar, analizar y operar tu punto de venta.",
+  icons: {
+    icon: "/brand/texto.png",
+    apple: "/brand/texto.png",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

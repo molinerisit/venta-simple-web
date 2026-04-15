@@ -104,7 +104,8 @@
   --card-foreground:      oklch(0.145 0 0);
   --popover:              oklch(1 0 0);
   --popover-foreground:   oklch(0.145 0 0);
-  --primary:              oklch(0.35 0.17 265);
+  /* brand blue #1E3A8A — elimina el violeta */
+  --primary:              oklch(0.31 0.124 264);
   --primary-foreground:   oklch(0.98 0 0);
   --secondary:            oklch(0.96 0 0);
   --secondary-foreground: oklch(0.205 0 0);
@@ -115,8 +116,8 @@
   --destructive:          oklch(0.577 0.245 27.325);
   --border:               oklch(0.91 0 0);
   --input:                oklch(0.91 0 0);
-  --ring:                 oklch(0.35 0.17 265 / 35%);
-  --chart-1:              oklch(0.58 0.25 278);
+  --ring:                 oklch(0.31 0.124 264 / 40%);
+  --chart-1:              oklch(0.50 0.16 264);
   --chart-2:              oklch(0.55 0.18 210);
   --chart-3:              oklch(0.55 0.18 148);
   --chart-4:              oklch(0.65 0.18 65);
@@ -124,14 +125,14 @@
   --radius:               0.75rem;
 
   /* Sidebar — light */
-  --sidebar:                      oklch(0.97 0 0);
+  --sidebar:                      oklch(0.95 0.005 264);
   --sidebar-foreground:           oklch(0.2 0 0);
-  --sidebar-primary:              oklch(0.35 0.17 265);
+  --sidebar-primary:              oklch(0.31 0.124 264);
   --sidebar-primary-foreground:   oklch(0.98 0 0);
-  --sidebar-accent:               oklch(0.94 0 0);
+  --sidebar-accent:               oklch(0.91 0.01 264);
   --sidebar-accent-foreground:    oklch(0.2 0 0);
   --sidebar-border:               oklch(0.91 0 0);
-  --sidebar-ring:                 oklch(0.35 0.17 265 / 35%);
+  --sidebar-ring:                 oklch(0.31 0.124 264 / 40%);
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -162,7 +163,8 @@
   --card-foreground:      oklch(0.93 0.01 255);
   --popover:              oklch(0.145 0.025 260);
   --popover-foreground:   oklch(0.93 0.01 255);
-  --primary:              oklch(0.65 0.19 250);
+  /* #60A5FA — variante clara del brand blue para dark mode */
+  --primary:              oklch(0.65 0.17 253);
   --primary-foreground:   oklch(0.98 0 0);
   --secondary:            oklch(0.19 0.025 260);
   --secondary-foreground: oklch(0.93 0.01 255);
@@ -173,8 +175,8 @@
   --destructive:          oklch(0.577 0.245 27.325);
   --border:               oklch(1 0 0 / 10%);
   --input:                oklch(1 0 0 / 12%);
-  --ring:                 oklch(0.65 0.19 250 / 50%);
-  --chart-1:              oklch(0.65 0.19 250);
+  --ring:                 oklch(0.65 0.17 253 / 50%);
+  --chart-1:              oklch(0.65 0.17 253);
   --chart-2:              oklch(0.72 0.15 210);
   --chart-3:              oklch(0.65 0.18 148);
   --chart-4:              oklch(0.75 0.18 65);
@@ -183,12 +185,12 @@
   /* Sidebar — dark */
   --sidebar:                      oklch(0.12 0.028 262);
   --sidebar-foreground:           oklch(0.85 0.01 255);
-  --sidebar-primary:              oklch(0.65 0.19 250);
+  --sidebar-primary:              oklch(0.65 0.17 253);
   --sidebar-primary-foreground:   oklch(0.98 0 0);
   --sidebar-accent:               oklch(0.19 0.025 260);
   --sidebar-accent-foreground:    oklch(0.93 0.01 255);
   --sidebar-border:               oklch(1 0 0 / 8%);
-  --sidebar-ring:                 oklch(0.65 0.19 250 / 50%);
+  --sidebar-ring:                 oklch(0.65 0.17 253 / 50%);
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -320,6 +322,109 @@
 .l-details > summary::-webkit-details-marker { display: none; }
 .l-details[open] .l-faq-icon { transform: rotate(45deg); }
 .l-faq-icon { transition: transform .2s; display: inline-block; }
+
+/* ─── RESPONSIVE LANDING ─────────────────────────────────────── */
+
+/* Container + section padding */
+@media (max-width: 768px) {
+  .l-container { padding: 0 16px; }
+  .vs-landing section { padding-top: 56px !important; padding-bottom: 56px !important; }
+}
+
+/* NAV: ocultar links centrales en mobile */
+.l-nav-links { display: flex; align-items: center; gap: 28px; }
+@media (max-width: 768px) { .l-nav-links { display: none; } }
+
+/* HERO grid */
+.l-hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+@media (max-width: 900px) {
+  .l-hero-grid { grid-template-columns: 1fr; gap: 48px; }
+  .l-hero-mockup { display: none; }
+}
+
+/* HERO buttons: stack en pantallas chicas */
+.l-hero-btns { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 28px; }
+@media (max-width: 520px) {
+  .l-hero-btns { flex-direction: column; }
+  .l-hero-btns > * { justify-content: center; }
+}
+
+/* STATS */
+.l-stats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; }
+@media (max-width: 768px) {
+  .l-stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .l-stats-grid > div { border-right: none !important; padding: 20px 12px !important; }
+  .l-stats-grid > div:nth-child(-n+4) { border-bottom: 1px solid var(--l-border) !important; }
+}
+
+/* PROBLEMS */
+.l-problems-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--l-border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+@media (max-width: 900px) { .l-problems-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .l-problems-grid { grid-template-columns: 1fr; } }
+
+/* FEATURES sticky layout */
+.l-features-grid {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 72px;
+  align-items: flex-start;
+}
+@media (max-width: 900px) {
+  .l-features-grid { grid-template-columns: 1fr; gap: 40px; }
+  .l-features-sticky { position: static !important; top: auto !important; }
+}
+
+/* STEPS */
+.l-steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+@media (max-width: 768px) { .l-steps-grid { grid-template-columns: 1fr; } }
+
+/* SOPORTE */
+.l-support-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 72px;
+  align-items: center;
+}
+@media (max-width: 900px) { .l-support-grid { grid-template-columns: 1fr; gap: 40px; } }
+
+/* TESTIMONIOS */
+.l-testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+@media (max-width: 900px) { .l-testimonials-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { .l-testimonials-grid { grid-template-columns: 1fr; } }
+
+/* PRICING */
+.l-pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  max-width: 920px;
+  margin-bottom: 20px;
+}
+@media (max-width: 900px) { .l-pricing-grid { grid-template-columns: 1fr; max-width: 100%; } }
+
+/* FAQ sticky layout */
+.l-faq-grid {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 72px;
+  align-items: flex-start;
+}
+@media (max-width: 900px) {
+  .l-faq-grid { grid-template-columns: 1fr; gap: 32px; }
+  .l-faq-sticky { position: static !important; top: auto !important; }
+}
 
 @layer base {
   * {
@@ -569,6 +674,12 @@ details[open] > summary span:last-child { transform: rotate(45deg); display: inl
    PANEL — mejoras UI globales
    ══════════════════════════════════════════════════════════════ */
 
+/* Shimmer skeleton */
+@keyframes shimmer {
+  0%   { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
 /* Hover de filas de tabla — funciona en ambos temas */
 .vs-table-row {
   transition: background .1s;
@@ -612,6 +723,25 @@ input, select, textarea {
 }
 .dark .recharts-cartesian-axis-tick-value {
   fill: #a3acc3 !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SIDEBAR NAV ITEMS — hover en light y dark
+   ══════════════════════════════════════════════════════════════ */
+
+.vs-sidebar-item:hover {
+  background: #E2E8F0 !important;
+}
+.dark .vs-sidebar-item:hover {
+  background: rgba(255,255,255,.05) !important;
+}
+.vs-sidebar-footer-btn:hover {
+  background: #E2E8F0;
+  color: #0F172A;
+}
+.dark .vs-sidebar-footer-btn:hover {
+  background: rgba(255,255,255,.07);
+  color: #C4D5EC;
 }
 
 /* ══════════════════════════════════════════════════════════════

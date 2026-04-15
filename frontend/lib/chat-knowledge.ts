@@ -21,7 +21,7 @@ VentaSimple es un sistema de gestión para negocios pequeños (kioscos, almacene
 - **Reportes:** KPIs, heatmap de ventas, productos más vendidos, comparativas por período.
 - **Clientes:** Historial de compras, datos de contacto, CRM básico.
 - **Multi-PC:** Hasta 3 PCs sincronizadas en plan Pro.
-- **Offline:** Funciona sin internet hasta 72 horas. Al volver la conexión sincroniza automáticamente.
+- **Offline:** Funciona sin internet indefinidamente. Al volver la conexión sincroniza automáticamente.
 - **Exportes:** PDF y CSV disponibles en planes Básico y Pro.
 - **Add-ons:** Bot de WhatsApp y Detección con Cámaras IA (disponibles en Básico y Pro, consultar precio).
 
@@ -60,7 +60,7 @@ VentaSimple es un sistema de gestión para negocios pequeños (kioscos, almacene
 - En plan Pro el soporte es prioritario.
 
 ## Preguntas frecuentes
-- **¿Funciona sin internet?** Sí, hasta 72 horas offline. Al volver la conexión sincroniza todo automáticamente.
+- **¿Funciona sin internet?** Sí, sin límite de tiempo offline. Al volver la conexión sincroniza todo automáticamente.
 - **¿Es difícil migrar desde Excel?** No. Se pueden importar productos desde CSV. El equipo de soporte acompaña la migración sin costo.
 - **¿Puedo cancelar?** Sí, en cualquier momento. Sin contratos anuales, sin cargos por cancelación. Suscripción mensual.
 - **¿En qué Windows funciona?** Windows 10 y 11. El panel web funciona en cualquier navegador moderno desde cualquier dispositivo.
@@ -87,7 +87,7 @@ export const QUICK_ANSWERS: QuickAnswer[] = [
   },
   {
     keywords: ["internet", "offline", "sin conexión", "sin conexion", "luz", "corte"],
-    answer: "Sí, VentaSimple funciona **offline hasta 72 horas**. Si se va internet o la luz (y tu PC tiene batería/UPS), seguís vendiendo con normalidad. Cuando vuelve la conexión, todo se sincroniza automáticamente — no se pierde nada.",
+    answer: "Sí, VentaSimple funciona **offline sin límite de tiempo**. Si se va internet o la luz (y tu PC tiene batería/UPS), seguís vendiendo con normalidad. Cuando vuelve la conexión, todo se sincroniza automáticamente — no se pierde nada.",
   },
   {
     keywords: ["cancelar", "contrato", "baja", "me voy", "dejar de usar"],

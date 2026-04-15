@@ -42,8 +42,8 @@ function VerifyEmailInner() {
       <div className="w-full max-w-sm text-center">
         {/* Logo */}
         <div className="flex items-center justify-center mb-10">
-          <Image src="/brand/logotexto.png" alt="Venta Simple" width={160} height={44}
-            style={{ height: 34, width: "auto", objectFit: "contain" }} priority />
+          <Image src="/brand/texto.png" alt="Venta Simple" width={320} height={100}
+            style={{ height: 56, width: "auto", objectFit: "contain" }} priority />
         </div>
 
         {state === "loading" && (

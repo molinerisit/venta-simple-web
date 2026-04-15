@@ -121,13 +121,13 @@ export default function TerminosPage() {
         <LegalSection title="14. Contacto">
           <p>Para consultas sobre estos términos:</p>
           <ul>
-            <li>Email: <a href="mailto:ventas@ventasimple.app" style={{ color: "#b3a7ff" }}>ventas@ventasimple.app</a></li>
-            <li>Web: <Link href="/" style={{ color: "#b3a7ff" }}>ventasimple.app</Link></li>
+            <li>Email: <a href="mailto:ventas@ventasimple.app" style={{ color: "#1E3A8A" }}>ventas@ventasimple.app</a></li>
+            <li>Web: <Link href="/" style={{ color: "#1E3A8A" }}>ventasimple.app</Link></li>
           </ul>
         </LegalSection>
 
         <div style={{ marginTop: 48, paddingTop: 24, borderTop: "1px solid rgba(255,255,255,.08)", display: "flex", gap: 24, flexWrap: "wrap" }}>
-          <Link href="/privacidad" style={{ fontSize: 13, color: "#b3a7ff", textDecoration: "none" }}>Política de Privacidad →</Link>
+          <Link href="/privacidad" style={{ fontSize: 13, color: "#1E3A8A", textDecoration: "none" }}>Política de Privacidad →</Link>
           <Link href="/" style={{ fontSize: 13, color: "var(--vs-muted)", textDecoration: "none" }}>Volver al inicio</Link>
         </div>
       </div>

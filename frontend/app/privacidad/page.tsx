@@ -31,7 +31,7 @@ export default function PrivacidadPage() {
 
         <LegalSection title="1. Quiénes somos">
           <p>VentaSimple es un sistema de gestión para negocios pequeños en Argentina. Operamos el sitio web <strong>ventasimple.app</strong> y la aplicación de escritorio VentaSimple para Windows.</p>
-          <p>Para consultas sobre privacidad podés escribirnos a <a href="mailto:ventas@ventasimple.app" style={{ color: "#b3a7ff" }}>ventas@ventasimple.app</a>.</p>
+          <p>Para consultas sobre privacidad podés escribirnos a <a href="mailto:ventas@ventasimple.app" style={{ color: "#1E3A8A" }}>ventas@ventasimple.app</a>.</p>
         </LegalSection>
 
         <LegalSection title="2. Qué información recopilamos">
@@ -73,7 +73,7 @@ export default function PrivacidadPage() {
             <li><strong>Portabilidad:</strong> solicitar una exportación de tus datos en formato CSV.</li>
             <li><strong>Oponerte</strong> al procesamiento de tus datos en determinadas circunstancias.</li>
           </ul>
-          <p>Para ejercer cualquiera de estos derechos, escribinos a <a href="mailto:ventas@ventasimple.app" style={{ color: "#b3a7ff" }}>ventas@ventasimple.app</a>.</p>
+          <p>Para ejercer cualquiera de estos derechos, escribinos a <a href="mailto:ventas@ventasimple.app" style={{ color: "#1E3A8A" }}>ventas@ventasimple.app</a>.</p>
         </LegalSection>
 
         <LegalSection title="7. Seguridad">
@@ -102,13 +102,13 @@ export default function PrivacidadPage() {
         <LegalSection title="11. Contacto">
           <p>Para cualquier consulta sobre esta política de privacidad:</p>
           <ul>
-            <li>Email: <a href="mailto:ventas@ventasimple.app" style={{ color: "#b3a7ff" }}>ventas@ventasimple.app</a></li>
-            <li>Web: <Link href="/" style={{ color: "#b3a7ff" }}>ventasimple.app</Link></li>
+            <li>Email: <a href="mailto:ventas@ventasimple.app" style={{ color: "#1E3A8A" }}>ventas@ventasimple.app</a></li>
+            <li>Web: <Link href="/" style={{ color: "#1E3A8A" }}>ventasimple.app</Link></li>
           </ul>
         </LegalSection>
 
         <div style={{ marginTop: 48, paddingTop: 24, borderTop: "1px solid rgba(255,255,255,.08)", display: "flex", gap: 24, flexWrap: "wrap" }}>
-          <Link href="/terminos" style={{ fontSize: 13, color: "#b3a7ff", textDecoration: "none" }}>Términos y Condiciones →</Link>
+          <Link href="/terminos" style={{ fontSize: 13, color: "#1E3A8A", textDecoration: "none" }}>Términos y Condiciones →</Link>
           <Link href="/" style={{ fontSize: 13, color: "var(--vs-muted)", textDecoration: "none" }}>Volver al inicio</Link>
         </div>
       </div>

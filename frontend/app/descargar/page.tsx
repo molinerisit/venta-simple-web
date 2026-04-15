@@ -202,8 +202,8 @@ export default function DescargarPage() {
       <nav className="border-b bg-background/90 backdrop-blur sticky top-0 z-50" style={{ borderColor: "var(--border)" }}>
         <div style={{ maxWidth: 960, margin: "0 auto", padding: "0 24px", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center" }}>
-            <Image src="/brand/logotexto.png" alt="Venta Simple" width={140} height={38}
-              style={{ height: 26, width: "auto", objectFit: "contain" }} priority />
+            <Image src="/brand/texto.png" alt="Venta Simple" width={320} height={100}
+              style={{ height: 38, width: "auto", objectFit: "contain" }} priority />
           </Link>
           <Link href="/dashboard" style={{
             fontSize: 13, fontWeight: 600, padding: "7px 16px", borderRadius: 8,
@@ -287,7 +287,7 @@ export default function DescargarPage() {
         {/* Features */}
         <div className="grid grid-cols-3 gap-5 mb-12 pb-10 border-b" style={{ borderColor: "var(--border)" }}>
           {[
-            { icon: Zap,     title: "Funciona offline",  desc: "Trabajá sin internet. Sincroniza al reconectar." },
+            { icon: Zap,     title: "Funciona offline",  desc: "Trabajá sin internet todo el tiempo que necesites. Sincroniza al reconectar." },
             { icon: Shield,  title: "Backup automático", desc: "Tus datos siempre seguros en la nube." },
             { icon: Monitor, title: "Multi-PC",          desc: "Usalo en más de una PC con el plan Pro." },
           ].map(({ icon: Icon, title, desc }) => (

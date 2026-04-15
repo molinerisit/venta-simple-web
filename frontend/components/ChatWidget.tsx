@@ -77,7 +77,7 @@ export default function ChatWidget() {
         style={{
           position: "fixed", bottom: 28, right: 28, zIndex: 9999,
           width: 56, height: 56, borderRadius: "50%",
-          background: "linear-gradient(135deg,#1E3A8A,#8b7fff)",
+          background: "#1E3A8A",
           border: "none", cursor: "pointer",
           boxShadow: "0 6px 24px rgba(30,58,138,.5)",
           display: "flex", alignItems: "center", justifyContent: "center",
@@ -153,7 +153,7 @@ export default function ChatWidget() {
                   padding: "10px 14px",
                   borderRadius: m.role === "user" ? "16px 16px 4px 16px" : "16px 16px 16px 4px",
                   background: m.role === "user"
-                    ? "linear-gradient(135deg,#1E3A8A,#8b7fff)"
+                    ? "#1E3A8A"
                     : "rgba(255,255,255,.06)",
                   border: m.role === "bot" ? "1px solid rgba(255,255,255,.08)" : "none",
                   fontSize: 13, lineHeight: 1.6,
@@ -188,7 +188,7 @@ export default function ChatWidget() {
                   style={{
                     padding: "5px 11px", borderRadius: 99, fontSize: 11, fontWeight: 600,
                     background: "rgba(30,58,138,.15)", border: "1px solid rgba(30,58,138,.3)",
-                    color: "#b3a7ff", cursor: "pointer",
+                    color: "#1E3A8A", cursor: "pointer",
                   }}
                 >
                   {s}
