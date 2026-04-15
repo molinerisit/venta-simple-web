@@ -104,7 +104,7 @@ export default function AdminPage() {
             <Shield size={20} className="text-primary" />
             <h1 className="text-2xl font-bold text-foreground">Panel Superadmin</h1>
           </div>
-          <p className="text-sm text-slate-500 mt-0.5">Gestión global de todos los clientes SaaS</p>
+          <p className="text-sm text-muted-foreground mt-0.5">Gestión global de todos los clientes SaaS</p>
         </div>
         <Button variant="outline" size="sm" onClick={load} disabled={loading}>
           <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
@@ -114,17 +114,17 @@ export default function AdminPage() {
       {/* Stats globales */}
       {stats && (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card><CardHeader className="flex flex-row items-center justify-between pb-2"><CardTitle className="text-sm font-medium text-slate-500">Tenants totales</CardTitle><Users size={16} className="text-slate-400" /></CardHeader><CardContent><p className="text-2xl font-bold">{stats.total}</p><p className="text-xs text-slate-400">{stats.activos} activos</p></CardContent></Card>
-          <Card><CardHeader className="flex flex-row items-center justify-between pb-2"><CardTitle className="text-sm font-medium text-slate-500">Online ahora</CardTitle><Wifi size={16} className="text-green-500" /></CardHeader><CardContent><p className="text-2xl font-bold text-green-600">{stats.online}</p></CardContent></Card>
-          <Card><CardHeader className="flex flex-row items-center justify-between pb-2"><CardTitle className="text-sm font-medium text-slate-500">Ventas (30d)</CardTitle><TrendingUp size={16} className="text-slate-400" /></CardHeader><CardContent><p className="text-2xl font-bold text-primary">{fmt(stats.ventas_30d)}</p><p className="text-xs text-slate-400">{stats.cantidad_ventas_30d} operaciones</p></CardContent></Card>
-          <Card><CardHeader className="flex flex-row items-center justify-between pb-2"><CardTitle className="text-sm font-medium text-slate-500">Productos registrados</CardTitle></CardHeader><CardContent><p className="text-2xl font-bold">{stats.total_productos.toLocaleString()}</p></CardContent></Card>
+          <Card><CardHeader className="flex flex-row items-center justify-between pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">Tenants totales</CardTitle><Users size={16} className="text-muted-foreground/60" /></CardHeader><CardContent><p className="text-2xl font-bold">{stats.total}</p><p className="text-xs text-muted-foreground/60">{stats.activos} activos</p></CardContent></Card>
+          <Card><CardHeader className="flex flex-row items-center justify-between pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">Online ahora</CardTitle><Wifi size={16} className="text-green-500" /></CardHeader><CardContent><p className="text-2xl font-bold text-green-600">{stats.online}</p></CardContent></Card>
+          <Card><CardHeader className="flex flex-row items-center justify-between pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">Ventas (30d)</CardTitle><TrendingUp size={16} className="text-muted-foreground/60" /></CardHeader><CardContent><p className="text-2xl font-bold text-primary">{fmt(stats.ventas_30d)}</p><p className="text-xs text-muted-foreground/60">{stats.cantidad_ventas_30d} operaciones</p></CardContent></Card>
+          <Card><CardHeader className="flex flex-row items-center justify-between pb-2"><CardTitle className="text-sm font-medium text-muted-foreground">Productos registrados</CardTitle></CardHeader><CardContent><p className="text-2xl font-bold">{stats.total_productos.toLocaleString()}</p></CardContent></Card>
         </div>
       )}
 
       {/* Filtros */}
       <div className="flex gap-2 flex-wrap">
         <div className="relative flex-1 min-w-48">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground/60" />
           <Input placeholder="Buscar cliente…" className="pl-8" value={q} onChange={e => setQ(e.target.value)} />
         </div>
         <Select value={planFilter} onValueChange={(v) => setPlanFilter(v ?? "_all")}>
@@ -139,11 +139,11 @@ export default function AdminPage() {
       {/* Tabla tenants */}
       <Card>
         <CardContent className="p-0">
-          {loading ? <p className="px-4 py-8 text-sm text-slate-400 text-center">Cargando…</p> :
-           filtered.length === 0 ? <p className="px-4 py-8 text-sm text-slate-400 text-center">Sin resultados.</p> : (
+          {loading ? <p className="px-4 py-8 text-sm text-muted-foreground/60 text-center">Cargando…</p> :
+           filtered.length === 0 ? <p className="px-4 py-8 text-sm text-muted-foreground/60 text-center">Sin resultados.</p> : (
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b text-xs text-slate-400">
+                <tr className="border-b text-xs text-muted-foreground/60">
                   <th className="text-left px-4 py-2">Estado</th>
                   <th className="text-left px-4 py-2">Negocio</th>
                   <th className="text-left px-4 py-2">Plan</th>
@@ -155,13 +155,13 @@ export default function AdminPage() {
               </thead>
               <tbody>
                 {filtered.map(t => (
-                  <tr key={t.id} className="border-b last:border-0 hover:bg-white/5">
+                  <tr key={t.id} className="border-b last:border-0 vs-table-row">
                     <td className="px-4 py-2.5">
-                      <span className={`inline-block w-2 h-2 rounded-full ${t.online ? "bg-green-500" : "bg-slate-300"}`} />
+                      <span className={`inline-block w-2 h-2 rounded-full ${t.online ? "bg-green-500" : "bg-border"}`} />
                     </td>
                     <td className="px-4 py-2.5">
                       <p className="font-medium text-foreground">{t.nombre_negocio}</p>
-                      <p className="text-xs text-slate-400">{t.email}</p>
+                      <p className="text-xs text-muted-foreground/60">{t.email}</p>
                     </td>
                     <td className="px-4 py-2.5">
                       <Select value={t.plan} onValueChange={v => changePlan(t, v ?? t.plan)}>
@@ -171,8 +171,8 @@ export default function AdminPage() {
                         </SelectContent>
                       </Select>
                     </td>
-                    <td className="px-4 py-2.5 text-right text-xs text-slate-500">{t.ventas_mes ?? 0}</td>
-                    <td className="px-4 py-2.5 text-xs text-slate-400">{relTime(t.last_seen_at)}</td>
+                    <td className="px-4 py-2.5 text-right text-xs text-muted-foreground">{t.ventas_mes ?? 0}</td>
+                    <td className="px-4 py-2.5 text-xs text-muted-foreground/60">{relTime(t.last_seen_at)}</td>
                     <td className="px-4 py-2.5 text-center">
                       <Switch checked={t.activo} onCheckedChange={() => toggleActivo(t)} />
                     </td>
@@ -212,17 +212,17 @@ export default function AdminPage() {
                       />
                     </div>
                   ))}
-                  {!selected.features && <p className="text-sm text-slate-400 text-center py-4">Sin features configuradas.</p>}
+                  {!selected.features && <p className="text-sm text-muted-foreground/60 text-center py-4">Sin features configuradas.</p>}
                 </div>
               </TabsContent>
               <TabsContent value="info" className="mt-4 space-y-2 text-sm">
                 <div className="grid grid-cols-2 gap-2">
-                  <div><p className="text-xs text-slate-400">Email</p><p className="font-medium">{selected.email}</p></div>
-                  <div><p className="text-xs text-slate-400">Plan</p><Badge variant={planColor(selected.plan)}>{selected.plan}</Badge></div>
-                  <div><p className="text-xs text-slate-400">Vencimiento</p><p>{selected.plan_expires_at ? new Date(selected.plan_expires_at).toLocaleDateString("es-AR") : "Sin vencimiento"}</p></div>
-                  <div><p className="text-xs text-slate-400">Registrado</p><p>{new Date(selected.created_at).toLocaleDateString("es-AR")}</p></div>
-                  <div><p className="text-xs text-slate-400">Último contacto</p><p>{relTime(selected.last_seen_at)}</p></div>
-                  <div><p className="text-xs text-slate-400">Estado</p><Badge variant={selected.activo ? "default" : "destructive"}>{selected.activo ? "Activo" : "Suspendido"}</Badge></div>
+                  <div><p className="text-xs text-muted-foreground/60">Email</p><p className="font-medium">{selected.email}</p></div>
+                  <div><p className="text-xs text-muted-foreground/60">Plan</p><Badge variant={planColor(selected.plan)}>{selected.plan}</Badge></div>
+                  <div><p className="text-xs text-muted-foreground/60">Vencimiento</p><p>{selected.plan_expires_at ? new Date(selected.plan_expires_at).toLocaleDateString("es-AR") : "Sin vencimiento"}</p></div>
+                  <div><p className="text-xs text-muted-foreground/60">Registrado</p><p>{new Date(selected.created_at).toLocaleDateString("es-AR")}</p></div>
+                  <div><p className="text-xs text-muted-foreground/60">Último contacto</p><p>{relTime(selected.last_seen_at)}</p></div>
+                  <div><p className="text-xs text-muted-foreground/60">Estado</p><Badge variant={selected.activo ? "default" : "destructive"}>{selected.activo ? "Activo" : "Suspendido"}</Badge></div>
                 </div>
               </TabsContent>
             </Tabs>

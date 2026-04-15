@@ -162,15 +162,7 @@ function CuentaPageInner() {
     <div className="space-y-6 max-w-3xl">
       {/* Toast */}
       {toast && (
-        <div style={{
-          position: "fixed", top: 20, right: 20, zIndex: 9999,
-          padding: "12px 18px", borderRadius: 10,
-          background: toast.ok ? "rgba(34,197,94,.15)" : "rgba(239,68,68,.15)",
-          border: `1px solid ${toast.ok ? "rgba(34,197,94,.3)" : "rgba(239,68,68,.3)"}`,
-          color: toast.ok ? "#86efac" : "#fca5a5",
-          fontSize: 14, fontWeight: 500,
-          display: "flex", alignItems: "center", gap: 8,
-        }}>
+        <div className={`vs-toast ${toast.ok ? "vs-toast-success" : "vs-toast-error"}`}>
           {toast.ok ? <CheckCircle size={16} /> : <AlertTriangle size={16} />}
           {toast.msg}
         </div>
@@ -189,9 +181,9 @@ function CuentaPageInner() {
 
       {/* Retorno de MP */}
       {fromReturn && (
-        <Card style={{ borderColor: "rgba(34,197,94,.3)", background: "rgba(34,197,94,.06)" }}>
+        <Card style={{ borderColor: "var(--success-bdr)", background: "var(--success-bg)" }}>
           <CardContent className="pt-4 pb-3">
-            <p className="text-sm font-medium" style={{ color: "#86efac" }}>
+            <p className="text-sm font-medium" style={{ color: "var(--success-text)" }}>
               ✓ Pago recibido — tu suscripción se activará en unos minutos. Si no se refleja, recargá la página.
             </p>
           </CardContent>
@@ -270,7 +262,7 @@ function CuentaPageInner() {
                 <div className="flex items-start justify-between gap-4 flex-wrap">
                   <div>
                     <p className="text-xs text-muted-foreground mb-1">Licencia activa</p>
-                    <p className="font-mono font-bold text-base tracking-widest" style={{ color: "#b3a7ff" }}>
+                    <p className="font-mono font-bold text-base tracking-widest text-primary">
                       {licencia.clave}
                     </p>
                     <p className="text-xs text-muted-foreground mt-1">
@@ -301,10 +293,10 @@ function CuentaPageInner() {
                 )}
                 {activation === "waiting" && (
                   <div className="w-full rounded-xl p-4" style={{
-                    background: "rgba(30,58,138,.08)",
-                    border: "1px solid rgba(30,58,138,.2)",
+                    background: "var(--info-bg)",
+                    border: "1px solid var(--info-bdr)",
                   }}>
-                    <p className="text-sm font-medium mb-1" style={{ color: "#b3a7ff" }}>
+                    <p className="text-sm font-medium mb-1 text-primary">
                       ¿No se abrió la app?
                     </p>
                     <p className="text-xs text-muted-foreground mb-3">
@@ -323,7 +315,7 @@ function CuentaPageInner() {
                   </div>
                 )}
                 {activation === "error" && (
-                  <p className="text-sm" style={{ color: "#fca5a5" }}>
+                  <p className="text-sm vs-alert vs-alert-error">
                     No se pudo generar el link de activación. Intentá de nuevo.
                   </p>
                 )}
@@ -351,7 +343,7 @@ function CuentaPageInner() {
               <Card
                 key={plan.id}
                 className={plan.highlight ? "border-primary/40" : ""}
-                style={plan.highlight ? { background: "linear-gradient(180deg, rgba(30,58,138,.1), rgba(81,198,255,.06))" } : {}}
+                style={plan.highlight ? { background: "linear-gradient(180deg, rgba(30,58,138,.1), rgba(30,58,138,.04))" } : {}}
               >
                 <CardContent className="pt-5 pb-4">
                   {plan.highlight && (
@@ -367,7 +359,7 @@ function CuentaPageInner() {
                   <ul className="space-y-1.5 mb-4">
                     {plan.features.map(f => (
                       <li key={f} className="text-sm text-muted-foreground flex items-center gap-2">
-                        <span style={{ color: "#22c55e" }}>✓</span> {f}
+                        <span style={{ color: "var(--vs-success)" }}>✓</span> {f}
                       </li>
                     ))}
                   </ul>

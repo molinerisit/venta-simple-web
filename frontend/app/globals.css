@@ -448,6 +448,88 @@ details[open] > summary span:last-child { transform: rotate(45deg); display: inl
 }
 
 /* ══════════════════════════════════════════════════════════════
+   STATUS TOKENS — alert boxes, toasts, badges
+   Uso: className="vs-alert vs-alert-success" o vs-alert-error / warning / info
+   ══════════════════════════════════════════════════════════════ */
+
+:root {
+  --success-bg:   rgba(5,150,105,.10);
+  --success-bdr:  rgba(5,150,105,.25);
+  --success-text: #059669;
+  --error-bg:     rgba(220,38,38,.10);
+  --error-bdr:    rgba(220,38,38,.28);
+  --error-text:   #dc2626;
+  --warning-bg:   rgba(217,119,6,.10);
+  --warning-bdr:  rgba(217,119,6,.28);
+  --warning-text: #d97706;
+  --info-bg:      rgba(30,58,138,.10);
+  --info-bdr:     rgba(30,58,138,.25);
+  --info-text:    #1E3A8A;
+}
+
+.dark {
+  --success-bg:   rgba(34,197,94,.10);
+  --success-bdr:  rgba(34,197,94,.25);
+  --success-text: #4ade80;
+  --error-bg:     rgba(239,68,68,.10);
+  --error-bdr:    rgba(239,68,68,.28);
+  --error-text:   #fca5a5;
+  --warning-bg:   rgba(245,158,11,.10);
+  --warning-bdr:  rgba(245,158,11,.28);
+  --warning-text: #fcd34d;
+  --info-bg:      rgba(96,165,250,.10);
+  --info-bdr:     rgba(96,165,250,.25);
+  --info-text:    #93C5FD;
+}
+
+.vs-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid;
+}
+.vs-alert-success { background: var(--success-bg); border-color: var(--success-bdr); color: var(--success-text); }
+.vs-alert-error   { background: var(--error-bg);   border-color: var(--error-bdr);   color: var(--error-text);   }
+.vs-alert-warning { background: var(--warning-bg); border-color: var(--warning-bdr); color: var(--warning-text); }
+.vs-alert-info    { background: var(--info-bg);    border-color: var(--info-bdr);    color: var(--info-text);    }
+
+/* Toast — posición fija */
+.vs-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  padding: 12px 18px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid;
+  box-shadow: 0 4px 20px rgba(0,0,0,.15);
+}
+.vs-toast-success { background: var(--success-bg); border-color: var(--success-bdr); color: var(--success-text); }
+.vs-toast-error   { background: var(--error-bg);   border-color: var(--error-bdr);   color: var(--error-text);   }
+
+/* Status circle icon (verify, reset, etc) */
+.vs-status-circle {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 1px solid;
+}
+.vs-status-circle-success { background: var(--success-bg); border-color: var(--success-bdr); color: var(--success-text); }
+.vs-status-circle-error   { background: var(--error-bg);   border-color: var(--error-bdr);   color: var(--error-text);   }
+.vs-status-circle-info    { background: var(--info-bg);    border-color: var(--info-bdr);    color: var(--info-text);    }
+
+/* ══════════════════════════════════════════════════════════════
    PANEL — mejoras UI globales
    ══════════════════════════════════════════════════════════════ */
 

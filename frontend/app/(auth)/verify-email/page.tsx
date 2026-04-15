@@ -7,6 +7,7 @@ import { saveToken, saveUser } from "@/lib/auth";
 import { CheckCircle, AlertTriangle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import Image from "next/image";
 
 function VerifyEmailInner() {
   const searchParams = useSearchParams();
@@ -40,36 +41,26 @@ function VerifyEmailInner() {
     <div className="min-h-screen flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-sm text-center">
         {/* Logo */}
-        <div className="flex items-center justify-center gap-3 mb-10">
-          <div style={{
-            width: 40, height: 40, borderRadius: 12,
-            background: "linear-gradient(135deg, #1E3A8A, #51c6ff)",
-            display: "grid", placeItems: "center",
-            fontWeight: 900, fontSize: 16, color: "#fff",
-          }}>VS</div>
-          <span style={{ fontWeight: 800, fontSize: 18, color: "var(--vs-text)" }}>Venta Simple</span>
+        <div className="flex items-center justify-center mb-10">
+          <Image src="/brand/logotexto.png" alt="Venta Simple" width={160} height={44}
+            style={{ height: 34, width: "auto", objectFit: "contain" }} priority />
         </div>
 
         {state === "loading" && (
           <div className="flex flex-col items-center gap-4">
-            <Loader2 size={40} className="animate-spin" style={{ color: "#1E3A8A" }} />
-            <p style={{ color: "#a3acbb" }}>Verificando tu cuenta…</p>
+            <Loader2 size={40} className="animate-spin text-primary" />
+            <p className="text-muted-foreground">Verificando tu cuenta…</p>
           </div>
         )}
 
         {state === "ok" && (
           <div className="flex flex-col items-center gap-4">
-            <div style={{
-              width: 64, height: 64, borderRadius: "50%",
-              background: "rgba(34,197,94,.12)",
-              border: "1px solid rgba(34,197,94,.25)",
-              display: "grid", placeItems: "center",
-            }}>
-              <CheckCircle size={30} style={{ color: "#86efac" }} />
+            <div className="vs-status-circle vs-status-circle-success" style={{ width: 64, height: 64 }}>
+              <CheckCircle size={30} />
             </div>
             <div>
               <h1 className="text-xl font-bold mb-1">¡Email verificado!</h1>
-              <p style={{ color: "#a3acbb", fontSize: 14 }}>
+              <p className="text-muted-foreground text-sm">
                 Tu cuenta está activa. Redirigiendo al panel…
               </p>
             </div>
@@ -78,24 +69,19 @@ function VerifyEmailInner() {
 
         {state === "error" && (
           <div className="flex flex-col items-center gap-4">
-            <div style={{
-              width: 64, height: 64, borderRadius: "50%",
-              background: "rgba(239,68,68,.12)",
-              border: "1px solid rgba(239,68,68,.25)",
-              display: "grid", placeItems: "center",
-            }}>
-              <AlertTriangle size={30} style={{ color: "#fca5a5" }} />
+            <div className="vs-status-circle vs-status-circle-error" style={{ width: 64, height: 64 }}>
+              <AlertTriangle size={30} />
             </div>
             <div>
               <h1 className="text-xl font-bold mb-1">Link inválido</h1>
-              <p style={{ color: "#a3acbb", fontSize: 14, marginBottom: 20 }}>{errorMsg}</p>
+              <p className="text-muted-foreground text-sm" style={{ marginBottom: 20 }}>{errorMsg}</p>
             </div>
             <div className="flex flex-col gap-2 w-full">
               <Link href="/registro">
                 <Button variant="outline" className="w-full">Volver al registro</Button>
               </Link>
               <Link href="/login">
-                <Button variant="ghost" className="w-full text-sm" style={{ color: "#b3a7ff" }}>
+                <Button variant="ghost" className="w-full text-sm text-primary">
                   Ya verifiqué mi cuenta — Iniciar sesión
                 </Button>
               </Link>

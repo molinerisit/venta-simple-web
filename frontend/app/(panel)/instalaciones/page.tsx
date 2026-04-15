@@ -27,7 +27,7 @@ import { Plus, Search, RefreshCw } from "lucide-react";
 function OnlineDot({ online }: { online: boolean }) {
   return (
     <span
-      className={`inline-block w-2 h-2 rounded-full ${online ? "bg-green-500" : "bg-slate-300"}`}
+      className={`inline-block w-2 h-2 rounded-full ${online ? "bg-green-500" : "bg-border"}`}
     />
   );
 }
@@ -106,11 +106,11 @@ export default function InstalacionesPage() {
   }
 
   return (
-    <div className="space-y-5 max-w-5xl">
+    <div className="space-y-6 max-w-5xl">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Instalaciones</h1>
-          <p className="text-sm text-slate-500 mt-0.5">
+          <p className="text-sm text-muted-foreground mt-0.5">
             {installs.length} instancia{installs.length !== 1 ? "s" : ""} registrada{installs.length !== 1 ? "s" : ""}
           </p>
         </div>
@@ -126,7 +126,7 @@ export default function InstalacionesPage() {
 
       {/* Search */}
       <div className="relative">
-        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground/60" />
         <Input
           placeholder="Buscar por nombre o email…"
           className="pl-8"
@@ -139,13 +139,13 @@ export default function InstalacionesPage() {
       <Card>
         <CardContent className="p-0">
           {loading ? (
-            <p className="px-4 py-8 text-sm text-slate-400 text-center">Cargando…</p>
+            <p className="px-4 py-8 text-sm text-muted-foreground/60 text-center">Cargando…</p>
           ) : filtered.length === 0 ? (
-            <p className="px-4 py-8 text-sm text-slate-400 text-center">Sin resultados.</p>
+            <p className="px-4 py-8 text-sm text-muted-foreground/60 text-center">Sin resultados.</p>
           ) : (
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b text-xs text-slate-400">
+                <tr className="border-b text-xs text-muted-foreground/60">
                   <th className="text-left px-4 py-2 font-medium">Estado</th>
                   <th className="text-left px-4 py-2 font-medium">Negocio</th>
                   <th className="text-left px-4 py-2 font-medium">Plan</th>
@@ -156,7 +156,7 @@ export default function InstalacionesPage() {
               </thead>
               <tbody>
                 {filtered.map((inst) => (
-                  <tr key={inst.id} className="border-b last:border-0 hover:bg-white/5">
+                  <tr key={inst.id} className="border-b last:border-0 vs-table-row">
                     <td className="px-4 py-3">
                       <OnlineDot online={inst.online} />
                     </td>
@@ -167,14 +167,14 @@ export default function InstalacionesPage() {
                       >
                         {inst.nombreNegocio}
                       </Link>
-                      <p className="text-xs text-slate-400">{inst.emailContacto}</p>
+                      <p className="text-xs text-muted-foreground/60">{inst.emailContacto}</p>
                     </td>
                     <td className="px-4 py-3">
                       <Badge variant={planColor(inst.plan)}>{inst.plan}</Badge>
                     </td>
-                    <td className="px-4 py-3 text-slate-500">{inst.versionApp ?? "—"}</td>
-                    <td className="px-4 py-3 text-slate-400 text-xs">{relativeTime(inst.lastSeenAt)}</td>
-                    <td className="px-4 py-3 text-slate-400 text-xs font-mono">{inst.ipAddress ?? "—"}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{inst.versionApp ?? "—"}</td>
+                    <td className="px-4 py-3 text-muted-foreground/60 text-xs">{relativeTime(inst.lastSeenAt)}</td>
+                    <td className="px-4 py-3 text-muted-foreground/60 text-xs font-mono">{inst.ipAddress ?? "—"}</td>
                   </tr>
                 ))}
               </tbody>
@@ -224,7 +224,7 @@ export default function InstalacionesPage() {
               </Select>
             </div>
             {newError && (
-              <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">
+              <p className="vs-alert vs-alert-error text-sm">
                 {newError}
               </p>
             )}
