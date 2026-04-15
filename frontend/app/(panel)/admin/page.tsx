@@ -101,7 +101,7 @@ export default function AdminPage() {
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <Shield size={20} className="text-blue-600" />
+            <Shield size={20} className="text-primary" />
             <h1 className="text-2xl font-bold text-foreground">Panel Superadmin</h1>
           </div>
           <p className="text-sm text-slate-500 mt-0.5">Gestión global de todos los clientes SaaS</p>
@@ -116,7 +116,7 @@ export default function AdminPage() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <Card><CardHeader className="flex flex-row items-center justify-between pb-2"><CardTitle className="text-sm font-medium text-slate-500">Tenants totales</CardTitle><Users size={16} className="text-slate-400" /></CardHeader><CardContent><p className="text-2xl font-bold">{stats.total}</p><p className="text-xs text-slate-400">{stats.activos} activos</p></CardContent></Card>
           <Card><CardHeader className="flex flex-row items-center justify-between pb-2"><CardTitle className="text-sm font-medium text-slate-500">Online ahora</CardTitle><Wifi size={16} className="text-green-500" /></CardHeader><CardContent><p className="text-2xl font-bold text-green-600">{stats.online}</p></CardContent></Card>
-          <Card><CardHeader className="flex flex-row items-center justify-between pb-2"><CardTitle className="text-sm font-medium text-slate-500">Ventas (30d)</CardTitle><TrendingUp size={16} className="text-slate-400" /></CardHeader><CardContent><p className="text-2xl font-bold text-blue-600">{fmt(stats.ventas_30d)}</p><p className="text-xs text-slate-400">{stats.cantidad_ventas_30d} operaciones</p></CardContent></Card>
+          <Card><CardHeader className="flex flex-row items-center justify-between pb-2"><CardTitle className="text-sm font-medium text-slate-500">Ventas (30d)</CardTitle><TrendingUp size={16} className="text-slate-400" /></CardHeader><CardContent><p className="text-2xl font-bold text-primary">{fmt(stats.ventas_30d)}</p><p className="text-xs text-slate-400">{stats.cantidad_ventas_30d} operaciones</p></CardContent></Card>
           <Card><CardHeader className="flex flex-row items-center justify-between pb-2"><CardTitle className="text-sm font-medium text-slate-500">Productos registrados</CardTitle></CardHeader><CardContent><p className="text-2xl font-bold">{stats.total_productos.toLocaleString()}</p></CardContent></Card>
         </div>
       )}

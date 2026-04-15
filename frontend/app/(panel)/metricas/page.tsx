@@ -86,7 +86,7 @@ export default function MetricasPage() {
         <>
           {/* KPI cards */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <StatCard title="Ventas totales" value={fmt(data.ventas.total)} icon={TrendingUp} color="text-blue-600"
+            <StatCard title="Ventas totales" value={fmt(data.ventas.total)} icon={TrendingUp} color="text-primary"
               sub={`${data.ventas.cantidad} operaciones`} />
             <StatCard title="Ticket promedio" value={fmt(data.ventas.ticket_promedio)} icon={ShoppingCart}
               sub={`Últimos ${dias} días`} />

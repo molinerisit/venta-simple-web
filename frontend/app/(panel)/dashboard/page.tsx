@@ -183,7 +183,7 @@ export default function DashboardPage() {
       <div className="space-y-6 max-w-5xl">
         <div>
           <div className="flex items-center gap-2">
-            <Shield size={18} className="text-blue-600" />
+            <Shield size={18} className="text-primary" />
             <h1 className="text-2xl font-bold text-foreground">Dashboard — Superadmin</h1>
           </div>
           <p className="text-sm text-slate-500 mt-0.5">Vista global del ecosistema VentaSimple</p>
@@ -192,7 +192,7 @@ export default function DashboardPage() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard title="Clientes SaaS" value={adminStats?.total ?? "—"} icon={Users} sub={`${adminStats?.activos ?? 0} activos`} />
           <StatCard title="Online ahora" value={adminStats?.online ?? "—"} icon={Wifi} color="text-green-600" />
-          <StatCard title="Ventas globales (30d)" value={adminStats ? fmt(adminStats.ventas_30d) : "—"} icon={TrendingUp} color="text-blue-600"
+          <StatCard title="Ventas globales (30d)" value={adminStats ? fmt(adminStats.ventas_30d) : "—"} icon={TrendingUp} color="text-primary"
             sub={`${adminStats?.cantidad_ventas_30d ?? 0} transacciones`} />
           <StatCard title="Productos registrados" value={adminStats?.total_productos?.toLocaleString() ?? "—"} icon={Package} />
         </div>
@@ -203,7 +203,7 @@ export default function DashboardPage() {
               <CardContent className="pt-4">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center">
-                    <Shield size={18} className="text-blue-600" />
+                    <Shield size={18} className="text-primary" />
                   </div>
                   <div>
                     <p className="font-semibold text-foreground">Gestionar clientes SaaS</p>
@@ -258,7 +258,7 @@ export default function DashboardPage() {
       ) : (
         <>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <StatCard title="Ventas" value={fmt(metricas.ventas.total)} icon={TrendingUp} color="text-blue-600"
+            <StatCard title="Ventas" value={fmt(metricas.ventas.total)} icon={TrendingUp} color="text-primary"
               sub={`${metricas.ventas.cantidad} operaciones`} />
             <StatCard title="Ticket promedio" value={fmt(metricas.ventas.ticket_promedio)} icon={ShoppingCart} />
             <StatCard title="Productos" value={metricas.totales?.total_productos ?? "—"} icon={Package} />

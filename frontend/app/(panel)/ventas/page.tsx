@@ -53,7 +53,7 @@ export default function VentasPage() {
         <div>
           <h1 className="text-2xl font-bold text-foreground">Ventas</h1>
           <p className="text-sm text-muted-foreground">
-            {cantidad} ventas · total: <span className="font-semibold text-blue-600">{fmt(total)}</span>
+            {cantidad} ventas · total: <span className="font-semibold text-primary">{fmt(total)}</span>
           </p>
         </div>
         <Button variant="outline" size="sm" onClick={load} disabled={loading}>
