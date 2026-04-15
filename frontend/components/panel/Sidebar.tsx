@@ -97,11 +97,11 @@ export default function Sidebar() {
       {/* ── Logo ── */}
       <div style={{ padding: "18px 16px 14px", borderBottom: "1px solid var(--sidebar-border)" }}>
         <Image
-          src="/brand/logotexto.png"
+          src="/brand/logotexto-nb.png"
           alt="Venta Simple"
-          width={132}
-          height={36}
-          style={{ objectFit: "contain", objectPosition: "left", height: 28, width: "auto" }}
+          width={180}
+          height={52}
+          style={{ objectFit: "contain", objectPosition: "left", height: 42, width: "auto" }}
           priority
         />
 
