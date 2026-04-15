@@ -136,7 +136,7 @@ export default function ProductosPage() {
       {/* Filtros */}
       <div className="flex gap-2 flex-wrap">
         <div className="relative flex-1 min-w-48">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground/60" />
           <Input placeholder="Buscar por nombre o código…" className="pl-8" value={q} onChange={e => setQ(e.target.value)} />
         </div>
         <Select value={catFilter} onValueChange={(v) => setCatFilter(v ?? "")}>
@@ -259,7 +259,7 @@ export default function ProductosPage() {
                 <Input value={form.descripcion ?? ""} onChange={e => set("descripcion", e.target.value)} />
               </div>
             </div>
-            {formError && <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">{formError}</p>}
+            {formError && <p className="vs-alert vs-alert-error text-sm">{formError}</p>}
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => setOpen(false)}>Cancelar</Button>
               <Button type="submit" disabled={saving}>{saving ? "Guardando…" : "Guardar"}</Button>
@@ -275,7 +275,7 @@ export default function ProductosPage() {
             <DialogTitle>Ajuste de stock — {stockDialog?.nombre}</DialogTitle>
           </DialogHeader>
           <div className="space-y-3 pt-2">
-            <p className="text-sm text-slate-500">Stock actual: <strong>{stockDialog?.stock}</strong></p>
+            <p className="text-sm text-muted-foreground">Stock actual: <strong className="text-foreground">{stockDialog?.stock}</strong></p>
             <div className="space-y-1">
               <Label>Delta (positivo = entrada, negativo = salida)</Label>
               <Input type="number" value={stockDelta} onChange={e => setStockDelta(parseInt(e.target.value) || 0)} />

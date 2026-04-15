@@ -19,18 +19,29 @@ function fmt(n: number) {
   return new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(n);
 }
 
-function StatCard({ title, value, sub, icon: Icon, color = "text-foreground" }: {
-  title: string; value: string | number; sub?: string; icon: React.ElementType; color?: string;
+function StatCard({
+  title, value, sub, icon: Icon, accent = false,
+}: {
+  title: string; value: string | number; sub?: string; icon: React.ElementType; accent?: boolean;
 }) {
   return (
-    <Card>
+    <Card className={`vs-stat-card${accent ? " vs-stat-card-accent" : ""}`}>
       <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-sm font-medium text-slate-500">{title}</CardTitle>
-        <Icon size={18} className="text-slate-400" />
+        <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
+        <div style={{
+          width: 30, height: 30, borderRadius: 8,
+          background: accent ? "rgba(249,115,22,.10)" : "rgba(30,58,138,.07)",
+          display: "grid", placeItems: "center",
+        }}>
+          <Icon size={15} style={{ color: accent ? "#F97316" : "#1E3A8A" }} />
+        </div>
       </CardHeader>
       <CardContent>
-        <p className={`text-2xl font-bold ${color}`}>{value}</p>
-        {sub && <p className="text-xs text-slate-400 mt-1">{sub}</p>}
+        <p className={`text-2xl font-bold ${accent ? "" : "text-foreground"}`}
+          style={accent ? { color: "#F97316" } : {}}>
+          {value}
+        </p>
+        {sub && <p className="text-xs text-muted-foreground mt-1">{sub}</p>}
       </CardContent>
     </Card>
   );
@@ -71,11 +82,19 @@ function OnboardingPanel({ licenciaActiva }: { licenciaActiva: boolean }) {
   return (
     <div className="space-y-6 max-w-2xl">
       {/* Hero */}
-      <div className="rounded-2xl p-6 bg-primary/5 border border-primary/20">
-        <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center mb-4">
-          <Monitor size={24} color="#fff" />
+      <div className="rounded-2xl p-6" style={{
+        background: "rgba(30,58,138,.06)",
+        border: "1px solid rgba(30,58,138,.16)",
+      }}>
+        <div style={{
+          width: 48, height: 48, borderRadius: 12,
+          background: "#1E3A8A",
+          display: "grid", placeItems: "center",
+          marginBottom: 16,
+        }}>
+          <Monitor size={22} color="#fff" />
         </div>
-        <h2 className="text-xl font-bold text-foreground mb-1">
+        <h2 className="text-xl font-bold text-foreground mb-2">
           Configurá tu sistema de ventas
         </h2>
         <p className="text-sm text-muted-foreground leading-relaxed">
@@ -87,7 +106,6 @@ function OnboardingPanel({ licenciaActiva }: { licenciaActiva: boolean }) {
       {/* Pasos */}
       <div className="space-y-3">
         {PASOS.map((paso, i) => {
-          const isLast = i === PASOS.length - 1;
           const unlocked = paso.done || i <= (licenciaActiva ? 2 : 1);
           return (
             <div
@@ -95,18 +113,18 @@ function OnboardingPanel({ licenciaActiva }: { licenciaActiva: boolean }) {
               className="flex gap-4 items-start rounded-2xl border bg-card"
               style={{
                 padding: "16px 20px",
-                opacity: isLast && !licenciaActiva ? 0.45 : 1,
+                opacity: i === PASOS.length - 1 && !licenciaActiva ? 0.45 : 1,
               }}
             >
               {/* Número / check */}
               <div style={{
                 width: 32, height: 32, borderRadius: "50%", flexShrink: 0,
-                background: paso.done ? "rgba(5,150,105,.12)" : "rgba(30,58,138,.12)",
-                border: paso.done ? "1px solid rgba(5,150,105,.35)" : "1px solid rgba(30,58,138,.3)",
+                background: paso.done ? "rgba(5,150,105,.10)" : "rgba(30,58,138,.10)",
+                border: paso.done ? "1px solid rgba(5,150,105,.30)" : "1px solid rgba(30,58,138,.25)",
                 display: "grid", placeItems: "center",
               }}>
                 {paso.done
-                  ? <CheckCircle2 size={16} className="text-emerald-600" />
+                  ? <CheckCircle2 size={16} style={{ color: "#059669" }} />
                   : <span style={{ fontWeight: 800, fontSize: 13, color: "#1E3A8A" }}>{paso.n}</span>
                 }
               </div>
@@ -116,8 +134,12 @@ function OnboardingPanel({ licenciaActiva }: { licenciaActiva: boolean }) {
                 <p className="font-semibold text-foreground text-sm mb-0.5">{paso.titulo}</p>
                 <p className="text-xs text-muted-foreground leading-relaxed">{paso.desc}</p>
                 {paso.action && unlocked && (
-                  <Link href={paso.action.href} className="inline-flex items-center gap-1 mt-2">
-                    <Button size="sm" variant={i === 1 ? "default" : "outline"} className="h-7 text-xs gap-1.5">
+                  <Link href={paso.action.href} className="inline-flex items-center gap-1 mt-3">
+                    <Button
+                      size="sm"
+                      variant={i === 1 ? "accent" : "outline"}
+                      className="gap-1.5"
+                    >
                       {i === 1 && <Download size={12} />}
                       {i === 2 && <Monitor size={12} />}
                       {paso.action.label}
@@ -131,7 +153,6 @@ function OnboardingPanel({ licenciaActiva }: { licenciaActiva: boolean }) {
         })}
       </div>
 
-      {/* CTA secundario */}
       <p className="text-xs text-muted-foreground text-center">
         ¿Necesitás ayuda?{" "}
         <Link href="/descargar" className="underline text-primary">
@@ -145,10 +166,10 @@ function OnboardingPanel({ licenciaActiva }: { licenciaActiva: boolean }) {
 // ── Dashboard principal ───────────────────────────────────────────────────────
 
 export default function DashboardPage() {
-  const [metricas, setMetricas] = useState<Metricas | null>(null);
+  const [metricas, setMetricas]     = useState<Metricas | null>(null);
   const [adminStats, setAdminStats] = useState<AdminStats | null>(null);
   const [licenciaActiva, setLicenciaActiva] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError]           = useState(false);
   const user = typeof window !== "undefined" ? getUser() : null;
   const isSuperAdmin = user?.rol === "superadmin";
 
@@ -169,10 +190,10 @@ export default function DashboardPage() {
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center h-64 gap-3 text-slate-500">
+      <div className="flex flex-col items-center justify-center h-64 gap-3 text-muted-foreground">
         <AlertCircle size={32} />
         <p className="text-sm">No se pudo conectar con el backend.</p>
-        <p className="text-xs text-slate-400">Verificá que NEXT_PUBLIC_API_URL apunte al servidor correcto.</p>
+        <p className="text-xs text-muted-foreground/60">Verificá que NEXT_PUBLIC_API_URL apunte al servidor correcto.</p>
       </div>
     );
   }
@@ -186,43 +207,53 @@ export default function DashboardPage() {
             <Shield size={18} className="text-primary" />
             <h1 className="text-2xl font-bold text-foreground">Dashboard — Superadmin</h1>
           </div>
-          <p className="text-sm text-slate-500 mt-0.5">Vista global del ecosistema VentaSimple</p>
+          <p className="text-sm text-muted-foreground mt-0.5">Vista global del ecosistema VentaSimple</p>
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatCard title="Clientes SaaS" value={adminStats?.total ?? "—"} icon={Users} sub={`${adminStats?.activos ?? 0} activos`} />
-          <StatCard title="Online ahora" value={adminStats?.online ?? "—"} icon={Wifi} color="text-green-600" />
-          <StatCard title="Ventas globales (30d)" value={adminStats ? fmt(adminStats.ventas_30d) : "—"} icon={TrendingUp} color="text-primary"
+          <StatCard title="Clientes SaaS" value={adminStats?.total ?? "—"} icon={Users}
+            sub={`${adminStats?.activos ?? 0} activos`} />
+          <StatCard title="Online ahora" value={adminStats?.online ?? "—"} icon={Wifi} />
+          <StatCard title="Ventas globales (30d)" value={adminStats ? fmt(adminStats.ventas_30d) : "—"}
+            icon={TrendingUp} accent
             sub={`${adminStats?.cantidad_ventas_30d ?? 0} transacciones`} />
           <StatCard title="Productos registrados" value={adminStats?.total_productos?.toLocaleString() ?? "—"} icon={Package} />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Link href="/admin">
-            <Card className="cursor-pointer hover:border-blue-300 transition-colors">
-              <CardContent className="pt-4">
+            <Card className="cursor-pointer transition-all hover:border-primary/30 hover:shadow-sm">
+              <CardContent className="pt-5 pb-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center">
-                    <Shield size={18} className="text-primary" />
+                  <div style={{
+                    width: 40, height: 40, borderRadius: 10,
+                    background: "rgba(30,58,138,.08)",
+                    display: "grid", placeItems: "center",
+                  }}>
+                    <Shield size={18} style={{ color: "#1E3A8A" }} />
                   </div>
                   <div>
-                    <p className="font-semibold text-foreground">Gestionar clientes SaaS</p>
-                    <p className="text-xs text-slate-400">Features, planes, suspensión</p>
+                    <p className="font-semibold text-foreground text-sm">Gestionar clientes SaaS</p>
+                    <p className="text-xs text-muted-foreground">Features, planes, suspensión</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
           </Link>
           <Link href="/instalaciones">
-            <Card className="cursor-pointer hover:border-blue-300 transition-colors">
-              <CardContent className="pt-4">
+            <Card className="cursor-pointer transition-all hover:border-primary/30 hover:shadow-sm">
+              <CardContent className="pt-5 pb-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center">
-                    <Wifi size={18} className="text-green-600" />
+                  <div style={{
+                    width: 40, height: 40, borderRadius: 10,
+                    background: "rgba(5,150,105,.08)",
+                    display: "grid", placeItems: "center",
+                  }}>
+                    <Wifi size={18} style={{ color: "#059669" }} />
                   </div>
                   <div>
-                    <p className="font-semibold text-foreground">Instalaciones desktop</p>
-                    <p className="text-xs text-slate-400">Heartbeats, acceso remoto</p>
+                    <p className="font-semibold text-foreground text-sm">Instalaciones desktop</p>
+                    <p className="text-xs text-muted-foreground">Heartbeats, acceso remoto</p>
                   </div>
                 </div>
               </CardContent>
@@ -245,20 +276,23 @@ export default function DashboardPage() {
         <h1 className="text-2xl font-bold text-foreground">
           {sinDatos ? `Hola, ${user?.nombre ?? ""}` : "Dashboard"}
         </h1>
-        <p className="text-sm text-slate-500 mt-0.5">
+        <p className="text-sm text-muted-foreground mt-0.5">
           {sinDatos ? "Bienvenido a Venta Simple" : "Resumen de los últimos 30 días"}
         </p>
       </div>
 
       {/* Sin datos → mostrar onboarding */}
       {!metricas ? (
-        <p className="text-sm text-slate-400 py-8 text-center">Cargando…</p>
+        <div className="flex items-center justify-center py-16">
+          <p className="text-sm text-muted-foreground">Cargando…</p>
+        </div>
       ) : sinDatos ? (
         <OnboardingPanel licenciaActiva={licenciaActiva} />
       ) : (
         <>
+          {/* KPI cards */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <StatCard title="Ventas" value={fmt(metricas.ventas.total)} icon={TrendingUp} color="text-primary"
+            <StatCard title="Ventas" value={fmt(metricas.ventas.total)} icon={TrendingUp} accent
               sub={`${metricas.ventas.cantidad} operaciones`} />
             <StatCard title="Ticket promedio" value={fmt(metricas.ventas.ticket_promedio)} icon={ShoppingCart} />
             <StatCard title="Productos" value={metricas.totales?.total_productos ?? "—"} icon={Package} />
@@ -267,22 +301,23 @@ export default function DashboardPage() {
 
           {/* Gráfico evolución */}
           <Card>
-            <CardHeader>
-              <CardTitle className="text-sm font-medium text-slate-500">Evolución de ventas diarias</CardTitle>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-semibold text-foreground">Evolución de ventas</CardTitle>
+              <p className="text-xs text-muted-foreground">Últimos 30 días</p>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={180}>
                 <AreaChart data={metricas.ventas_por_dia} margin={{ top: 4, right: 8, bottom: 0, left: -10 }}>
                   <defs>
                     <linearGradient id="grad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                      <stop offset="5%" stopColor="#1E3A8A" stopOpacity={0.22} />
+                      <stop offset="95%" stopColor="#1E3A8A" stopOpacity={0} />
                     </linearGradient>
                   </defs>
                   <XAxis dataKey="dia" tick={{ fontSize: 10 }} />
                   <YAxis tick={{ fontSize: 10 }} tickFormatter={v => `$${(v / 1000).toFixed(0)}k`} />
                   <Tooltip formatter={(v) => typeof v === "number" ? fmt(v) : ""} />
-                  <Area type="monotone" dataKey="total" stroke="#3b82f6" fill="url(#grad)" strokeWidth={2} />
+                  <Area type="monotone" dataKey="total" stroke="#1E3A8A" fill="url(#grad)" strokeWidth={2} />
                 </AreaChart>
               </ResponsiveContainer>
             </CardContent>
@@ -291,20 +326,25 @@ export default function DashboardPage() {
           {/* Top productos */}
           {metricas.top_productos.length > 0 && (
             <Card>
-              <CardHeader>
-                <CardTitle className="text-sm font-medium text-slate-500">Top productos vendidos</CardTitle>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-semibold text-foreground">Top productos vendidos</CardTitle>
               </CardHeader>
               <CardContent className="p-0">
                 <table className="w-full text-sm">
                   <tbody>
                     {metricas.top_productos.map((p, i) => (
-                      <tr key={i} className="border-b last:border-0">
+                      <tr key={i} className="border-b last:border-0 vs-table-row">
                         <td className="px-4 py-2.5">
-                          <span className="text-xs text-slate-400 mr-2">#{i + 1}</span>
-                          <span className="font-medium">{p.nombre}</span>
+                          <span style={{
+                            fontSize: 10, fontWeight: 800, color: "#F97316",
+                            marginRight: 8, opacity: 0.8,
+                          }}>
+                            #{i + 1}
+                          </span>
+                          <span className="font-medium text-foreground">{p.nombre}</span>
                         </td>
-                        <td className="px-4 py-2.5 text-right text-sm text-slate-500">{p.unidades} ud.</td>
-                        <td className="px-4 py-2.5 text-right font-medium">{fmt(p.total)}</td>
+                        <td className="px-4 py-2.5 text-right text-sm text-muted-foreground">{p.unidades} ud.</td>
+                        <td className="px-4 py-2.5 text-right font-semibold text-foreground">{fmt(p.total)}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -315,15 +355,20 @@ export default function DashboardPage() {
 
           {/* Alertas de stock */}
           {metricas.stock_bajo_minimo.length > 0 && (
-            <Card style={{ borderColor: "rgba(245,158,11,.25)", background: "rgba(245,158,11,.08)" }}>
+            <Card style={{ borderColor: "var(--warning-bdr)", background: "var(--warning-bg)" }}>
               <CardContent className="pt-4 pb-3">
-                <p className="text-sm font-medium text-orange-300 mb-2">
-                  {metricas.stock_bajo_minimo.length} productos con stock bajo mínimo
+                <p className="text-sm font-semibold mb-2" style={{ color: "var(--warning-text)" }}>
+                  {metricas.stock_bajo_minimo.length} producto{metricas.stock_bajo_minimo.length > 1 ? "s" : ""} con stock bajo mínimo
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {metricas.stock_bajo_minimo.map(p => (
                     <Link key={p.id} href="/productos">
-                      <Badge variant="outline" className="border-orange-500/30 text-orange-300 cursor-pointer">
+                      <Badge variant="outline" style={{
+                        borderColor: "var(--warning-bdr)",
+                        color: "var(--warning-text)",
+                        background: "transparent",
+                        cursor: "pointer",
+                      }}>
                         {p.nombre} ({p.stock})
                       </Badge>
                     </Link>

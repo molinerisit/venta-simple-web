@@ -5,36 +5,72 @@ interface EmptyStateProps {
   title: string;
   description?: string;
   action?: React.ReactNode;
+  /** Wrap in a dashed border container (default: true) */
+  bordered?: boolean;
 }
 
-export function EmptyState({ icon: Icon, title, description, action }: EmptyStateProps) {
-  return (
-    <div className="flex flex-col items-center justify-center py-16 px-8 text-center">
-      <div
-        style={{
-          width: 48, height: 48, borderRadius: 14,
-          background: "rgba(30,58,138,.08)",
-          border: "1px solid rgba(30,58,138,.15)",
-          display: "grid", placeItems: "center",
-          marginBottom: 16,
-        }}
-      >
-        <Icon size={22} style={{ color: "#1E3A8A", opacity: 0.7 }} />
+export function EmptyState({
+  icon: Icon,
+  title,
+  description,
+  action,
+  bordered = true,
+}: EmptyStateProps) {
+  const content = (
+    <>
+      {/* Icon container */}
+      <div style={{
+        width: 56, height: 56, borderRadius: 16,
+        background: "rgba(30,58,138,.07)",
+        border: "1px solid rgba(30,58,138,.14)",
+        display: "grid", placeItems: "center",
+        marginBottom: 16,
+      }}>
+        <Icon size={24} style={{ color: "#1E3A8A", opacity: 0.75 }} />
       </div>
-      <p className="text-sm font-semibold text-foreground mb-1">{title}</p>
+
+      {/* Text */}
+      <p className="text-base font-semibold text-foreground mb-2">{title}</p>
       {description && (
-        <p className="text-xs text-muted-foreground max-w-xs leading-relaxed">{description}</p>
+        <p className="text-sm text-muted-foreground max-w-xs leading-relaxed" style={{ marginBottom: action ? 0 : 0 }}>
+          {description}
+        </p>
       )}
-      {action && <div className="mt-4">{action}</div>}
+
+      {/* CTA */}
+      {action && <div style={{ marginTop: 20 }}>{action}</div>}
+    </>
+  );
+
+  if (bordered) {
+    return (
+      <div className="vs-empty">
+        {content}
+      </div>
+    );
+  }
+
+  return (
+    <div style={{
+      display: "flex", flexDirection: "column",
+      alignItems: "center", justifyContent: "center",
+      padding: "48px 32px", textAlign: "center",
+    }}>
+      {content}
     </div>
   );
 }
 
 export function LoadingState({ label = "Cargando…" }: { label?: string }) {
   return (
-    <div className="flex flex-col items-center justify-center py-14 gap-3 text-muted-foreground">
+    <div style={{
+      display: "flex", flexDirection: "column",
+      alignItems: "center", justifyContent: "center",
+      padding: "56px 32px", gap: 12,
+      color: "var(--vs-muted)",
+    }}>
       <Loader2 size={20} className="animate-spin" style={{ color: "#1E3A8A" }} />
-      <p className="text-xs">{label}</p>
+      <p style={{ fontSize: 13 }}>{label}</p>
     </div>
   );
 }

@@ -18,17 +18,25 @@ function fmt(n: number) {
   return new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(n);
 }
 
-function StatCard({ title, value, sub, icon: Icon, color = "text-foreground" }: {
-  title: string; value: string | number; sub?: string; icon: React.ElementType; color?: string;
+function StatCard({ title, value, sub, icon: Icon, accent = false }: {
+  title: string; value: string | number; sub?: string; icon: React.ElementType; accent?: boolean;
 }) {
   return (
-    <Card>
+    <Card className={`vs-stat-card${accent ? " vs-stat-card-accent" : ""}`}>
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
-        <Icon size={18} className="text-muted-foreground/60" />
+        <div style={{
+          width: 30, height: 30, borderRadius: 8,
+          background: accent ? "rgba(249,115,22,.10)" : "rgba(30,58,138,.07)",
+          display: "grid", placeItems: "center",
+        }}>
+          <Icon size={15} style={{ color: accent ? "#F97316" : "#1E3A8A" }} />
+        </div>
       </CardHeader>
       <CardContent>
-        <p className={`text-2xl font-bold ${color}`}>{value}</p>
+        <p className="text-2xl font-bold" style={accent ? { color: "#F97316" } : {}}>
+          {value}
+        </p>
         {sub && <p className="text-xs text-muted-foreground mt-1">{sub}</p>}
       </CardContent>
     </Card>
@@ -87,7 +95,7 @@ export default function MetricasPage() {
         <>
           {/* KPI cards */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <StatCard title="Ventas totales" value={fmt(data.ventas.total)} icon={TrendingUp} color="text-primary"
+            <StatCard title="Ventas totales" value={fmt(data.ventas.total)} icon={TrendingUp} accent
               sub={`${data.ventas.cantidad} operaciones`} />
             <StatCard title="Ticket promedio" value={fmt(data.ventas.ticket_promedio)} icon={ShoppingCart}
               sub={`Últimos ${dias} días`} />

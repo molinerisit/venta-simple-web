@@ -7,6 +7,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-accent-orange: var(--vs-accent);
   --font-sans: Inter, "Geist", system-ui, Segoe UI, Roboto, Arial, sans-serif;
   --font-mono: "Geist Mono", ui-monospace, monospace;
   --font-heading: var(--font-sans);
@@ -59,6 +60,8 @@
   --vs-text:        #1A1816;
   --vs-primary:     #1E3A8A;
   --vs-primary-2:   #3b82f6;
+  --vs-accent:      #F97316;
+  --vs-accent-soft: #FFEDD5;
   --vs-success:     #059669;
   --vs-danger:      #dc2626;
   --vs-warning:     #d97706;
@@ -118,6 +121,8 @@
   --vs-text:        #e6e8ef;
   --vs-primary:     #60A5FA;
   --vs-primary-2:   #93C5FD;
+  --vs-accent:      #FB923C;
+  --vs-accent-soft: rgba(249,115,22,.15);
   --vs-success:     #22c55e;
   --vs-danger:      #ef4444;
   --vs-warning:     #f59e0b;
@@ -317,14 +322,18 @@
 
   #__next, #root { min-height: 100vh; }
 
-  /* ── Focus states — anillo azul/violeta consistente ── */
+  /* ── Focus states — anillo navy consistente ── */
   *:focus-visible {
-    outline: 2px solid #1E3A8A;
-    outline-offset: 2px;
-    border-radius: 4px;
+    outline: none;
+    box-shadow: 0 0 0 2px var(--background), 0 0 0 4px #1E3A8A;
+    border-radius: 6px;
+  }
+  .dark *:focus-visible {
+    box-shadow: 0 0 0 2px var(--background), 0 0 0 4px #60A5FA;
   }
   *:focus:not(:focus-visible) {
     outline: none;
+    box-shadow: none;
   }
 }
 
@@ -576,4 +585,36 @@ input, select, textarea {
 }
 .dark .recharts-cartesian-axis-tick-value {
   fill: #a3acc3 !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   EMPTY STATE CONTAINER — dashed border variant
+   ══════════════════════════════════════════════════════════════ */
+.vs-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 32px;
+  text-align: center;
+  border: 2px dashed var(--border);
+  border-radius: 16px;
+}
+
+/* Stat card — top accent stripe */
+.vs-stat-card {
+  overflow: hidden;
+  position: relative;
+}
+.vs-stat-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--vs-primary);
+  opacity: 0.5;
+}
+.vs-stat-card-accent::before {
+  background: var(--vs-accent);
+  opacity: 1;
 }
