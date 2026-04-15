@@ -77,9 +77,9 @@ export default function ChatWidget() {
         style={{
           position: "fixed", bottom: 28, right: 28, zIndex: 9999,
           width: 56, height: 56, borderRadius: "50%",
-          background: "linear-gradient(135deg,#6d5dfc,#8b7fff)",
+          background: "linear-gradient(135deg,#1E3A8A,#8b7fff)",
           border: "none", cursor: "pointer",
-          boxShadow: "0 6px 24px rgba(109,93,252,.5)",
+          boxShadow: "0 6px 24px rgba(30,58,138,.5)",
           display: "flex", alignItems: "center", justifyContent: "center",
           transition: "transform .2s",
         }}
@@ -112,20 +112,20 @@ export default function ChatWidget() {
           width: 360, maxWidth: "calc(100vw - 40px)",
           borderRadius: 20, overflow: "hidden",
           background: "#0f172a",
-          border: "1px solid rgba(109,93,252,.3)",
-          boxShadow: "0 20px 60px rgba(0,0,0,.6), 0 0 0 1px rgba(109,93,252,.15)",
+          border: "1px solid rgba(30,58,138,.3)",
+          boxShadow: "0 20px 60px rgba(0,0,0,.6), 0 0 0 1px rgba(30,58,138,.15)",
           display: "flex", flexDirection: "column",
         }}>
 
           {/* Header */}
           <div style={{
             padding: "16px 20px", borderBottom: "1px solid rgba(255,255,255,.08)",
-            background: "linear-gradient(135deg,rgba(109,93,252,.2),rgba(81,198,255,.08))",
+            background: "linear-gradient(135deg,rgba(30,58,138,.2),rgba(81,198,255,.08))",
             display: "flex", alignItems: "center", gap: 12,
           }}>
             <div style={{
               width: 38, height: 38, borderRadius: 12,
-              background: "linear-gradient(135deg,#6d5dfc,#51c6ff)",
+              background: "linear-gradient(135deg,#1E3A8A,#51c6ff)",
               display: "grid", placeItems: "center",
               fontWeight: 900, fontSize: 13, color: "#fff", flexShrink: 0,
             }}>VS</div>
@@ -153,7 +153,7 @@ export default function ChatWidget() {
                   padding: "10px 14px",
                   borderRadius: m.role === "user" ? "16px 16px 4px 16px" : "16px 16px 16px 4px",
                   background: m.role === "user"
-                    ? "linear-gradient(135deg,#6d5dfc,#8b7fff)"
+                    ? "linear-gradient(135deg,#1E3A8A,#8b7fff)"
                     : "rgba(255,255,255,.06)",
                   border: m.role === "bot" ? "1px solid rgba(255,255,255,.08)" : "none",
                   fontSize: 13, lineHeight: 1.6,
@@ -169,7 +169,7 @@ export default function ChatWidget() {
                 {[0,1,2].map(i => (
                   <span key={i} style={{
                     width: 7, height: 7, borderRadius: "50%",
-                    background: "#6d5dfc", display: "inline-block",
+                    background: "#1E3A8A", display: "inline-block",
                     animation: `bounce 1.2s ease-in-out ${i * 0.2}s infinite`,
                   }}/>
                 ))}
@@ -187,7 +187,7 @@ export default function ChatWidget() {
                   onClick={() => send(s)}
                   style={{
                     padding: "5px 11px", borderRadius: 99, fontSize: 11, fontWeight: 600,
-                    background: "rgba(109,93,252,.15)", border: "1px solid rgba(109,93,252,.3)",
+                    background: "rgba(30,58,138,.15)", border: "1px solid rgba(30,58,138,.3)",
                     color: "#b3a7ff", cursor: "pointer",
                   }}
                 >
@@ -221,7 +221,7 @@ export default function ChatWidget() {
               disabled={loading || !input.trim()}
               style={{
                 width: 38, height: 38, borderRadius: 10, flexShrink: 0,
-                background: input.trim() ? "linear-gradient(135deg,#6d5dfc,#8b7fff)" : "rgba(255,255,255,.06)",
+                background: input.trim() ? "linear-gradient(135deg,#1E3A8A,#8b7fff)" : "rgba(255,255,255,.06)",
                 border: "none", cursor: input.trim() ? "pointer" : "default",
                 display: "grid", placeItems: "center", transition: "background .2s",
               }}

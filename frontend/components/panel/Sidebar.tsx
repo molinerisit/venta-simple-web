@@ -77,7 +77,7 @@ export default function Sidebar() {
     FREE: "Plan Gratuito", BASIC: "Plan Básico", PRO: "Plan Pro", ENTERPRISE: "Enterprise",
   };
   const planColor: Record<string, string> = {
-    FREE: "#9CA3AF", BASIC: "#6d5dfc", PRO: "#0ea5e9", ENTERPRISE: "#f59e0b",
+    FREE: "#9CA3AF", BASIC: "#1E3A8A", PRO: "#0ea5e9", ENTERPRISE: "#f59e0b",
   };
 
   return (
@@ -99,11 +99,11 @@ export default function Sidebar() {
       }}>
         <div style={{
           width: 34, height: 34, borderRadius: 10,
-          background: "#6d5dfc",
+          background: "#1E3A8A",
           display: "grid", placeItems: "center",
           fontWeight: 900, fontSize: 13, color: "#fff",
           flexShrink: 0,
-          boxShadow: "0 2px 8px rgba(109,93,252,.35)",
+          boxShadow: "0 2px 8px rgba(30,58,138,.35)",
         }}>VS</div>
         <div style={{ minWidth: 0 }}>
           <p style={{
@@ -138,7 +138,7 @@ export default function Sidebar() {
                   {daysLeft !== null && (
                     <span style={{
                       fontSize: 10, fontWeight: 700,
-                      color: daysLeft <= 5 ? "#EF4444" : daysLeft <= 10 ? "#F59E0B" : "#6d5dfc",
+                      color: daysLeft <= 5 ? "#EF4444" : daysLeft <= 10 ? "#F59E0B" : "#1E3A8A",
                     }}>
                       {daysLeft}d
                     </span>
@@ -150,7 +150,7 @@ export default function Sidebar() {
                       <div style={{
                         height: "100%", borderRadius: 99,
                         width: `${Math.round((daysLeft / FREE_TRIAL_DAYS) * 100)}%`,
-                        background: daysLeft <= 5 ? "#EF4444" : daysLeft <= 10 ? "#F59E0B" : "#6d5dfc",
+                        background: daysLeft <= 5 ? "#EF4444" : daysLeft <= 10 ? "#F59E0B" : "#1E3A8A",
                         transition: "width .4s",
                       }} />
                     </div>
@@ -162,27 +162,27 @@ export default function Sidebar() {
                   </>
                 )}
                 <div style={{ display: "flex", alignItems: "center", gap: 4, marginTop: 7 }}>
-                  <Zap size={9} color="#6d5dfc" />
-                  <span style={{ fontSize: 10, fontWeight: 700, color: "#6d5dfc" }}>Upgradear plan →</span>
+                  <Zap size={9} color="#1E3A8A" />
+                  <span style={{ fontSize: 10, fontWeight: 700, color: "#1E3A8A" }}>Upgradear plan →</span>
                 </div>
               </div>
             </Link>
           ) : (
             <div style={{
               padding: "8px 12px", borderRadius: 10,
-              background: isDark ? "rgba(109,93,252,.1)" : "rgba(109,93,252,.07)",
-              border: "1px solid rgba(109,93,252,.18)",
+              background: isDark ? "rgba(30,58,138,.1)" : "rgba(30,58,138,.07)",
+              border: "1px solid rgba(30,58,138,.18)",
             }}>
               <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
                 <span style={{
                   width: 7, height: 7, borderRadius: "50%",
-                  background: planColor[plan] ?? "#6d5dfc",
+                  background: planColor[plan] ?? "#1E3A8A",
                   display: "inline-block", flexShrink: 0,
-                  boxShadow: `0 0 0 2px ${(planColor[plan] ?? "#6d5dfc")}33`,
+                  boxShadow: `0 0 0 2px ${(planColor[plan] ?? "#1E3A8A")}33`,
                 }} />
                 <span style={{
                   fontSize: 11, fontWeight: 700,
-                  color: planColor[plan] ?? "#6d5dfc",
+                  color: planColor[plan] ?? "#1E3A8A",
                   letterSpacing: "0.04em",
                 }}>
                   {planLabel[plan] ?? plan}
@@ -211,9 +211,9 @@ export default function Sidebar() {
                 fontWeight: active ? 600 : 500,
                 textDecoration: "none",
                 transition: "background .12s, color .12s",
-                color: active ? "#6d5dfc" : "var(--sidebar-foreground)",
+                color: active ? "#1E3A8A" : "var(--sidebar-foreground)",
                 background: active
-                  ? (isDark ? "rgba(109,93,252,.16)" : "rgba(109,93,252,.09)")
+                  ? (isDark ? "rgba(30,58,138,.16)" : "rgba(30,58,138,.09)")
                   : "transparent",
                 opacity: isLocked && !active ? 0.45 : 1,
                 position: "relative",
@@ -224,7 +224,7 @@ export default function Sidebar() {
                   position: "absolute", left: 0, top: "50%",
                   transform: "translateY(-50%)",
                   width: 3, height: 18, borderRadius: "0 3px 3px 0",
-                  background: "#6d5dfc",
+                  background: "#1E3A8A",
                 }} />
               )}
               <Icon size={15} strokeWidth={active ? 2.2 : 1.8} />
@@ -232,8 +232,8 @@ export default function Sidebar() {
               {isLocked && (
                 <span style={{
                   fontSize: 9, padding: "2px 6px", borderRadius: 99,
-                  background: "rgba(109,93,252,.14)",
-                  color: "#6d5dfc", fontWeight: 800, letterSpacing: "0.05em",
+                  background: "rgba(30,58,138,.14)",
+                  color: "#1E3A8A", fontWeight: 800, letterSpacing: "0.05em",
                 }}>
                   PRO
                 </span>

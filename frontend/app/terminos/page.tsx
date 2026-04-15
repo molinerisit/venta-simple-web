@@ -14,7 +14,7 @@ export default function TerminosPage() {
       <nav className="l-nav">
         <div className="l-container" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: 64 }}>
           <Link href="/" style={{ display: "flex", alignItems: "center", gap: 9, textDecoration: "none" }}>
-            <div style={{ width: 32, height: 32, borderRadius: 8, background: "#1B4FD8", display: "grid", placeItems: "center", fontWeight: 900, fontSize: 13, color: "#fff" }}>VS</div>
+            <div style={{ width: 32, height: 32, borderRadius: 8, background: "#1E3A8A", display: "grid", placeItems: "center", fontWeight: 900, fontSize: 13, color: "#fff" }}>VS</div>
             <span style={{ fontWeight: 800, fontSize: 15, color: "#1A1816", letterSpacing: "-0.02em" }}>Venta Simple</span>
           </Link>
           <Link href="/" style={{ fontSize: 13, color: "#706B65", textDecoration: "none" }}>← Volver al inicio</Link>

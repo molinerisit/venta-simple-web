@@ -75,11 +75,11 @@ const GUIA = [
   {
     id: "instalacion",
     icon: Download,
-    iconColor: "#6d5dfc",
+    iconColor: "#1E3A8A",
     bgLight: "#F5F3FF",
-    bgDark:  "rgba(109,93,252,.08)",
+    bgDark:  "rgba(30,58,138,.08)",
     bdrLight:"#DDD6FE",
-    bdrDark: "rgba(109,93,252,.2)",
+    bdrDark: "rgba(30,58,138,.2)",
     titulo: "Pasos de instalación normales",
     pasos: [
       "Descargá el archivo .exe desde esta página.",
@@ -201,13 +201,13 @@ export default function DescargarPage() {
       <nav className="border-b bg-background/90 backdrop-blur sticky top-0 z-50" style={{ borderColor: "var(--border)" }}>
         <div style={{ maxWidth: 960, margin: "0 auto", padding: "0 24px", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <Link href="/" style={{ display: "flex", alignItems: "center", gap: 9, textDecoration: "none" }}>
-            <div style={{ width: 32, height: 32, borderRadius: 8, background: "#6d5dfc", display: "grid", placeItems: "center", fontWeight: 900, fontSize: 13, color: "#fff" }}>VS</div>
+            <div style={{ width: 32, height: 32, borderRadius: 8, background: "#1E3A8A", display: "grid", placeItems: "center", fontWeight: 900, fontSize: 13, color: "#fff" }}>VS</div>
             <span className="font-bold text-sm text-foreground" style={{ letterSpacing: "-0.02em" }}>Venta Simple</span>
           </Link>
           <Link href="/dashboard" style={{
             fontSize: 13, fontWeight: 600, padding: "7px 16px", borderRadius: 8,
-            background: "rgba(109,93,252,.1)", border: "1px solid rgba(109,93,252,.25)",
-            color: "#6d5dfc", textDecoration: "none",
+            background: "rgba(30,58,138,.1)", border: "1px solid rgba(30,58,138,.25)",
+            color: "#1E3A8A", textDecoration: "none",
           }}>
             Ir al panel →
           </Link>
@@ -220,10 +220,10 @@ export default function DescargarPage() {
         <div className="text-center mb-10">
           <div style={{
             width: 72, height: 72, borderRadius: 20,
-            background: "#6d5dfc",
+            background: "#1E3A8A",
             display: "grid", placeItems: "center",
             margin: "0 auto 24px",
-            boxShadow: "0 8px 32px rgba(109,93,252,.3)",
+            boxShadow: "0 8px 32px rgba(30,58,138,.3)",
           }}>
             <Monitor size={34} color="#fff" />
           </div>
@@ -252,8 +252,8 @@ export default function DescargarPage() {
                 style={{
                   display: "inline-flex", alignItems: "center", gap: 10,
                   padding: "15px 32px", borderRadius: 10, fontWeight: 800, fontSize: 16,
-                  background: "#6d5dfc", color: "#fff", textDecoration: "none",
-                  boxShadow: "0 6px 24px rgba(109,93,252,.35)",
+                  background: "#1E3A8A", color: "#fff", textDecoration: "none",
+                  boxShadow: "0 6px 24px rgba(30,58,138,.35)",
                   letterSpacing: "-0.01em",
                 }}
               >
@@ -272,8 +272,8 @@ export default function DescargarPage() {
               <div style={{
                 display: "inline-flex", alignItems: "center", gap: 10,
                 padding: "15px 32px", borderRadius: 10, fontWeight: 800, fontSize: 16,
-                background: "rgba(109,93,252,.08)", border: "1px solid rgba(109,93,252,.2)",
-                color: "#6d5dfc", cursor: "not-allowed",
+                background: "rgba(30,58,138,.08)", border: "1px solid rgba(30,58,138,.2)",
+                color: "#1E3A8A", cursor: "not-allowed",
               }}>
                 <Download size={20} />
                 Descarga disponible próximamente
@@ -293,9 +293,9 @@ export default function DescargarPage() {
             <div key={title} className="text-center">
               <div style={{
                 width: 40, height: 40, borderRadius: 10, margin: "0 auto 10px",
-                background: "rgba(109,93,252,.1)", display: "grid", placeItems: "center",
+                background: "rgba(30,58,138,.1)", display: "grid", placeItems: "center",
               }}>
-                <Icon size={18} style={{ color: "#6d5dfc" }} />
+                <Icon size={18} style={{ color: "#1E3A8A" }} />
               </div>
               <p className="text-sm font-semibold text-foreground mb-1">{title}</p>
               <p className="text-xs text-muted-foreground leading-relaxed">{desc}</p>
@@ -333,7 +333,7 @@ export default function DescargarPage() {
               <p className="text-xs text-muted-foreground leading-relaxed">
                 Escribinos por WhatsApp — soporte humano 24/7, respondemos en menos de 5 minutos.
                 También podés escribir a{" "}
-                <a href="mailto:ventas@ventasimple.app" style={{ color: "#6d5dfc", fontWeight: 600 }}>
+                <a href="mailto:ventas@ventasimple.app" style={{ color: "#1E3A8A", fontWeight: 600 }}>
                   ventas@ventasimple.app
                 </a>
               </p>
@@ -348,7 +348,7 @@ export default function DescargarPage() {
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1"
-              style={{ color: "#6d5dfc", fontWeight: 600 }}
+              style={{ color: "#1E3A8A", fontWeight: 600 }}
             >
               github.com/molinerisit/venta-simple-pos
               <ExternalLink size={11} />

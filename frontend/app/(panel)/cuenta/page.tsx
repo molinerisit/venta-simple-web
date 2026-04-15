@@ -264,8 +264,8 @@ function CuentaPageInner() {
             <div className="space-y-4">
               {/* Info de licencia */}
               <div className="rounded-xl p-4" style={{
-                background: "rgba(109,93,252,.08)",
-                border: "1px solid rgba(109,93,252,.2)",
+                background: "rgba(30,58,138,.08)",
+                border: "1px solid rgba(30,58,138,.2)",
               }}>
                 <div className="flex items-start justify-between gap-4 flex-wrap">
                   <div>
@@ -301,8 +301,8 @@ function CuentaPageInner() {
                 )}
                 {activation === "waiting" && (
                   <div className="w-full rounded-xl p-4" style={{
-                    background: "rgba(109,93,252,.08)",
-                    border: "1px solid rgba(109,93,252,.2)",
+                    background: "rgba(30,58,138,.08)",
+                    border: "1px solid rgba(30,58,138,.2)",
                   }}>
                     <p className="text-sm font-medium mb-1" style={{ color: "#b3a7ff" }}>
                       ¿No se abrió la app?
@@ -351,7 +351,7 @@ function CuentaPageInner() {
               <Card
                 key={plan.id}
                 className={plan.highlight ? "border-primary/40" : ""}
-                style={plan.highlight ? { background: "linear-gradient(180deg, rgba(109,93,252,.1), rgba(81,198,255,.06))" } : {}}
+                style={plan.highlight ? { background: "linear-gradient(180deg, rgba(30,58,138,.1), rgba(81,198,255,.06))" } : {}}
               >
                 <CardContent className="pt-5 pb-4">
                   {plan.highlight && (

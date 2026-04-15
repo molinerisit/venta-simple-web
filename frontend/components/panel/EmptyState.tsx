@@ -13,13 +13,13 @@ export function EmptyState({ icon: Icon, title, description, action }: EmptyStat
       <div
         style={{
           width: 48, height: 48, borderRadius: 14,
-          background: "rgba(109,93,252,.08)",
-          border: "1px solid rgba(109,93,252,.15)",
+          background: "rgba(30,58,138,.08)",
+          border: "1px solid rgba(30,58,138,.15)",
           display: "grid", placeItems: "center",
           marginBottom: 16,
         }}
       >
-        <Icon size={22} style={{ color: "#6d5dfc", opacity: 0.7 }} />
+        <Icon size={22} style={{ color: "#1E3A8A", opacity: 0.7 }} />
       </div>
       <p className="text-sm font-semibold text-foreground mb-1">{title}</p>
       {description && (
@@ -33,7 +33,7 @@ export function EmptyState({ icon: Icon, title, description, action }: EmptyStat
 export function LoadingState({ label = "Cargando…" }: { label?: string }) {
   return (
     <div className="flex flex-col items-center justify-center py-14 gap-3 text-muted-foreground">
-      <Loader2 size={20} className="animate-spin" style={{ color: "#6d5dfc" }} />
+      <Loader2 size={20} className="animate-spin" style={{ color: "#1E3A8A" }} />
       <p className="text-xs">{label}</p>
     </div>
   );

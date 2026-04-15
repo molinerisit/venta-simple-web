@@ -43,7 +43,7 @@ function VerifyEmailInner() {
         <div className="flex items-center justify-center gap-3 mb-10">
           <div style={{
             width: 40, height: 40, borderRadius: 12,
-            background: "linear-gradient(135deg, #6d5dfc, #51c6ff)",
+            background: "linear-gradient(135deg, #1E3A8A, #51c6ff)",
             display: "grid", placeItems: "center",
             fontWeight: 900, fontSize: 16, color: "#fff",
           }}>VS</div>
@@ -52,7 +52,7 @@ function VerifyEmailInner() {
 
         {state === "loading" && (
           <div className="flex flex-col items-center gap-4">
-            <Loader2 size={40} className="animate-spin" style={{ color: "#6d5dfc" }} />
+            <Loader2 size={40} className="animate-spin" style={{ color: "#1E3A8A" }} />
             <p style={{ color: "#a3acbb" }}>Verificando tu cuenta…</p>
           </div>
         )}

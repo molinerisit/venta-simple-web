@@ -70,7 +70,7 @@ function RegistroForm() {
         <div className="flex items-center justify-center gap-3 mb-8">
           <div style={{
             width: 40, height: 40, borderRadius: 12,
-            background: "linear-gradient(135deg, #6d5dfc, #51c6ff)",
+            background: "linear-gradient(135deg, #1E3A8A, #51c6ff)",
             display: "grid", placeItems: "center",
             fontWeight: 900, fontSize: 16, color: "#fff",
           }}>VS</div>
@@ -96,8 +96,8 @@ function RegistroForm() {
                 <div className="flex flex-col items-center gap-3 py-2">
                   <div style={{
                     width: 52, height: 52, borderRadius: "50%",
-                    background: "rgba(109,93,252,.12)",
-                    border: "1px solid rgba(109,93,252,.25)",
+                    background: "rgba(30,58,138,.12)",
+                    border: "1px solid rgba(30,58,138,.25)",
                     display: "grid", placeItems: "center",
                   }}>
                     <CheckCircle size={24} style={{ color: "#b3a7ff" }} />

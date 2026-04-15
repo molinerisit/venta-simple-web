@@ -101,13 +101,13 @@ function OnboardingPanel({ licenciaActiva }: { licenciaActiva: boolean }) {
               {/* Número / check */}
               <div style={{
                 width: 32, height: 32, borderRadius: "50%", flexShrink: 0,
-                background: paso.done ? "rgba(5,150,105,.12)" : "rgba(109,93,252,.12)",
-                border: paso.done ? "1px solid rgba(5,150,105,.35)" : "1px solid rgba(109,93,252,.3)",
+                background: paso.done ? "rgba(5,150,105,.12)" : "rgba(30,58,138,.12)",
+                border: paso.done ? "1px solid rgba(5,150,105,.35)" : "1px solid rgba(30,58,138,.3)",
                 display: "grid", placeItems: "center",
               }}>
                 {paso.done
                   ? <CheckCircle2 size={16} className="text-emerald-600" />
-                  : <span style={{ fontWeight: 800, fontSize: 13, color: "#6d5dfc" }}>{paso.n}</span>
+                  : <span style={{ fontWeight: 800, fontSize: 13, color: "#1E3A8A" }}>{paso.n}</span>
                 }
               </div>
 
