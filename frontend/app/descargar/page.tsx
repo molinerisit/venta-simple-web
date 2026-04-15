@@ -4,7 +4,10 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getUser } from "@/lib/auth";
 import Link from "next/link";
-import { Download, Monitor, Shield, Zap, Loader2 } from "lucide-react";
+import {
+  Download, Monitor, Shield, Zap, Loader2,
+  ChevronDown, AlertTriangle, CheckCircle2, Info, ExternalLink,
+} from "lucide-react";
 
 const GITHUB_REPO = "molinerisit/venta-simple-pos";
 
@@ -20,31 +23,164 @@ async function fetchLatestRelease(): Promise<Release> {
     `https://api.github.com/repos/${GITHUB_REPO}/releases/latest`,
     { headers: { Accept: "application/vnd.github+json" }, next: { revalidate: 0 } }
   );
-  if (!res.ok) throw new Error("No hay releases publicados aún");
+  if (!res.ok) throw new Error("No hay releases aún");
   const data = await res.json();
-
   const asset = (data.assets as { name: string; browser_download_url: string; size: number }[])
     .find(a => a.name.endsWith(".exe"));
-
   return {
-    version: data.tag_name?.replace(/^v/, "") ?? "—",
+    version:     data.tag_name?.replace(/^v/, "") ?? "—",
     downloadUrl: asset?.browser_download_url ?? null,
     publishedAt: data.published_at ?? "",
-    fileSize: asset ? `${(asset.size / 1024 / 1024).toFixed(0)} MB` : null,
+    fileSize:    asset ? `${(asset.size / 1024 / 1024).toFixed(0)} MB` : null,
   };
 }
 
+/* ── Guía de instalación — ítems ────────────────────────────── */
+const GUIA = [
+  {
+    id: "smartscreen",
+    icon: AlertTriangle,
+    iconColor: "#D97706",
+    bgLight: "#FFFBEB",
+    bgDark:  "rgba(217,119,6,.08)",
+    bdrLight:"#FDE68A",
+    bdrDark: "rgba(217,119,6,.25)",
+    titulo: "Windows bloqueó la instalación (SmartScreen)",
+    pasos: [
+      'Al ejecutar el instalador, Windows puede mostrar el mensaje "Windows protegió tu PC".',
+      'Hacé clic en "Más información" (link pequeño debajo del mensaje).',
+      'Aparece el botón "Ejecutar de todas formas" — hacé clic ahí.',
+      'La instalación continúa con normalidad.',
+    ],
+    nota: "Esto ocurre porque el instalador aún no tiene reputación acumulada en Microsoft. No indica que el archivo sea peligroso.",
+  },
+  {
+    id: "antivirus",
+    icon: Shield,
+    iconColor: "#DC2626",
+    bgLight: "#FEF2F2",
+    bgDark:  "rgba(220,38,38,.08)",
+    bdrLight:"#FECACA",
+    bdrDark: "rgba(220,38,38,.2)",
+    titulo: "El antivirus bloqueó o borró el instalador",
+    pasos: [
+      "Algunos antivirus eliminan archivos .exe desconocidos antes de que los ejecutes.",
+      "Revisá la carpeta de cuarentena de tu antivirus y restaurá el archivo si está ahí.",
+      "Podés desactivar temporalmente la protección en tiempo real, instalar la app, y volver a activarla.",
+      "Si usás Windows Defender: Seguridad de Windows → Protección contra virus → Administrar configuración → Desactivar protección en tiempo real por un momento.",
+      "Una vez instalada la app, el antivirus ya no la va a volver a eliminar.",
+    ],
+    nota: "La app está publicada en GitHub con código abierto. Si querés verificar su origen, el repositorio es github.com/molinerisit/venta-simple-pos",
+  },
+  {
+    id: "instalacion",
+    icon: Download,
+    iconColor: "#6d5dfc",
+    bgLight: "#F5F3FF",
+    bgDark:  "rgba(109,93,252,.08)",
+    bdrLight:"#DDD6FE",
+    bdrDark: "rgba(109,93,252,.2)",
+    titulo: "Pasos de instalación normales",
+    pasos: [
+      "Descargá el archivo .exe desde esta página.",
+      "Ejecutalo y seguí el asistente de instalación (Next → Next → Install).",
+      "Podés elegir si instalar para todos los usuarios o solo para vos.",
+      "Al finalizar, aparece el acceso directo en el escritorio y en el Menú Inicio.",
+      "Abrí la app e iniciá sesión con tu cuenta de VentaSimple.",
+      "Desde Mi Cuenta en el panel web, generá el token de activación para conectar la app.",
+    ],
+    nota: null,
+  },
+  {
+    id: "noapre",
+    icon: Info,
+    iconColor: "#0EA5E9",
+    bgLight: "#F0F9FF",
+    bgDark:  "rgba(14,165,233,.08)",
+    bdrLight:"#BAE6FD",
+    bdrDark: "rgba(14,165,233,.2)",
+    titulo: "La app se instaló pero no abre",
+    pasos: [
+      "Buscá 'Venta Simple Hub' en el menú Inicio.",
+      "Si no aparece, revisá en C:\\Users\\TuUsuario\\AppData\\Local\\Programs\\Venta Simple.",
+      "Clic derecho en el .exe → Ejecutar como administrador.",
+      "Si ves un error sobre módulos faltantes, desinstalá la app y volvé a instalar la versión más reciente desde esta página.",
+    ],
+    nota: "Ante cualquier problema escribinos por WhatsApp. Respondemos en menos de 5 minutos las 24 horas.",
+  },
+];
+
+function GuiaItem({ item, open, onToggle }: {
+  item: typeof GUIA[0];
+  open: boolean;
+  onToggle: () => void;
+}) {
+  const Icon = item.icon;
+  return (
+    <div className="rounded-xl border overflow-hidden" style={{ borderColor: "var(--border)" }}>
+      <button
+        onClick={onToggle}
+        className="w-full flex items-center gap-3 px-4 py-3.5 text-left transition-colors hover:bg-muted/40"
+        style={{ background: "var(--card)" }}
+      >
+        <span style={{
+          width: 30, height: 30, borderRadius: 8, flexShrink: 0,
+          background: `color-mix(in srgb, ${item.iconColor} 12%, transparent)`,
+          display: "grid", placeItems: "center",
+        }}>
+          <Icon size={15} style={{ color: item.iconColor }} />
+        </span>
+        <span className="flex-1 text-sm font-semibold text-foreground">{item.titulo}</span>
+        <ChevronDown
+          size={16}
+          className="text-muted-foreground shrink-0 transition-transform"
+          style={{ transform: open ? "rotate(180deg)" : "rotate(0deg)" }}
+        />
+      </button>
+
+      {open && (
+        <div className="px-4 pb-4 pt-2" style={{ background: "var(--card)", borderTop: "1px solid var(--border)" }}>
+          <ol className="space-y-2.5">
+            {item.pasos.map((p, i) => (
+              <li key={i} className="flex gap-3 text-sm text-muted-foreground leading-relaxed">
+                <span style={{
+                  width: 20, height: 20, borderRadius: "50%", flexShrink: 0, marginTop: 1,
+                  background: `color-mix(in srgb, ${item.iconColor} 12%, transparent)`,
+                  border: `1px solid color-mix(in srgb, ${item.iconColor} 25%, transparent)`,
+                  display: "grid", placeItems: "center",
+                  fontSize: 10, fontWeight: 800, color: item.iconColor,
+                }}>
+                  {i + 1}
+                </span>
+                {p}
+              </li>
+            ))}
+          </ol>
+          {item.nota && (
+            <div className="mt-3 flex gap-2 px-3 py-2.5 rounded-lg" style={{
+              background: `color-mix(in srgb, ${item.iconColor} 8%, transparent)`,
+              border: `1px solid color-mix(in srgb, ${item.iconColor} 20%, transparent)`,
+            }}>
+              <Info size={13} style={{ color: item.iconColor, flexShrink: 0, marginTop: 1 }} />
+              <p className="text-xs leading-relaxed" style={{ color: item.iconColor, margin: 0 }}>{item.nota}</p>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ── Página principal ────────────────────────────────────────── */
 export default function DescargarPage() {
-  const router = useRouter();
-  const [release, setRelease] = useState<Release | null>(null);
-  const [loading, setLoading] = useState(true);
+  const router  = useRouter();
+  const [release, setRelease]   = useState<Release | null>(null);
+  const [loading, setLoading]   = useState(true);
+  const [openId, setOpenId]     = useState<string | null>("smartscreen");
 
   useEffect(() => {
     const user = getUser();
-    if (!user) {
-      router.replace("/login?next=/descargar");
-      return;
-    }
+    if (!user) { router.replace("/login?next=/descargar"); return; }
     fetchLatestRelease()
       .then(setRelease)
       .catch(() => setRelease({ version: "—", downloadUrl: null, publishedAt: "", fileSize: null }))
@@ -54,116 +190,173 @@ export default function DescargarPage() {
   const user = typeof window !== "undefined" ? getUser() : null;
   if (!user) return null;
 
+  function toggle(id: string) {
+    setOpenId(prev => prev === id ? null : id);
+  }
+
   return (
-    <div style={{ background: "#0f1117", minHeight: "100vh" }}>
+    <div className="min-h-screen bg-background text-foreground">
+
       {/* Nav */}
-      <nav style={{ borderBottom: "1px solid rgba(255,255,255,.06)", padding: "0 24px" }}>
-        <div style={{ maxWidth: 960, margin: "0 auto", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
-            <div style={{
-              width: 34, height: 34, borderRadius: 10,
-              background: "linear-gradient(135deg, #6d5dfc, #51c6ff)",
-              display: "grid", placeItems: "center",
-              fontWeight: 900, fontSize: 14, color: "#fff",
-            }}>VS</div>
-            <span style={{ fontWeight: 800, fontSize: 16, color: "#fff" }}>Venta Simple</span>
+      <nav className="border-b bg-background/90 backdrop-blur sticky top-0 z-50" style={{ borderColor: "var(--border)" }}>
+        <div style={{ maxWidth: 960, margin: "0 auto", padding: "0 24px", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <Link href="/" style={{ display: "flex", alignItems: "center", gap: 9, textDecoration: "none" }}>
+            <div style={{ width: 32, height: 32, borderRadius: 8, background: "#6d5dfc", display: "grid", placeItems: "center", fontWeight: 900, fontSize: 13, color: "#fff" }}>VS</div>
+            <span className="font-bold text-sm text-foreground" style={{ letterSpacing: "-0.02em" }}>Venta Simple</span>
           </Link>
           <Link href="/dashboard" style={{
-            fontSize: 13, fontWeight: 600, padding: "7px 18px", borderRadius: 8,
-            background: "rgba(109,93,252,.18)", border: "1px solid rgba(109,93,252,.35)",
-            color: "#b3a7ff", textDecoration: "none",
+            fontSize: 13, fontWeight: 600, padding: "7px 16px", borderRadius: 8,
+            background: "rgba(109,93,252,.1)", border: "1px solid rgba(109,93,252,.25)",
+            color: "#6d5dfc", textDecoration: "none",
           }}>
             Ir al panel →
           </Link>
         </div>
       </nav>
 
-      {/* Hero */}
-      <div style={{ maxWidth: 680, margin: "0 auto", padding: "80px 24px 60px", textAlign: "center" }}>
-        <div style={{
-          width: 80, height: 80, borderRadius: 22,
-          background: "linear-gradient(135deg, #6d5dfc, #51c6ff)",
-          display: "grid", placeItems: "center",
-          margin: "0 auto 28px", boxShadow: "0 8px 40px rgba(109,93,252,.35)",
-        }}>
-          <Monitor size={38} color="#fff" />
+      <div style={{ maxWidth: 680, margin: "0 auto", padding: "64px 24px 80px" }}>
+
+        {/* Hero */}
+        <div className="text-center mb-10">
+          <div style={{
+            width: 72, height: 72, borderRadius: 20,
+            background: "#6d5dfc",
+            display: "grid", placeItems: "center",
+            margin: "0 auto 24px",
+            boxShadow: "0 8px 32px rgba(109,93,252,.3)",
+          }}>
+            <Monitor size={34} color="#fff" />
+          </div>
+
+          <h1 className="text-3xl font-bold text-foreground mb-3" style={{ letterSpacing: "-0.03em" }}>
+            Venta Simple Hub para Windows
+          </h1>
+          <p className="text-base text-muted-foreground leading-relaxed" style={{ maxWidth: 460, margin: "0 auto" }}>
+            Gestioná ventas, stock y clientes sin depender de internet.
+            Sincronización automática cuando hay conexión.
+          </p>
         </div>
 
-        <h1 style={{ margin: "0 0 14px", fontSize: 36, fontWeight: 900, color: "#fff" }}>
-          Venta Simple para Windows
-        </h1>
-        <p style={{ margin: "0 0 36px", fontSize: 16, color: "#a3acbb", lineHeight: 1.6 }}>
-          Gestioná ventas, stock y clientes sin depender de internet.
-          Sincronización automática cuando hay conexión.
-        </p>
-
-        {/* Botón de descarga */}
-        {loading ? (
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 10, color: "#5a6070", fontSize: 14 }}>
-            <Loader2 size={18} style={{ animation: "spin 1s linear infinite" }} />
-            Buscando versión más reciente…
-          </div>
-        ) : release?.downloadUrl ? (
-          <>
-            <a
-              href={release.downloadUrl}
-              download
-              style={{
-                display: "inline-flex", alignItems: "center", gap: 10,
-                padding: "16px 36px", borderRadius: 12, fontWeight: 800, fontSize: 16,
-                background: "linear-gradient(135deg, #6d5dfc, #51c6ff)",
-                color: "#fff", textDecoration: "none",
-                boxShadow: "0 6px 30px rgba(109,93,252,.4)",
-              }}
-            >
-              <Download size={20} />
-              Descargar para Windows
-              <span style={{ fontSize: 11, fontWeight: 600, opacity: 0.75 }}>v{release.version}</span>
-            </a>
-            <p style={{ margin: "14px 0 0", fontSize: 12, color: "#5a6070" }}>
-              Windows 10 / 11 · 64-bit
-              {release.fileSize ? ` · ${release.fileSize}` : ""}
-              {release.publishedAt ? ` · Publicado el ${new Date(release.publishedAt).toLocaleDateString("es-AR")}` : ""}
-            </p>
-          </>
-        ) : (
-          <>
-            <div style={{
-              display: "inline-flex", alignItems: "center", gap: 10,
-              padding: "16px 36px", borderRadius: 12, fontWeight: 800, fontSize: 16,
-              background: "rgba(109,93,252,.12)", border: "1px solid rgba(109,93,252,.25)",
-              color: "#6d5dfc", cursor: "not-allowed",
-            }}>
-              <Download size={20} />
-              Descarga disponible próximamente
+        {/* Botón descarga */}
+        <div className="text-center mb-10">
+          {loading ? (
+            <div className="inline-flex items-center gap-2 text-sm text-muted-foreground">
+              <Loader2 size={16} className="animate-spin" />
+              Buscando versión más reciente…
             </div>
-            <p style={{ margin: "14px 0 0", fontSize: 12, color: "#5a6070" }}>
-              El instalador estará disponible en breve. Te avisaremos por email.
-            </p>
-          </>
-        )}
-      </div>
+          ) : release?.downloadUrl ? (
+            <>
+              <a
+                href={release.downloadUrl}
+                download
+                style={{
+                  display: "inline-flex", alignItems: "center", gap: 10,
+                  padding: "15px 32px", borderRadius: 10, fontWeight: 800, fontSize: 16,
+                  background: "#6d5dfc", color: "#fff", textDecoration: "none",
+                  boxShadow: "0 6px 24px rgba(109,93,252,.35)",
+                  letterSpacing: "-0.01em",
+                }}
+              >
+                <Download size={20} />
+                Descargar para Windows
+                <span style={{ fontSize: 11, fontWeight: 600, opacity: 0.7 }}>v{release.version}</span>
+              </a>
+              <p className="text-xs text-muted-foreground mt-3">
+                Windows 10 / 11 · 64-bit
+                {release.fileSize ? ` · ${release.fileSize}` : ""}
+                {release.publishedAt ? ` · ${new Date(release.publishedAt).toLocaleDateString("es-AR")}` : ""}
+              </p>
+            </>
+          ) : (
+            <>
+              <div style={{
+                display: "inline-flex", alignItems: "center", gap: 10,
+                padding: "15px 32px", borderRadius: 10, fontWeight: 800, fontSize: 16,
+                background: "rgba(109,93,252,.08)", border: "1px solid rgba(109,93,252,.2)",
+                color: "#6d5dfc", cursor: "not-allowed",
+              }}>
+                <Download size={20} />
+                Descarga disponible próximamente
+              </div>
+              <p className="text-xs text-muted-foreground mt-3">El instalador estará disponible en breve.</p>
+            </>
+          )}
+        </div>
 
-      {/* Features */}
-      <div style={{ borderTop: "1px solid rgba(255,255,255,.06)", padding: "40px 24px 60px", textAlign: "center" }}>
-        <div style={{ maxWidth: 680, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 24 }}>
+        {/* Features */}
+        <div className="grid grid-cols-3 gap-5 mb-12 pb-10 border-b" style={{ borderColor: "var(--border)" }}>
           {[
-            { icon: Zap, title: "Rápido sin internet", desc: "Trabaja offline. Sincroniza automáticamente al reconectar." },
-            { icon: Shield, title: "Datos seguros", desc: "Backup automático en la nube con tu cuenta web." },
-            { icon: Monitor, title: "Multi-PC", desc: "Usalo en más de una computadora con el plan Pro." },
+            { icon: Zap,     title: "Funciona offline",  desc: "Trabajá sin internet. Sincroniza al reconectar." },
+            { icon: Shield,  title: "Backup automático", desc: "Tus datos siempre seguros en la nube." },
+            { icon: Monitor, title: "Multi-PC",          desc: "Usalo en más de una PC con el plan Pro." },
           ].map(({ icon: Icon, title, desc }) => (
-            <div key={title}>
-              <Icon size={22} style={{ color: "#6d5dfc", marginBottom: 10 }} />
-              <p style={{ margin: "0 0 6px", fontWeight: 700, color: "#fff", fontSize: 13 }}>{title}</p>
-              <p style={{ margin: 0, fontSize: 12, color: "#5a6070", lineHeight: 1.5 }}>{desc}</p>
+            <div key={title} className="text-center">
+              <div style={{
+                width: 40, height: 40, borderRadius: 10, margin: "0 auto 10px",
+                background: "rgba(109,93,252,.1)", display: "grid", placeItems: "center",
+              }}>
+                <Icon size={18} style={{ color: "#6d5dfc" }} />
+              </div>
+              <p className="text-sm font-semibold text-foreground mb-1">{title}</p>
+              <p className="text-xs text-muted-foreground leading-relaxed">{desc}</p>
             </div>
           ))}
         </div>
-      </div>
 
-      <style>{`
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-      `}</style>
+        {/* Guía de instalación */}
+        <div>
+          <div className="flex items-center gap-2 mb-4">
+            <h2 className="text-lg font-bold text-foreground" style={{ letterSpacing: "-0.02em" }}>
+              Guía de instalación y problemas comunes
+            </h2>
+          </div>
+          <p className="text-sm text-muted-foreground mb-5">
+            Windows puede mostrar alertas al instalar apps nuevas. Es normal. Expandí el problema que tenés para ver cómo resolverlo.
+          </p>
+
+          <div className="space-y-2">
+            {GUIA.map(item => (
+              <GuiaItem
+                key={item.id}
+                item={item}
+                open={openId === item.id}
+                onToggle={() => toggle(item.id)}
+              />
+            ))}
+          </div>
+
+          {/* ¿Necesitás más ayuda? */}
+          <div className="mt-6 flex items-start gap-3 px-4 py-3.5 rounded-xl border" style={{ borderColor: "var(--border)", background: "var(--card)" }}>
+            <CheckCircle2 size={16} className="text-emerald-600 mt-0.5 shrink-0" />
+            <div>
+              <p className="text-sm font-semibold text-foreground mb-0.5">¿Seguís con problemas?</p>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Escribinos por WhatsApp — soporte humano 24/7, respondemos en menos de 5 minutos.
+                También podés escribir a{" "}
+                <a href="mailto:ventas@ventasimple.app" style={{ color: "#6d5dfc", fontWeight: 600 }}>
+                  ventas@ventasimple.app
+                </a>
+              </p>
+            </div>
+          </div>
+
+          {/* Link repo */}
+          <p className="text-xs text-muted-foreground text-center mt-6">
+            Código fuente disponible en{" "}
+            <a
+              href="https://github.com/molinerisit/venta-simple-pos"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1"
+              style={{ color: "#6d5dfc", fontWeight: 600 }}
+            >
+              github.com/molinerisit/venta-simple-pos
+              <ExternalLink size={11} />
+            </a>
+          </p>
+        </div>
+
+      </div>
     </div>
   );
 }
