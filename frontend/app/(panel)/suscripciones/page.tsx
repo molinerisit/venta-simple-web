@@ -74,7 +74,7 @@ export default function SuscripcionesPage() {
     <div className="space-y-5 max-w-5xl">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Suscripciones</h1>
+          <h1 className="text-3xl font-black tracking-tight text-foreground">Suscripciones</h1>
           <p className="text-sm text-slate-500 mt-0.5">
             {expiringSoon.length > 0 && (
               <span className="text-orange-500 font-medium mr-2">

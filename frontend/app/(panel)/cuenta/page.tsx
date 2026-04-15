@@ -172,7 +172,7 @@ function CuentaPageInner() {
       <div>
         <div className="flex items-center gap-2">
           <CreditCard size={20} className="text-primary" />
-          <h1 className="text-2xl font-bold">Mi cuenta</h1>
+          <h1 className="text-3xl font-black tracking-tight">Mi cuenta</h1>
         </div>
         <p className="text-sm text-muted-foreground mt-0.5">
           {user?.nombre} · Gestioná tu suscripción y la app de escritorio

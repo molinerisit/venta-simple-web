@@ -109,7 +109,7 @@ export default function InstalacionesPage() {
     <div className="space-y-6 max-w-5xl">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Instalaciones</h1>
+          <h1 className="text-3xl font-black tracking-tight text-foreground">Instalaciones</h1>
           <p className="text-sm text-muted-foreground mt-0.5">
             {installs.length} instancia{installs.length !== 1 ? "s" : ""} registrada{installs.length !== 1 ? "s" : ""}
           </p>

@@ -120,7 +120,7 @@ export default function ProductosPage() {
     <div className="space-y-6 max-w-6xl">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Productos</h1>
+          <h1 className="text-3xl font-black tracking-tight text-foreground">Productos</h1>
           <p className="text-sm text-muted-foreground">{items.length} productos</p>
         </div>
         <div className="flex gap-2">

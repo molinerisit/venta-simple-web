@@ -120,7 +120,7 @@ export default function ClientesPage() {
 
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Clientes</h1>
+          <h1 className="text-3xl font-black tracking-tight text-foreground">Clientes</h1>
           <p className="text-sm text-muted-foreground">
             {items.length} clientes
             {totalDeuda > 0 && <span className="text-red-500 ml-2">· Deuda total: {fmt(totalDeuda)}</span>}

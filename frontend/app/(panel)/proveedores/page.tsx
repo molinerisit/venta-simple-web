@@ -98,7 +98,7 @@ export default function ProveedoresPage() {
 
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Proveedores</h1>
+          <h1 className="text-3xl font-black tracking-tight text-foreground">Proveedores</h1>
           <p className="text-sm text-muted-foreground">{items.length} proveedores</p>
         </div>
         <div className="flex gap-2">

@@ -24,24 +24,44 @@ function StatCard({ title, value, sub, icon: Icon, accent = false }: {
   title: string; value: string | number; sub?: string; icon: React.ElementType; accent?: boolean;
 }) {
   return (
-    <Card className={`vs-stat-card${accent ? " vs-stat-card-accent" : ""}`}>
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
+    <div style={{
+      background: "var(--card)",
+      borderRadius: 14,
+      border: "1px solid var(--border)",
+      borderLeft: `3px solid ${accent ? "#F97316" : "#1E3A8A"}`,
+      padding: "18px 20px",
+      display: "flex",
+      flexDirection: "column",
+      gap: 12,
+    }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <p style={{
+          fontSize: 10, fontWeight: 800, letterSpacing: "0.10em",
+          textTransform: "uppercase",
+          color: "var(--muted-foreground)",
+          margin: 0,
+        }}>
+          {title}
+        </p>
         <div style={{
-          width: 30, height: 30, borderRadius: 8,
+          width: 32, height: 32, borderRadius: 9, flexShrink: 0,
           background: accent ? "rgba(249,115,22,.10)" : "rgba(30,58,138,.07)",
           display: "grid", placeItems: "center",
         }}>
-          <Icon size={15} style={{ color: accent ? "#F97316" : "#1E3A8A" }} />
+          <Icon size={16} style={{ color: accent ? "#F97316" : "#1E3A8A" }} />
         </div>
-      </CardHeader>
-      <CardContent>
-        <p className="text-2xl font-bold" style={accent ? { color: "#F97316" } : {}}>
+      </div>
+      <div>
+        <p style={{
+          fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1,
+          color: accent ? "#F97316" : "var(--foreground)",
+          margin: 0,
+        }}>
           {value}
         </p>
-        {sub && <p className="text-xs text-muted-foreground mt-1">{sub}</p>}
-      </CardContent>
-    </Card>
+        {sub && <p style={{ fontSize: 11, color: "var(--muted-foreground)", marginTop: 5 }}>{sub}</p>}
+      </div>
+    </div>
   );
 }
 
@@ -68,8 +88,8 @@ export default function MetricasPage() {
     <div className="space-y-6 max-w-6xl">
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Métricas</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">Análisis de tu negocio</p>
+          <h1 className="text-3xl font-black tracking-tight text-foreground">Métricas</h1>
+          <p className="text-sm text-muted-foreground mt-1">Análisis de tu negocio</p>
         </div>
         <div className="flex items-center gap-2">
           <div className="flex gap-1">
@@ -93,7 +113,7 @@ export default function MetricasPage() {
 
       {loading ? (
         <p className="text-sm text-muted-foreground py-12 text-center">Cargando métricas…</p>
-      ) : !data || (data.ventas.cantidad === 0 && (data.totales?.total_productos ?? 0) === 0) ? (
+      ) : !data || data.ventas.cantidad === 0 ? (
         <EmptyState
           icon={BarChart2}
           title="Todavía no hay actividad para mostrar"
@@ -121,7 +141,10 @@ export default function MetricasPage() {
           {/* Ventas por día */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-sm text-muted-foreground">Evolución de ventas</CardTitle>
+              <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between" }}>
+                <CardTitle className="text-base font-bold text-foreground">Evolución de ventas</CardTitle>
+                <span style={{ fontSize: 11, color: "var(--muted-foreground)", fontWeight: 500 }}>últimos {dias} días</span>
+              </div>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={200}>
@@ -145,7 +168,7 @@ export default function MetricasPage() {
             {/* Top productos */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-sm text-muted-foreground">Top 5 productos vendidos</CardTitle>
+                <CardTitle className="text-base font-bold text-foreground">Top productos vendidos</CardTitle>
               </CardHeader>
               <CardContent>
                 {data.top_productos.length === 0 ? (
@@ -166,7 +189,7 @@ export default function MetricasPage() {
             {/* Métodos de pago */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-sm text-muted-foreground">Ventas por método de pago</CardTitle>
+                <CardTitle className="text-base font-bold text-foreground">Ventas por método de pago</CardTitle>
               </CardHeader>
               <CardContent className="flex items-center justify-center">
                 {data.ventas_por_metodo.length === 0 ? (

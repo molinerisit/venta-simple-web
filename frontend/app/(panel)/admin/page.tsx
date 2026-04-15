@@ -102,7 +102,7 @@ export default function AdminPage() {
         <div>
           <div className="flex items-center gap-2">
             <Shield size={20} className="text-primary" />
-            <h1 className="text-2xl font-bold text-foreground">Panel Superadmin</h1>
+            <h1 className="text-3xl font-black tracking-tight text-foreground">Panel Superadmin</h1>
           </div>
           <p className="text-sm text-muted-foreground mt-0.5">Gestión global de todos los clientes SaaS</p>
         </div>

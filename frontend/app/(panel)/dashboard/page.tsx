@@ -25,25 +25,44 @@ function StatCard({
   title: string; value: string | number; sub?: string; icon: React.ElementType; accent?: boolean;
 }) {
   return (
-    <Card className={`vs-stat-card${accent ? " vs-stat-card-accent" : ""}`}>
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
+    <div style={{
+      background: "var(--card)",
+      borderRadius: 14,
+      border: "1px solid var(--border)",
+      borderLeft: `3px solid ${accent ? "#F97316" : "#1E3A8A"}`,
+      padding: "18px 20px",
+      display: "flex",
+      flexDirection: "column",
+      gap: 12,
+    }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <p style={{
+          fontSize: 10, fontWeight: 800, letterSpacing: "0.10em",
+          textTransform: "uppercase",
+          color: "var(--muted-foreground)",
+          margin: 0,
+        }}>
+          {title}
+        </p>
         <div style={{
-          width: 30, height: 30, borderRadius: 8,
+          width: 32, height: 32, borderRadius: 9, flexShrink: 0,
           background: accent ? "rgba(249,115,22,.10)" : "rgba(30,58,138,.07)",
           display: "grid", placeItems: "center",
         }}>
-          <Icon size={15} style={{ color: accent ? "#F97316" : "#1E3A8A" }} />
+          <Icon size={16} style={{ color: accent ? "#F97316" : "#1E3A8A" }} />
         </div>
-      </CardHeader>
-      <CardContent>
-        <p className={`text-2xl font-bold ${accent ? "" : "text-foreground"}`}
-          style={accent ? { color: "#F97316" } : {}}>
+      </div>
+      <div>
+        <p style={{
+          fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1,
+          color: accent ? "#F97316" : "var(--foreground)",
+          margin: 0,
+        }}>
           {value}
         </p>
-        {sub && <p className="text-xs text-muted-foreground mt-1">{sub}</p>}
-      </CardContent>
-    </Card>
+        {sub && <p style={{ fontSize: 11, color: "var(--muted-foreground)", marginTop: 5 }}>{sub}</p>}
+      </div>
+    </div>
   );
 }
 
@@ -204,10 +223,10 @@ export default function DashboardPage() {
       <div className="space-y-6 max-w-5xl">
         <div>
           <div className="flex items-center gap-2">
-            <Shield size={18} className="text-primary" />
-            <h1 className="text-2xl font-bold text-foreground">Dashboard — Superadmin</h1>
+            <Shield size={20} className="text-primary" />
+            <h1 className="text-3xl font-black tracking-tight text-foreground">Dashboard</h1>
           </div>
-          <p className="text-sm text-muted-foreground mt-0.5">Vista global del ecosistema VentaSimple</p>
+          <p className="text-sm text-muted-foreground mt-1">Vista global del ecosistema VentaSimple</p>
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -273,10 +292,10 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6 max-w-5xl">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">
+        <h1 className="text-3xl font-black tracking-tight text-foreground">
           {sinDatos ? `Hola, ${user?.nombre ?? ""}` : "Dashboard"}
         </h1>
-        <p className="text-sm text-muted-foreground mt-0.5">
+        <p className="text-sm text-muted-foreground mt-1">
           {sinDatos ? "Bienvenido a Venta Simple" : "Resumen de los últimos 30 días"}
         </p>
       </div>
@@ -302,8 +321,10 @@ export default function DashboardPage() {
           {/* Gráfico evolución */}
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-semibold text-foreground">Evolución de ventas</CardTitle>
-              <p className="text-xs text-muted-foreground">Últimos 30 días</p>
+              <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between" }}>
+                <CardTitle className="text-base font-bold text-foreground">Evolución de ventas</CardTitle>
+                <span style={{ fontSize: 11, color: "var(--muted-foreground)", fontWeight: 500 }}>últimos 30 días</span>
+              </div>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={180}>
@@ -327,7 +348,7 @@ export default function DashboardPage() {
           {metricas.top_productos.length > 0 && (
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-semibold text-foreground">Top productos vendidos</CardTitle>
+                <CardTitle className="text-base font-bold text-foreground">Top productos vendidos</CardTitle>
               </CardHeader>
               <CardContent className="p-0">
                 <table className="w-full text-sm">

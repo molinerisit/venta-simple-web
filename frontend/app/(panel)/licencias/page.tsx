@@ -78,7 +78,7 @@ export default function LicenciasPage() {
     <div className="space-y-5 max-w-5xl">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Licencias</h1>
+          <h1 className="text-3xl font-black tracking-tight text-foreground">Licencias</h1>
           <p className="text-sm text-slate-500 mt-0.5">
             {disponibles} disponible{disponibles !== 1 ? "s" : ""} · {activas} activa{activas !== 1 ? "s" : ""}
           </p>
