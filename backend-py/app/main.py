@@ -12,9 +12,18 @@ app = FastAPI(
     description="API multi-tenant para el panel administrativo de VentaSimple",
 )
 
+_allowed_origins = [
+    settings.frontend_url,
+    "http://localhost:3000",
+    # aliases Vercel del frontend
+    "https://frontend-eight-lyart-56.vercel.app",
+    "https://frontend-julianmolineris-projects.vercel.app",
+    "https://frontend-git-main-julianmolineris-projects.vercel.app",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[settings.frontend_url, "http://localhost:3000"],
+    allow_origins=_allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

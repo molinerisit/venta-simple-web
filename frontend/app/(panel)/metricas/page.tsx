@@ -5,61 +5,196 @@ import { getMetricas, type Metricas } from "@/lib/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { RefreshCw, TrendingUp, ShoppingCart, Users, Package, AlertTriangle, BarChart2 } from "lucide-react";
-import { EmptyState } from "@/components/panel/EmptyState";
+import { RefreshCw, TrendingUp, ShoppingCart, Users, Package, AlertTriangle, BarChart2, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import {
   AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell,
   XAxis, YAxis, Tooltip, ResponsiveContainer,
 } from "recharts";
 
-/* Chart colors — brand-aligned palette */
 const COLORS = ["#1E3A8A", "#0ea5e9", "#059669", "#d97706", "#dc2626"];
 
 function fmt(n: number) {
   return new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(n);
 }
 
-function StatCard({ title, value, sub, icon: Icon, accent = false }: {
-  title: string; value: string | number; sub?: string; icon: React.ElementType; accent?: boolean;
+// ── KPI card principal ────────────────────────────────────────────────────────
+function HeroStatCard({
+  title, value, sub, icon: Icon,
+}: {
+  title: string; value: string | number; sub?: string; icon: React.ElementType;
+}) {
+  return (
+    <div style={{
+      background: "linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%)",
+      borderRadius: 16,
+      padding: "24px 22px",
+      display: "flex",
+      flexDirection: "column",
+      gap: 14,
+      boxShadow: "0 8px 32px rgba(30,58,138,.28)",
+      position: "relative",
+      overflow: "hidden",
+    }}>
+      <div style={{
+        position: "absolute", top: -28, right: -28,
+        width: 110, height: 110, borderRadius: "50%",
+        background: "rgba(255,255,255,.06)", pointerEvents: "none",
+      }} />
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", position: "relative" }}>
+        <p style={{
+          fontSize: 10, fontWeight: 800, letterSpacing: "0.10em",
+          textTransform: "uppercase", color: "rgba(255,255,255,.60)", margin: 0,
+        }}>
+          {title}
+        </p>
+        <div style={{
+          width: 36, height: 36, borderRadius: 10, flexShrink: 0,
+          background: "rgba(255,255,255,.15)",
+          display: "grid", placeItems: "center",
+        }}>
+          <Icon size={18} style={{ color: "#fff" }} />
+        </div>
+      </div>
+      <div style={{ position: "relative" }}>
+        <p style={{
+          fontSize: 38, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1,
+          color: "#fff", margin: 0,
+        }}>
+          {value}
+        </p>
+        {sub && <p style={{ fontSize: 12, color: "rgba(255,255,255,.58)", margin: "6px 0 0" }}>{sub}</p>}
+      </div>
+    </div>
+  );
+}
+
+// ── KPI cards secundarias ─────────────────────────────────────────────────────
+function StatCard({
+  title, value, sub, icon: Icon,
+}: {
+  title: string; value: string | number; sub?: string; icon: React.ElementType;
 }) {
   return (
     <div style={{
       background: "var(--card)",
       borderRadius: 14,
       border: "1px solid var(--border)",
-      borderLeft: `3px solid ${accent ? "#F97316" : "#1E3A8A"}`,
-      padding: "18px 20px",
-      display: "flex",
-      flexDirection: "column",
-      gap: 12,
+      padding: "20px 20px",
+      display: "flex", flexDirection: "column", gap: 14,
     }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <p style={{
           fontSize: 10, fontWeight: 800, letterSpacing: "0.10em",
-          textTransform: "uppercase",
-          color: "var(--muted-foreground)",
-          margin: 0,
+          textTransform: "uppercase", color: "var(--muted-foreground)", margin: 0,
         }}>
           {title}
         </p>
         <div style={{
-          width: 32, height: 32, borderRadius: 9, flexShrink: 0,
-          background: accent ? "rgba(249,115,22,.10)" : "rgba(30,58,138,.07)",
+          width: 30, height: 30, borderRadius: 8, flexShrink: 0,
+          background: "rgba(30,58,138,.07)",
           display: "grid", placeItems: "center",
         }}>
-          <Icon size={16} style={{ color: accent ? "#F97316" : "#1E3A8A" }} />
+          <Icon size={14} style={{ color: "#1E3A8A" }} />
         </div>
       </div>
       <div>
         <p style={{
-          fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1,
-          color: accent ? "#F97316" : "var(--foreground)",
-          margin: 0,
+          fontSize: 26, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1,
+          color: "var(--foreground)", margin: 0,
         }}>
           {value}
         </p>
-        {sub && <p style={{ fontSize: 11, color: "var(--muted-foreground)", marginTop: 5 }}>{sub}</p>}
+        {sub && <p style={{ fontSize: 11, color: "var(--muted-foreground)", margin: "4px 0 0" }}>{sub}</p>}
+      </div>
+    </div>
+  );
+}
+
+// ── Empty state completo para métricas ────────────────────────────────────────
+function MetricasEmptyState() {
+  const PREVIEW = [
+    { icon: TrendingUp, label: "Evolución de ventas",  desc: "Gráfico día a día" },
+    { icon: ShoppingCart, label: "Ticket promedio",    desc: "Por período elegido" },
+    { icon: Package,    label: "Top productos",        desc: "Los más vendidos" },
+    { icon: Users,      label: "Clientes activos",     desc: "Con deuda o frecuentes" },
+  ];
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 24, maxWidth: 560 }}>
+      {/* Header */}
+      <div style={{
+        width: 64, height: 64, borderRadius: 18,
+        background: "linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%)",
+        display: "grid", placeItems: "center",
+        boxShadow: "0 8px 24px rgba(30,58,138,.25)",
+      }}>
+        <BarChart2 size={28} color="#fff" />
+      </div>
+
+      <div>
+        <h2 style={{
+          fontSize: 22, fontWeight: 800, letterSpacing: "-0.02em",
+          color: "var(--foreground)", margin: "0 0 10px",
+        }}>
+          Tu panel de análisis te espera
+        </h2>
+        <p style={{
+          fontSize: 15, lineHeight: 1.7, color: "var(--muted-foreground)", margin: 0,
+        }}>
+          Cuando registres tus primeras ventas vas a ver la evolución diaria de tu negocio,
+          los productos más vendidos, el ticket promedio y cómo te pagan tus clientes.
+        </p>
+      </div>
+
+      {/* Preview de qué vas a ver */}
+      <div>
+        <p style={{
+          fontSize: 10, fontWeight: 800, letterSpacing: "0.10em",
+          textTransform: "uppercase", color: "var(--muted-foreground)",
+          margin: "0 0 12px",
+        }}>
+          Lo que vas a ver cuando vendas
+        </p>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+          {PREVIEW.map(item => (
+            <div key={item.label} style={{
+              padding: "12px 14px", borderRadius: 12,
+              border: "1px solid var(--border)",
+              background: "var(--card)",
+              display: "flex", alignItems: "center", gap: 11,
+            }}>
+              <div style={{
+                width: 30, height: 30, borderRadius: 8,
+                background: "rgba(30,58,138,.07)",
+                display: "grid", placeItems: "center", flexShrink: 0,
+              }}>
+                <item.icon size={14} style={{ color: "#1E3A8A" }} />
+              </div>
+              <div>
+                <p style={{ fontSize: 12, fontWeight: 700, color: "var(--foreground)", margin: 0 }}>{item.label}</p>
+                <p style={{ fontSize: 11, color: "var(--muted-foreground)", margin: 0 }}>{item.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* CTAs */}
+      <div style={{ display: "flex", gap: 10 }}>
+        <Link href="/ventas">
+          <Button variant="default" className="gap-1.5">
+            <ShoppingCart size={14} />
+            Registrar primera venta
+            <ArrowRight size={13} />
+          </Button>
+        </Link>
+        <Link href="/productos">
+          <Button variant="outline" size="sm" className="gap-1.5">
+            <Package size={13} />
+            Ver productos
+          </Button>
+        </Link>
       </div>
     </div>
   );
@@ -85,21 +220,23 @@ export default function MetricasPage() {
   useEffect(() => { load(); }, [dias]);
 
   return (
-    <div className="space-y-6 max-w-6xl">
-      <div className="flex items-center justify-between flex-wrap gap-3">
+    <div style={{ display: "flex", flexDirection: "column", gap: 24, maxWidth: 1100 }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
         <div>
-          <h1 className="text-3xl font-black tracking-tight text-foreground">Métricas</h1>
-          <p className="text-sm text-muted-foreground mt-1">Análisis de tu negocio</p>
+          <h1 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.03em", color: "var(--foreground)", margin: "0 0 4px" }}>
+            Métricas
+          </h1>
+          <p style={{ fontSize: 14, color: "var(--muted-foreground)", margin: 0 }}>Análisis de tu negocio</p>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="flex gap-1">
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <div style={{ display: "flex", gap: 4 }}>
             {PERIODOS.map((d) => (
               <Button
                 key={d}
                 size="sm"
                 variant={dias === d ? "default" : "outline"}
                 onClick={() => setDias(d)}
-                className="text-xs"
+                style={{ fontSize: 12 }}
               >
                 {d === 365 ? "1 año" : `${d}d`}
               </Button>
@@ -112,26 +249,21 @@ export default function MetricasPage() {
       </div>
 
       {loading ? (
-        <p className="text-sm text-muted-foreground py-12 text-center">Cargando métricas…</p>
+        <p style={{ fontSize: 14, color: "var(--muted-foreground)", padding: "48px 0", textAlign: "center" }}>
+          Cargando métricas…
+        </p>
       ) : !data || data.ventas.cantidad === 0 ? (
-        <EmptyState
-          icon={BarChart2}
-          title="Todavía no hay actividad para mostrar"
-          description="Cuando registres ventas, acá vas a ver evolución, ticket promedio y productos más vendidos."
-          action={
-            <Link href="/ventas">
-              <Button size="sm" variant="outline" className="gap-1.5">
-                <ShoppingCart size={13} /> Ir a ventas
-              </Button>
-            </Link>
-          }
-        />
+        <MetricasEmptyState />
       ) : (
         <>
           {/* KPI cards */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <StatCard title="Ventas totales" value={fmt(data.ventas.total)} icon={TrendingUp} accent
-              sub={`${data.ventas.cantidad} operaciones`} />
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 14 }}>
+            <HeroStatCard
+              title="Ventas totales"
+              value={fmt(data.ventas.total)}
+              icon={TrendingUp}
+              sub={`${data.ventas.cantidad} operaciones`}
+            />
             <StatCard title="Ticket promedio" value={fmt(data.ventas.ticket_promedio)} icon={ShoppingCart}
               sub={`Últimos ${dias} días`} />
             <StatCard title="Productos activos" value={data.totales.total_productos ?? "—"} icon={Package} />
@@ -142,7 +274,7 @@ export default function MetricasPage() {
           <Card>
             <CardHeader>
               <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between" }}>
-                <CardTitle className="text-base font-bold text-foreground">Evolución de ventas</CardTitle>
+                <CardTitle style={{ fontSize: 15, fontWeight: 700 }}>Evolución de ventas</CardTitle>
                 <span style={{ fontSize: 11, color: "var(--muted-foreground)", fontWeight: 500 }}>últimos {dias} días</span>
               </div>
             </CardHeader>
@@ -158,28 +290,28 @@ export default function MetricasPage() {
                   <XAxis dataKey="dia" tick={{ fontSize: 10 }} />
                   <YAxis tick={{ fontSize: 10 }} tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} />
                   <Tooltip formatter={(v) => typeof v === 'number' ? fmt(v) : ''} />
-                  <Area type="monotone" dataKey="total" name="Total" stroke="#1E3A8A" fill="url(#grad1)" strokeWidth={2} />
+                  <Area type="monotone" dataKey="total" name="Total" stroke="#1E3A8A" fill="url(#grad1)" strokeWidth={2.5} />
                 </AreaChart>
               </ResponsiveContainer>
             </CardContent>
           </Card>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
             {/* Top productos */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-base font-bold text-foreground">Top productos vendidos</CardTitle>
+                <CardTitle style={{ fontSize: 15, fontWeight: 700 }}>Top productos vendidos</CardTitle>
               </CardHeader>
               <CardContent>
                 {data.top_productos.length === 0 ? (
-                  <p className="text-sm text-muted-foreground text-center py-4">Sin datos</p>
+                  <p style={{ fontSize: 14, color: "var(--muted-foreground)", textAlign: "center", padding: "16px 0" }}>Sin datos</p>
                 ) : (
                   <ResponsiveContainer width="100%" height={180}>
                     <BarChart data={data.top_productos} layout="vertical" margin={{ left: 8, right: 16 }}>
                       <XAxis type="number" tick={{ fontSize: 10 }} />
                       <YAxis type="category" dataKey="nombre" width={100} tick={{ fontSize: 10 }} />
                       <Tooltip />
-                      <Bar dataKey="unidades" name="Unidades" fill="#1E3A8A" radius={[0, 3, 3, 0]} />
+                      <Bar dataKey="unidades" name="Unidades" fill="#1E3A8A" radius={[0, 4, 4, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 )}
@@ -189,11 +321,11 @@ export default function MetricasPage() {
             {/* Métodos de pago */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-base font-bold text-foreground">Ventas por método de pago</CardTitle>
+                <CardTitle style={{ fontSize: 15, fontWeight: 700 }}>Ventas por método de pago</CardTitle>
               </CardHeader>
-              <CardContent className="flex items-center justify-center">
+              <CardContent style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
                 {data.ventas_por_metodo.length === 0 ? (
-                  <p className="text-sm text-muted-foreground py-4">Sin datos</p>
+                  <p style={{ fontSize: 14, color: "var(--muted-foreground)", padding: "16px 0" }}>Sin datos</p>
                 ) : (
                   <ResponsiveContainer width="100%" height={180}>
                     <PieChart>
@@ -204,7 +336,8 @@ export default function MetricasPage() {
                         cx="50%"
                         cy="50%"
                         outerRadius={70}
-                        label={({ name, percent }: { name?: string; percent?: number }) => `${name ?? ''} ${((percent ?? 0) * 100).toFixed(0)}%`}
+                        label={({ name, percent }: { name?: string; percent?: number }) =>
+                          `${name ?? ''} ${((percent ?? 0) * 100).toFixed(0)}%`}
                         labelLine={false}
                       >
                         {data.ventas_por_metodo.map((_, i) => (
@@ -221,32 +354,32 @@ export default function MetricasPage() {
 
           {/* Stock bajo mínimo */}
           {data.stock_bajo_minimo.length > 0 && (
-            <Card className="vs-alert-warning" style={{ border: "1px solid var(--warning-bdr)", background: "var(--warning-bg)" }}>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm flex items-center gap-2" style={{ color: "var(--warning-text)" }}>
+            <Card style={{ border: "1px solid var(--warning-bdr)", background: "var(--warning-bg)" }}>
+              <CardHeader style={{ paddingBottom: 8 }}>
+                <CardTitle style={{ fontSize: 14, display: "flex", alignItems: "center", gap: 8, color: "var(--warning-text)" }}>
                   <AlertTriangle size={14} />
                   {data.stock_bajo_minimo.length} producto{data.stock_bajo_minimo.length > 1 ? "s" : ""} con stock bajo mínimo
                 </CardTitle>
               </CardHeader>
-              <CardContent className="p-0">
-                <table className="w-full text-sm">
+              <CardContent style={{ padding: 0 }}>
+                <table style={{ width: "100%", fontSize: 14 }}>
                   <thead>
-                    <tr className="border-b text-xs" style={{ borderColor: "var(--warning-bdr)", color: "var(--warning-text)" }}>
-                      <th className="text-left px-4 py-2 font-medium">Producto</th>
-                      <th className="text-left px-4 py-2 font-medium">Stock actual</th>
-                      <th className="text-left px-4 py-2 font-medium">Mínimo</th>
-                      <th className="text-left px-4 py-2 font-medium">Categoría</th>
+                    <tr style={{ borderBottom: `1px solid var(--warning-bdr)`, fontSize: 12, color: "var(--warning-text)" }}>
+                      <th style={{ textAlign: "left", padding: "8px 16px", fontWeight: 600 }}>Producto</th>
+                      <th style={{ textAlign: "left", padding: "8px 16px", fontWeight: 600 }}>Stock actual</th>
+                      <th style={{ textAlign: "left", padding: "8px 16px", fontWeight: 600 }}>Mínimo</th>
+                      <th style={{ textAlign: "left", padding: "8px 16px", fontWeight: 600 }}>Categoría</th>
                     </tr>
                   </thead>
                   <tbody>
                     {data.stock_bajo_minimo.map((p) => (
-                      <tr key={p.id} className="border-b last:border-0" style={{ borderColor: "var(--warning-bdr)" }}>
-                        <td className="px-4 py-2 font-medium text-foreground">{p.nombre}</td>
-                        <td className="px-4 py-2">
+                      <tr key={p.id} style={{ borderBottom: "1px solid var(--warning-bdr)" }}>
+                        <td style={{ padding: "8px 16px", fontWeight: 500, color: "var(--foreground)" }}>{p.nombre}</td>
+                        <td style={{ padding: "8px 16px" }}>
                           <Badge variant="destructive">{p.stock}</Badge>
                         </td>
-                        <td className="px-4 py-2 text-muted-foreground">{p.stock_minimo}</td>
-                        <td className="px-4 py-2 text-muted-foreground">{p.categoria ?? "—"}</td>
+                        <td style={{ padding: "8px 16px", color: "var(--muted-foreground)" }}>{p.stock_minimo}</td>
+                        <td style={{ padding: "8px 16px", color: "var(--muted-foreground)" }}>{p.categoria ?? "—"}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -258,12 +391,12 @@ export default function MetricasPage() {
           {/* Clientes con deuda */}
           {data.clientes_con_deuda.length > 0 && (
             <Card style={{ borderColor: "var(--error-bdr)", background: "var(--error-bg)" }}>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm" style={{ color: "var(--error-text)" }}>
+              <CardHeader style={{ paddingBottom: 8 }}>
+                <CardTitle style={{ fontSize: 14, color: "var(--error-text)" }}>
                   Clientes con deuda pendiente
                 </CardTitle>
               </CardHeader>
-              <CardContent className="flex flex-wrap gap-2 pt-0">
+              <CardContent style={{ paddingTop: 0, display: "flex", flexWrap: "wrap", gap: 8 }}>
                 {data.clientes_con_deuda.map((c) => (
                   <Badge key={c.id} variant="outline" style={{
                     borderColor: "var(--error-bdr)",
