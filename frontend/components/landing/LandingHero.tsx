@@ -43,7 +43,6 @@ export default function LandingHero() {
                 padding: "15px 30px", borderRadius: 9,
                 fontWeight: 800, fontSize: 15, textDecoration: "none",
                 background: C.orange, color: "#fff",
-                boxShadow: "0 8px 32px rgba(249,115,22,.40)",
                 letterSpacing: "-0.01em",
               }}>
                 Empezar gratis, sin tarjeta <ArrowRight size={15} />

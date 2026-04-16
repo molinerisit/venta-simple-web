@@ -14,7 +14,7 @@ export default function LandingProblem() {
           </p>
         </div>
 
-        <div className="l-problems-grid">
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 1, background: C.border, borderRadius: 16, overflow: "hidden" }}>
           {PROBLEMS.map((p, i) => (
             <div key={i} style={{
               background: C.surface, padding: "28px 26px",

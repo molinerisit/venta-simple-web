@@ -51,9 +51,9 @@ export default function LandingFeatures() {
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                 <div style={{
                   width: 52, height: 52, borderRadius: 14,
-                  background: C.heroBg, display: "grid", placeItems: "center",
+                  background: C.blueBg, display: "grid", placeItems: "center",
                 }}>
-                  <f.icon size={22} style={{ color: "#fff" }} />
+                  <f.icon size={22} style={{ color: C.blue }} />
                 </div>
                 <span style={{ fontSize: 11, fontWeight: 800, color: C.orange, letterSpacing: "0.1em" }}>{f.n}</span>
               </div>
@@ -72,7 +72,6 @@ export default function LandingFeatures() {
             display: "inline-flex", alignItems: "center", gap: 8,
             padding: "14px 32px", borderRadius: 9, fontWeight: 700, fontSize: 14,
             background: C.orange, color: "#fff", textDecoration: "none",
-            boxShadow: "0 4px 18px rgba(249,115,22,.30)",
           }}>
             Probarlo gratis <ArrowRight size={14} />
           </Link>

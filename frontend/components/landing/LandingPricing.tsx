@@ -14,10 +14,7 @@ function PricingCard({ name, badge, price, features, cta, href, highlight }: {
       padding: highlight ? "36px 30px" : "30px 26px",
       position: "relative",
       display: "flex", flexDirection: "column",
-      boxShadow: highlight
-        ? `0 20px 56px rgba(11,29,63,.40), 0 0 0 1px rgba(249,115,22,.25)`
-        : "0 1px 4px rgba(26,24,22,.05)",
-      transform: highlight ? "translateY(-8px)" : "none",
+      boxShadow: highlight ? "0 8px 24px rgba(11,29,63,.18)" : "0 1px 4px rgba(26,24,22,.05)",
     }}>
       {badge && (
         <span style={{
@@ -71,7 +68,6 @@ function PricingCard({ name, badge, price, features, cta, href, highlight }: {
         textDecoration: "none",
         background: highlight ? C.orange : C.heroBg,
         color: "#fff",
-        boxShadow: highlight ? "0 6px 20px rgba(249,115,22,.35)" : "0 4px 14px rgba(11,29,63,.20)",
         letterSpacing: "-0.01em",
       }}>
         {cta}

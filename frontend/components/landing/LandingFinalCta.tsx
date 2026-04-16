@@ -32,7 +32,6 @@ export default function LandingFinalCta() {
             padding: "16px 34px", borderRadius: 9, fontWeight: 800, fontSize: 15,
             background: C.orange, color: "#fff", textDecoration: "none",
             letterSpacing: "-0.02em",
-            boxShadow: "0 8px 32px rgba(249,115,22,.40)",
           }}>
             Empezar gratis ahora <ArrowRight size={15} />
           </Link>

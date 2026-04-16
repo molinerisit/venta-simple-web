@@ -3,16 +3,15 @@ import { C } from "./tokens";
 const STATS = [
   { n: "+500",       sub: "negocios activos",    accent: false },
   { n: "+1.200.000", sub: "ventas procesadas",   accent: true  },
-  { n: "100%",       sub: "modo offline",        accent: false },
+  { n: "100%",       sub: "funciona offline",    accent: false },
   { n: "< 5 min",    sub: "tiempo de respuesta", accent: false },
-  { n: "$0",         sub: "para empezar",        accent: false },
 ];
 
 export default function LandingStats() {
   return (
-    <section style={{ background: C.surface, borderBottom: `1px solid ${C.border}`, padding: "64px 0" }}>
+    <section style={{ background: C.surface, borderBottom: `1px solid ${C.border}`, padding: "56px 0" }}>
       <div className="l-container">
-        <div className="l-stats-grid">
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 0 }}>
           {STATS.map((s, i) => (
             <div key={s.n} style={{
               textAlign: "center",
@@ -20,7 +19,7 @@ export default function LandingStats() {
               borderRight: i < STATS.length - 1 ? `1px solid ${C.border}` : "none",
             }}>
               <div style={{
-                fontSize: "clamp(36px, 4vw, 52px)", fontWeight: 900,
+                fontSize: "clamp(38px, 4.5vw, 56px)", fontWeight: 900,
                 letterSpacing: "-0.05em",
                 color: s.accent ? C.orange : C.text,
                 lineHeight: 1,

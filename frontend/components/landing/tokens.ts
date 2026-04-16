@@ -1,4 +1,4 @@
-import { TrendingDown, Clock, PhoneOff, DollarSign, BarChart2, Monitor, MessageSquare, UserCheck, Rocket } from "lucide-react";
+import { TrendingDown, Clock, PhoneOff, BarChart2, MessageSquare, UserCheck, Rocket } from "lucide-react";
 
 export const PRICE_BASIC = 2999;
 export const PRICE_PRO   = 4499;
@@ -40,9 +40,7 @@ export const PROBLEMS = [
   { icon: TrendingDown, text: "No sabés cuánto stock te queda hasta que se acaba" },
   { icon: Clock,        text: "Cada cierre de caja es un caos de papeles y calculadora" },
   { icon: PhoneOff,     text: "Si algo falla, nadie te ayuda en el momento" },
-  { icon: DollarSign,   text: "Pagás software caro que no usás ni la mitad" },
   { icon: BarChart2,    text: "No podés ver si tu negocio creció o bajó este mes" },
-  { icon: Monitor,      text: "Tu sistema no funciona desde todas las PCs del negocio" },
 ];
 
 export const SUPPORT_CARDS = [
