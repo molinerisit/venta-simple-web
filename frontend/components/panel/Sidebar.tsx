@@ -47,16 +47,16 @@ const planLabel: Record<string, string> = {
 
 // ── Paleta del sidebar — light (design system) / dark ─────────────────────────
 const S_LIGHT = {
-  bg:         "#F1F5F9",
+  bg:         "#F3F4F6",
   borderR:    "#E5E7EB",
   activeBg:   "#DBEAFE",
   hoverBg:    "#E2E8F0",
   divider:    "#E5E7EB",
-  text:       "#64748B",
-  textStrong: "#0F172A",
+  text:       "#6B7280",
+  textStrong: "#111827",
   textActive: "#1E3A8A",
-  label:      "#94A3B8",
-  iconNormal: "#94A3B8",
+  label:      "#9CA3AF",
+  iconNormal: "#9CA3AF",
   iconActive: "#1E3A8A",
   accent:     "#1E3A8A",
 };
@@ -140,7 +140,6 @@ export default function Sidebar() {
           <div style={{
             width: 32, height: 32, borderRadius: 9, flexShrink: 0,
             background: "#1E3A8A",
-            border: "1.5px solid rgba(96,165,250,.30)",
             display: "grid", placeItems: "center",
             fontSize: 13, fontWeight: 800, color: "#fff",
             letterSpacing: "0.01em",

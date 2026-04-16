@@ -77,24 +77,35 @@
    LIGHT THEME (por defecto) — VentaSimple Panel
    ══════════════════════════════════════════════════════════════ */
 :root {
-  /* VS tokens — modo claro */
-  --vs-bg:          #F8F7F4;
-  --vs-bg2:         #EDECE8;
+  /* VS tokens — modo claro — alineados con Design System V3 */
+  --vs-bg:          #F9FAFB;
+  --vs-bg2:         #F3F4F6;
   --vs-surface:     #FFFFFF;
   --vs-card:        #FFFFFF;
-  --vs-border:      rgba(0,0,0,.09);
-  --vs-muted:       #706B65;
-  --vs-text:        #1A1816;
+  --vs-border:      #E5E7EB;
+  --vs-border-strong: #CBD5E1;
+  --vs-text:        #111827;
+  --vs-text-soft:   #6B7280;
+  --vs-muted:       #9CA3AF;
   --vs-primary:     #1E3A8A;
+  --vs-primary-dark: #0B1F4D;
+  --vs-primary-soft: #DBEAFE;
   --vs-primary-2:   #3b82f6;
   --vs-accent:      #F97316;
+  --vs-accent-dark: #EA580C;
   --vs-accent-soft: #FFEDD5;
-  --vs-success:     #059669;
-  --vs-danger:      #dc2626;
-  --vs-warning:     #d97706;
-  --vs-shadow:      0 2px 12px rgba(0,0,0,.08);
-  --vs-radius:      14px;
-  --vs-radius-sm:   10px;
+  --vs-success:     #16A34A;
+  --vs-success-soft: #DCFCE7;
+  --vs-danger:      #DC2626;
+  --vs-danger-soft: #FEE2E2;
+  --vs-warning:     #D97706;
+  --vs-warning-soft: #FEF3C7;
+  --vs-shadow-sm:   0 1px 2px rgba(0,0,0,0.04);
+  --vs-shadow:      0 4px 12px rgba(0,0,0,0.06);
+  --vs-shadow-lg:   0 12px 28px rgba(0,0,0,0.08);
+  --vs-radius:      16px;
+  --vs-radius-sm:   8px;
+  --vs-radius-md:   12px;
   --vs-container:   1140px;
 
   /* shadcn/ui vars — light */
@@ -444,12 +455,9 @@
     background: var(--background);
   }
 
-  /* Fondo con gradiente solo en modo oscuro */
+  /* Fondo oscuro — sin gradientes decorativos */
   .dark body {
-    background:
-      radial-gradient(900px 500px at 15% -10%, rgba(30,58,138,.22), transparent 50%),
-      radial-gradient(800px 450px at 90% -10%, rgba(96,165,250,.10), transparent 50%),
-      linear-gradient(180deg, var(--vs-bg), #0a0f25 60%, #0a0f25);
+    background: var(--background);
   }
 
   #__next, #root { min-height: 100vh; }
@@ -473,90 +481,11 @@
    UTILIDADES GLOBALES VENTASIMPLE
    ══════════════════════════════════════════════════════════════ */
 
-/* Gradiente de texto — usado en landing */
-.grad-text {
-  background: linear-gradient(135deg, #1E3A8A, #3B82F6);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-.grad-text-2 {
-  background: linear-gradient(135deg, #3B82F6, #93C5FD);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-/* Chip/badge small */
-.vs-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 3px 12px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,.12);
-  background: rgba(255,255,255,.05);
-  color: #cbd5e1;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-/* Card VS con fondo degradado oscuro */
-.vs-card {
-  background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-  border: 1px solid rgba(255,255,255,.10);
-  border-radius: var(--vs-radius);
-  box-shadow: var(--vs-shadow);
-}
-
-/* Highlight card (plan recomendado) */
-.vs-card-highlight {
-  background: linear-gradient(180deg, rgba(30,58,138,.18), rgba(96,165,250,.12));
-  border-color: rgba(30,58,138,.4);
-}
-
-/* Divider sutil */
-.vs-hr {
-  height: 1px;
-  width: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,.12), transparent);
-  margin: 10px 0;
-}
-
-/* Stat card */
-.vs-stat {
-  background: rgba(11,18,32,.8);
-  border: 1px solid #27344e;
-  border-radius: 12px;
-  padding: 12px 14px;
-}
-
-/* Container */
+/* Container panel */
 .vs-container {
   max-width: var(--vs-container);
   margin: 0 auto;
   padding: 0 20px;
-}
-
-/* Landing nav */
-.vs-nav {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  border-bottom: 1px solid rgba(255,255,255,.08);
-  background: rgba(9,13,31,.75);
-  backdrop-filter: saturate(160%) blur(10px);
-}
-
-/* Kbd tag */
-.vs-kbd {
-  font-family: ui-monospace, Menlo, monospace;
-  background: #0d1433;
-  border: 1px solid rgba(255,255,255,.1);
-  padding: 2px 7px;
-  border-radius: 6px;
-  color: #c8d0e7;
-  font-size: 12px;
 }
 
 /* FAQ details/summary — quitar marker nativo en todos los browsers */
@@ -564,29 +493,7 @@ details > summary { list-style: none; }
 details > summary::-webkit-details-marker { display: none; }
 details[open] > summary span:last-child { transform: rotate(45deg); display: inline-block; }
 
-/* Recharts override para dark */
-.recharts-tooltip-wrapper .recharts-default-tooltip {
-  background: #0f172a !important;
-  border-color: rgba(255,255,255,.12) !important;
-  color: #e6e8ef !important;
-  border-radius: 8px !important;
-}
-.recharts-cartesian-axis-tick-value {
-  fill: #a3acc3 !important;
-}
 
-/* Feature-ico */
-.vs-feature-ico {
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
-  display: grid;
-  place-items: center;
-  font-size: 18px;
-  background: rgba(255,255,255,.07);
-  border: 1px solid rgba(255,255,255,.1);
-  flex-shrink: 0;
-}
 
 /* ══════════════════════════════════════════════════════════════
    STATUS TOKENS — alert boxes, toasts, badges
