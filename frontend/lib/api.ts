@@ -1,7 +1,10 @@
 // lib/api.ts — cliente HTTP centralizado para el backend FastAPI
 import axios from "axios";
 
-const BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+// Client: URL relativa → Next.js proxy (sin CORS). Server: URL directa al backend.
+const BASE = typeof window === "undefined"
+  ? (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000")
+  : "";
 
 const http = axios.create({ baseURL: BASE });
 
