@@ -31,7 +31,102 @@ const SALE_POOL = [
   { prod: "Galletitas 200g", price: "$480",   amount: 480   },
 ];
 
-type VentasRow = { prod: string; price: string; time: string; key: number; isNew: boolean };
+type Sale      = { prod: string; price: string; key: number; isNew: boolean };
+type VentasRow = Sale & { time: string };
+
+const PC_SCREENS = ["Ventas", "Dashboard", "Métricas"] as const;
+
+function DashboardScreen({ total, tickets, sales }: { total: number; tickets: number; sales: Sale[] }) {
+  return (
+    <div style={{ padding: 13, display: "flex", flexDirection: "column", gap: 8, height: "100%", minHeight: 0, overflow: "hidden" }}>
+      <div>
+        <div style={{ fontSize: 8.5, fontWeight: 600, color: "#9CA3AF" }}>Hoy, jueves 17 de abril</div>
+        <div style={{ fontSize: 12, fontWeight: 800, color: "#111827", letterSpacing: "-0.02em" }}>Buenos días, Martín</div>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 5 }}>
+        <div style={{ background: "#1E3A8A", borderRadius: 7, padding: "8px" }}>
+          <div style={{ fontSize: 7, fontWeight: 600, color: "rgba(255,255,255,.55)", marginBottom: 3 }}>Ventas hoy</div>
+          <div style={{ fontSize: 11, fontWeight: 900, color: "#fff", letterSpacing: "-0.03em", lineHeight: 1 }}>${total.toLocaleString("es-AR")}</div>
+          <div style={{ fontSize: 7, color: "#4ADE80", marginTop: 2, fontWeight: 700 }}>+12% vs ayer</div>
+        </div>
+        <div style={{ background: "#fff", border: "1px solid #E9EAEC", borderRadius: 7, padding: "8px" }}>
+          <div style={{ fontSize: 7, fontWeight: 600, color: "#9CA3AF", marginBottom: 3 }}>Tickets</div>
+          <div style={{ fontSize: 11, fontWeight: 900, color: "#111827", letterSpacing: "-0.03em", lineHeight: 1 }}>{tickets}</div>
+          <div style={{ fontSize: 7, color: "#16A34A", marginTop: 2, fontWeight: 700 }}>hoy</div>
+        </div>
+        <div style={{ background: "#FFFBEB", border: "1px solid #FDE68A", borderRadius: 7, padding: "8px" }}>
+          <div style={{ fontSize: 7, fontWeight: 600, color: "#D97706", marginBottom: 3 }}>Stock bajo</div>
+          <div style={{ fontSize: 11, fontWeight: 900, color: "#D97706", letterSpacing: "-0.03em", lineHeight: 1 }}>3</div>
+          <div style={{ fontSize: 7, color: "#D97706", marginTop: 2, fontWeight: 700 }}>productos</div>
+        </div>
+      </div>
+      <div style={{ background: "#fff", border: "1px solid #E9EAEC", borderRadius: 7, overflow: "hidden", flex: 1, minHeight: 0 }}>
+        <div style={{ padding: "5px 9px", borderBottom: "1px solid #F1F3F5", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <span style={{ fontSize: 8.5, fontWeight: 700, color: "#111827" }}>Últimas ventas</span>
+          <LiveBadge />
+        </div>
+        {sales.slice(0, 4).map((s, i) => (
+          <div key={s.key} className={s.isNew ? "mockup-row-new" : undefined} style={{ display: "flex", justifyContent: "space-between", padding: "5px 9px", borderBottom: i < 3 ? "1px solid #F8F9FB" : "none", background: s.isNew ? "#F0FDF4" : "transparent", transition: "background 1.4s ease" }}>
+            <span style={{ fontSize: 8.5, color: "#6B7280" }}>{s.prod}</span>
+            <span style={{ fontSize: 8.5, fontWeight: 700, color: "#111827" }}>{s.price}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function MetricasScreen() {
+  const days     = ["L", "M", "X", "J", "V", "S", "D"];
+  const lineVals = [42, 55, 48, 68, 72, 85, 95];
+  const barVals  = [55, 70, 45, 80, 65, 100, 35];
+  const W = 260, H = 52;
+  const max = Math.max(...lineVals);
+  const pts = lineVals.map((v, i) => ({ x: (i / (lineVals.length - 1)) * W, y: H - (v / max) * (H - 6) - 3 }));
+  const polyline = pts.map(p => `${p.x},${p.y}`).join(" ");
+  return (
+    <div style={{ padding: 13, display: "flex", flexDirection: "column", gap: 7, height: "100%", minHeight: 0, overflow: "hidden" }}>
+      <div style={{ fontSize: 12, fontWeight: 800, color: "#111827" }}>Esta semana</div>
+      <div style={{ background: "#fff", border: "1px solid #E9EAEC", borderRadius: 7, padding: "7px 9px" }}>
+        <div style={{ fontSize: 7.5, fontWeight: 600, color: "#9CA3AF", marginBottom: 5 }}>Tendencia de ventas ↑</div>
+        <svg width="100%" height={H} viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" style={{ overflow: "visible" }}>
+          <defs>
+            <linearGradient id="mg2" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#1E3A8A" stopOpacity="0.18" />
+              <stop offset="100%" stopColor="#1E3A8A" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          <polygon points={`0,${H} ${polyline} ${W},${H}`} fill="url(#mg2)" />
+          <polyline points={polyline} fill="none" stroke="#1E3A8A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="line-chart-path" />
+        </svg>
+        <div style={{ display: "flex", justifyContent: "space-between", marginTop: 3 }}>
+          {days.map(d => <span key={d} style={{ fontSize: 7, color: "#C4C9D4" }}>{d}</span>)}
+        </div>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
+        <div style={{ background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: 7, padding: "7px" }}>
+          <div style={{ fontSize: 7.5, color: "#16A34A", fontWeight: 600 }}>Mejor día</div>
+          <div style={{ fontSize: 12, fontWeight: 900, color: "#15803D", letterSpacing: "-0.03em" }}>$189K</div>
+        </div>
+        <div style={{ background: "#EFF6FF", border: "1px solid #BFDBFE", borderRadius: 7, padding: "7px" }}>
+          <div style={{ fontSize: 7.5, color: "#1D4ED8", fontWeight: 600 }}>Promedio/día</div>
+          <div style={{ fontSize: 12, fontWeight: 900, color: "#1D4ED8", letterSpacing: "-0.03em" }}>$124K</div>
+        </div>
+      </div>
+      <div style={{ flex: 1, background: "#fff", border: "1px solid #E9EAEC", borderRadius: 7, padding: "7px 9px", display: "flex", flexDirection: "column", gap: 4, minHeight: 0 }}>
+        <div style={{ fontSize: 8, fontWeight: 700, color: "#111827" }}>Ventas por día</div>
+        <div style={{ flex: 1, display: "flex", alignItems: "flex-end", gap: 3, minHeight: 0 }}>
+          {barVals.map((v, i) => (
+            <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
+              <div style={{ width: "100%", borderRadius: "2px 2px 0 0", background: days[i] === "S" ? "#1E3A8A" : "#DBEAFE", height: `${v * 0.32}px` }} />
+              <span style={{ fontSize: 7, color: days[i] === "S" ? "#1E3A8A" : "#9CA3AF", fontWeight: days[i] === "S" ? 700 : 500 }}>{days[i]}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function LiveBadge() {
   return (
@@ -133,8 +228,14 @@ function PhoneDashboard({ total, tickets }: { total: number; tickets: number }) 
 }
 
 export default function LandingHero() {
+  const [active, setActive]   = useState<typeof PC_SCREENS[number]>("Ventas");
   const [total, setTotal]     = useState(124500);
   const [tickets, setTickets] = useState(47);
+  const [sales, setSales]     = useState<Sale[]>([
+    { prod: "Coca-Cola 2.25L",  price: "$1.200", key: 0, isNew: false },
+    { prod: "Pan lactal 400g",  price: "$850",   key: 1, isNew: false },
+    { prod: "Leche entera 1L",  price: "$750",   key: 2, isNew: false },
+  ]);
   const [rows, setRows]       = useState<VentasRow[]>([
     { time: "14:32", prod: "Coca-Cola 2.25L",  price: "$1.200", key: 10, isNew: false },
     { time: "14:28", prod: "Yerba mate 500g",   price: "$1.450", key: 11, isNew: false },
@@ -143,12 +244,15 @@ export default function LandingHero() {
     { time: "14:08", prod: "Leche entera 1L",   price: "$750",   key: 14, isNew: false },
   ]);
   const [phoneTotal, setPhoneTotal] = useState(124500);
-  const keyRef = useRef(15);
+  const dashKey  = useRef(3);
+  const ventasKey = useRef(15);
 
+  // Ventas live animation
   useEffect(() => {
+    if (active !== "Ventas") return;
     const id = setInterval(() => {
       const s   = SALE_POOL[Math.floor(Math.random() * SALE_POOL.length)];
-      const key = keyRef.current++;
+      const key = ventasKey.current++;
       const now = new Date();
       const time = `${now.getHours()}:${String(now.getMinutes()).padStart(2, "0")}`;
       setRows(prev => [{ prod: s.prod, price: s.price, key, isNew: true, time }, ...prev.slice(0, 4)]);
@@ -156,6 +260,31 @@ export default function LandingHero() {
       setTickets(prev => prev + 1);
       setTimeout(() => setRows(prev => prev.map(r => r.key === key ? { ...r, isNew: false } : r)), 900);
     }, 2500);
+    return () => clearInterval(id);
+  }, [active]);
+
+  // Dashboard live animation
+  useEffect(() => {
+    if (active !== "Dashboard") return;
+    const id = setInterval(() => {
+      const s   = SALE_POOL[Math.floor(Math.random() * SALE_POOL.length)];
+      const key = dashKey.current++;
+      setSales(prev => [{ prod: s.prod, price: s.price, key, isNew: true }, ...prev.slice(0, 3)]);
+      setTotal(prev => prev + s.amount);
+      setTickets(prev => prev + 1);
+      setTimeout(() => setSales(prev => prev.map(r => r.key === key ? { ...r, isNew: false } : r)), 900);
+    }, 2500);
+    return () => clearInterval(id);
+  }, [active]);
+
+  // Autoplay — cambia de pantalla cada 7s
+  useEffect(() => {
+    const id = setInterval(() => {
+      setActive(prev => {
+        const i = PC_SCREENS.indexOf(prev);
+        return PC_SCREENS[(i + 1) % PC_SCREENS.length];
+      });
+    }, 7000);
     return () => clearInterval(id);
   }, []);
 
@@ -251,15 +380,19 @@ export default function LandingHero() {
                       <span style={{ fontSize: 6.5, fontWeight: 800, color: "#C4C9D4", letterSpacing: "0.1em", textTransform: "uppercase" }}>Navegación</span>
                     </div>
                     {NAV_ITEMS.map(({ label, icon: Icon }) => (
-                      <div key={label} style={{ padding: "5px 6px", borderRadius: 6, display: "flex", alignItems: "center", gap: 5, background: label === "Ventas" ? "#DBEAFE" : "transparent", borderLeft: label === "Ventas" ? "2px solid #1E3A8A" : "2px solid transparent" }}>
-                        <Icon size={9} strokeWidth={label === "Ventas" ? 2.2 : 1.8} style={{ color: label === "Ventas" ? "#1E3A8A" : "#9CA3AF", flexShrink: 0 }} />
-                        <span style={{ fontSize: 9, fontWeight: label === "Ventas" ? 700 : 500, color: label === "Ventas" ? "#1E3A8A" : "#9CA3AF" }}>{label}</span>
+                      <div key={label} style={{ padding: "5px 6px", borderRadius: 6, display: "flex", alignItems: "center", gap: 5, background: active === label ? "#DBEAFE" : "transparent", borderLeft: active === label ? "2px solid #1E3A8A" : "2px solid transparent", transition: "background .2s, border-left-color .2s" }}>
+                        <Icon size={9} strokeWidth={active === label ? 2.2 : 1.8} style={{ color: active === label ? "#1E3A8A" : "#9CA3AF", flexShrink: 0 }} />
+                        <span style={{ fontSize: 9, fontWeight: active === label ? 700 : 500, color: active === label ? "#1E3A8A" : "#9CA3AF" }}>{label}</span>
                       </div>
                     ))}
                   </div>
 
-                  {/* Ventas en vivo */}
-                  <PCVentasScreen rows={rows} total={total} />
+                  {/* Pantalla activa */}
+                  <div key={active} className="mockup-screen" style={{ background: "#F9FAFB", overflow: "hidden", height: "100%", minHeight: 0 }}>
+                    {active === "Ventas"    && <PCVentasScreen rows={rows} total={total} />}
+                    {active === "Dashboard" && <DashboardScreen total={total} tickets={tickets} sales={sales} />}
+                    {active === "Métricas"  && <MetricasScreen />}
+                  </div>
 
                 </div>
               </div>
