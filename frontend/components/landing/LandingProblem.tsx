@@ -39,7 +39,7 @@ export default function LandingProblem() {
           marginTop: 32, fontSize: 14, fontWeight: 700,
           color: C.muted, textAlign: "center", letterSpacing: "-0.01em",
         }}>
-          Esto no es falta de esfuerzo. Es falta de herramientas.
+          No es tu culpa. Es el sistema que no tenés.
         </p>
       </div>
     </section>

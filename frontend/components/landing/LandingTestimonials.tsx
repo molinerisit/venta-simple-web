@@ -11,14 +11,25 @@ export default function LandingTestimonials() {
   return (
     <section style={{ background: C.bg, padding: "112px 0" }}>
       <div className="l-container">
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 48, flexWrap: "wrap", gap: 16 }}>
+        {/* Authority badge */}
+        <div style={{ textAlign: "center", marginBottom: 48 }}>
+          <div style={{
+            display: "inline-flex", alignItems: "center", gap: 10,
+            background: C.blueBg, border: `1px solid #BFDBFE`,
+            borderRadius: 99, padding: "10px 22px", marginBottom: 32,
+          }}>
+            <span style={{ fontSize: 22 }}>🏪</span>
+            <span style={{ fontSize: 14, fontWeight: 700, color: C.blue }}>
+              +500 negocios ya usan VentaSimple todos los días
+            </span>
+          </div>
           <div>
             <div style={{ ...T.label, marginBottom: 14 }}>Testimonios</div>
-            <h2 style={{ ...T.h2, margin: 0 }}>Negocios reales,<br />resultados reales.</h2>
+            <h2 style={{ ...T.h2, margin: "0 0 12px" }}>Negocios reales,<br />resultados reales.</h2>
           </div>
-          <div style={{ display: "flex", gap: 2, alignItems: "center" }}>
+          <div style={{ display: "flex", gap: 2, alignItems: "center", justifyContent: "center", marginTop: 12 }}>
             {[...Array(5)].map((_, i) => (
-              <Star key={i} size={18} fill="#F59E0B" style={{ color: "#F59E0B" }} />
+              <Star key={i} size={16} fill="#F59E0B" style={{ color: "#F59E0B" }} />
             ))}
             <span style={{ ...T.small, marginLeft: 8, fontSize: 13, fontWeight: 600 }}>4.9 / 5 promedio</span>
           </div>

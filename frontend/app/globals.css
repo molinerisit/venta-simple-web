@@ -427,9 +427,10 @@
 @media (max-width: 680px) { .l-cambio-grid { grid-template-columns: 1fr; } }
 
 /* FEATURES cards hover */
+.l-feature-card { transition: all 0.2s ease !important; }
 .l-feature-card:hover {
-  box-shadow: 0 8px 28px rgba(0,0,0,.08), 0 2px 6px rgba(0,0,0,.04) !important;
-  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0,0,0,.05) !important;
+  transform: translateY(-4px);
 }
 @media (max-width: 700px) { .l-feature-card { padding: 28px 20px !important; } }
 

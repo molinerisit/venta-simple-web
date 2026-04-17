@@ -110,7 +110,7 @@ export default function LandingCambio() {
                     <span style={{ fontSize: 13, fontWeight: 700, color: "#7F1D1D" }}>{m.label}</span>
                     <span style={{ fontSize: 12, color: "#B91C1C" }}>{m.before.text}</span>
                   </div>
-                  <AnimBar pct={m.before.pct} color="#EF4444" animate={visible} slow delay={i * 120} />
+                  <AnimBar pct={m.before.pct} color="#EF4444" animate={visible} slow delay={i * 100} />
                 </div>
               ))}
             </div>
@@ -133,7 +133,7 @@ export default function LandingCambio() {
                     <span style={{ fontSize: 13, fontWeight: 700, color: "#064E3B" }}>{m.label}</span>
                     <span style={{ fontSize: 12, color: C.green, fontWeight: 600 }}>{m.after.text}</span>
                   </div>
-                  <AnimBar pct={m.after.pct} color={C.green} animate={visible} delay={i * 120} />
+                  <AnimBar pct={m.after.pct} color={C.green} animate={visible} delay={i * 100} />
                 </div>
               ))}
             </div>
@@ -148,7 +148,7 @@ export default function LandingCambio() {
           background: C.greenBg, border: `1px solid ${C.greenBdr}`, borderRadius: 12,
         }}>
           <p style={{ fontSize: 15, fontWeight: 700, color: C.green, margin: 0, letterSpacing: "-0.01em" }}>
-            Menos tiempo por venta = más clientes atendidos = más ingresos
+            Más ventas, menos caos. Así de simple.
           </p>
         </div>
 

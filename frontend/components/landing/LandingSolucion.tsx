@@ -18,7 +18,7 @@ export default function LandingSolucion() {
           <div>
             <div style={{ ...T.label, marginBottom: 16 }}>La solución</div>
             <h2 style={{ ...T.h2, margin: "0 0 20px" }}>
-              Todo lo que necesitás<br />en un solo sistema.
+              Pasá de improvisar a tener<br />el control total de tu negocio.
             </h2>
             <p style={{ ...T.body, maxWidth: 440, marginBottom: 40 }}>
               Cada problema que te frena hoy tiene una respuesta concreta dentro de VentaSimple.

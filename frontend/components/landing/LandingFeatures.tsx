@@ -78,7 +78,7 @@ export default function LandingFeatures() {
             padding: "14px 32px", borderRadius: 9, fontWeight: 700, fontSize: 14,
             background: C.orange, color: "#fff", textDecoration: "none",
           }}>
-            Probarlo gratis <ArrowRight size={14} />
+            Ver cómo funciona <ArrowRight size={14} />
           </Link>
         </div>
 
