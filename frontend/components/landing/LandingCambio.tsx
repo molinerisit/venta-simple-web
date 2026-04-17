@@ -20,14 +20,18 @@ const ROWS = [
   },
 ];
 
-function Bar({ pct, color, animate }: { pct: number; color: string; animate: boolean }) {
+function Bar({ pct, color, animate, slow }: { pct: number; color: string; animate: boolean; slow?: boolean }) {
   return (
     <div style={{ height: 8, background: "#E5E7EB", borderRadius: 99, overflow: "hidden", flex: 1 }}>
       <div style={{
         height: "100%", borderRadius: 99,
         background: color,
         width: animate ? `${pct}%` : "0%",
-        transition: animate ? "width 1s cubic-bezier(.4,0,.2,1)" : "none",
+        transition: animate
+          ? slow
+            ? "width 2.8s cubic-bezier(.05,.6,.3,1)"   // lenta — transmite la demora
+            : "width 0.55s cubic-bezier(.4,0,.2,1)"    // rápida — transmite eficiencia
+          : "none",
       }} />
     </div>
   );
@@ -88,7 +92,7 @@ export default function LandingCambio() {
               {/* Before */}
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                  <Bar pct={row.before.pct} color="#EF4444" animate={visible} />
+                  <Bar pct={row.before.pct} color="#EF4444" animate={visible} slow />
                 </div>
                 <span style={{ fontSize: 12, color: "#B91C1C" }}>{row.before.label}</span>
               </div>
