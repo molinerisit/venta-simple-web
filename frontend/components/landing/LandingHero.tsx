@@ -4,21 +4,19 @@ import { C } from "./tokens";
 
 export default function LandingHero() {
   return (
-    <section style={{ background: C.heroBg, padding: "100px 0 96px" }}>
+    <section style={{ background: C.heroBg, padding: "96px 0 88px" }}>
       <div className="l-container" style={{ position: "relative", zIndex: 1 }}>
 
-        {/* Badge soporte */}
         <div style={{
-          display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 36,
-          padding: "6px 14px 6px 10px", borderRadius: 99,
-          border: "1px solid rgba(255,255,255,.10)",
-          background: "rgba(255,255,255,.05)",
+          display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 40,
+          padding: "5px 14px", borderRadius: 99,
+          border: "1px solid rgba(255,255,255,.12)",
+          background: "rgba(255,255,255,.04)",
         }}>
-          <span style={{ display: "flex", alignItems: "center", gap: 5, padding: "2px 8px", borderRadius: 99, background: "rgba(34,197,94,.15)", border: "1px solid rgba(34,197,94,.25)" }}>
-            <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#22C55E" }} />
-            <span style={{ fontSize: 11, fontWeight: 700, color: "#4ADE80", letterSpacing: "0.04em" }}>EN VIVO</span>
+          <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#22C55E", flexShrink: 0 }} />
+          <span style={{ fontSize: 12, color: "rgba(255,255,255,.50)", fontWeight: 500 }}>
+            +500 negocios activos en Argentina
           </span>
-          <span style={{ fontSize: 13, color: "rgba(255,255,255,.55)", fontWeight: 500 }}>Soporte activo · respondemos en menos de 5 min</span>
         </div>
 
         <div className="l-hero-grid">
@@ -26,33 +24,33 @@ export default function LandingHero() {
           {/* Columna izquierda */}
           <div>
             <h1 style={{
-              fontSize: "clamp(40px, 5vw, 64px)", fontWeight: 900, lineHeight: 1.04,
-              letterSpacing: "-0.04em", color: "#FFFFFF", margin: "0 0 22px",
+              fontSize: "clamp(38px, 5vw, 62px)", fontWeight: 900, lineHeight: 1.05,
+              letterSpacing: "-0.04em", color: "#FFFFFF", margin: "0 0 20px",
             }}>
-              Controlá tu negocio<br />
-              desde un solo lugar.
+              Vendé rápido,<br />
+              controlá tu negocio.
             </h1>
 
-            <p style={{ fontSize: 17, lineHeight: 1.72, color: "rgba(255,255,255,.58)", maxWidth: 440, margin: "0 0 36px" }}>
-              App de escritorio para Windows con ventas, stock y reportes. Funciona offline y se sincroniza en la nube. Con soporte humano 24/7.
+            <p style={{ fontSize: 17, lineHeight: 1.70, color: "rgba(255,255,255,.55)", maxWidth: 420, margin: "0 0 36px" }}>
+              App de escritorio para Windows. Ventas, stock y reportes en un solo lugar. Funciona sin internet. Soporte humano 24/7.
             </p>
 
             <div className="l-hero-btns">
               <Link href="/registro" style={{
                 display: "inline-flex", alignItems: "center", gap: 8,
-                padding: "15px 30px", borderRadius: 9,
+                padding: "14px 28px", borderRadius: 8,
                 fontWeight: 800, fontSize: 15, textDecoration: "none",
                 background: C.orange, color: "#fff",
                 letterSpacing: "-0.01em",
               }}>
-                Empezar gratis, sin tarjeta <ArrowRight size={15} />
+                Empezar gratis <ArrowRight size={15} />
               </Link>
               <a href="#como-funciona" style={{
                 display: "inline-flex", alignItems: "center", gap: 8,
-                padding: "15px 22px", borderRadius: 9,
+                padding: "14px 20px", borderRadius: 8,
                 fontWeight: 600, fontSize: 14, textDecoration: "none",
-                background: "rgba(255,255,255,.07)", color: "rgba(255,255,255,.80)",
-                border: "1px solid rgba(255,255,255,.15)",
+                color: "rgba(255,255,255,.72)",
+                border: "1px solid rgba(255,255,255,.14)",
               }}>
                 Ver cómo funciona
               </a>
@@ -60,7 +58,7 @@ export default function LandingHero() {
 
             <div style={{ display: "flex", gap: 22, flexWrap: "wrap" }}>
               {["Sin tarjeta de crédito", "Listo en 5 minutos", "Cancelás cuando querés"].map(t => (
-                <span key={t} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "rgba(255,255,255,.38)" }}>
+                <span key={t} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "rgba(255,255,255,.35)" }}>
                   <Check size={11} strokeWidth={3} style={{ color: "#22C55E", flexShrink: 0 }} />
                   {t}
                 </span>
@@ -68,73 +66,108 @@ export default function LandingHero() {
             </div>
           </div>
 
-          {/* Mockup del dashboard */}
+          {/* Mockup — replica el panel real */}
           <div className="l-hero-mockup">
             <div style={{
-              borderRadius: 14, overflow: "hidden",
-              background: "#0D1B38",
-              border: "1px solid rgba(255,255,255,.10)",
-              boxShadow: "0 24px 60px rgba(0,0,0,.45)",
+              borderRadius: 12, overflow: "hidden",
+              border: "1px solid rgba(255,255,255,.12)",
+              boxShadow: "0 20px 48px rgba(0,0,0,.40)",
+              background: "#F3F4F6",
             }}>
-              {/* Browser chrome */}
-              <div style={{ padding: "10px 14px", background: "rgba(255,255,255,.04)", borderBottom: "1px solid rgba(255,255,255,.07)", display: "flex", alignItems: "center", gap: 8 }}>
-                <div style={{ display: "flex", gap: 5 }}>
-                  {["#EF4444","#F59E0B","#22C55E"].map(col => (
-                    <span key={col} style={{ width: 9, height: 9, borderRadius: "50%", background: col, opacity: 0.7 }} />
+              {/* Title bar — app Windows */}
+              <div style={{
+                padding: "9px 14px",
+                background: "#F9FAFB",
+                borderBottom: "1px solid #E5E7EB",
+                display: "flex", alignItems: "center", justifyContent: "space-between",
+              }}>
+                <span style={{ fontSize: 11, fontWeight: 600, color: "#6B7280" }}>VentaSimple</span>
+                <div style={{ display: "flex", gap: 6 }}>
+                  {["#E5E7EB","#E5E7EB","#E5E7EB"].map((col, i) => (
+                    <span key={i} style={{ width: 10, height: 10, borderRadius: "50%", background: col }} />
                   ))}
                 </div>
-                <span style={{ fontSize: 11, color: "rgba(255,255,255,.28)", marginLeft: 6, fontWeight: 500 }}>VentaSimple — Dashboard</span>
               </div>
 
-              <div style={{ padding: 16, display: "grid", gridTemplateColumns: "38px 1fr", gap: 12 }}>
-                {/* Mini sidebar */}
-                <div style={{ display: "flex", flexDirection: "column", gap: 7, paddingTop: 4 }}>
-                  {[1,1,0,0,0,0,0].map((active, i) => (
-                    <div key={i} style={{ height: 7, borderRadius: 99, background: active ? "rgba(255,255,255,.22)" : "rgba(255,255,255,.06)" }} />
+              {/* App layout */}
+              <div style={{ display: "grid", gridTemplateColumns: "120px 1fr", height: 320 }}>
+
+                {/* Sidebar real */}
+                <div style={{ background: "#F3F4F6", borderRight: "1px solid #E5E7EB", padding: "12px 8px", display: "flex", flexDirection: "column", gap: 2 }}>
+                  <div style={{ padding: "6px 8px 10px", marginBottom: 2 }}>
+                    <div style={{ height: 8, width: "80%", borderRadius: 4, background: "#1E3A8A", opacity: 0.85 }} />
+                  </div>
+                  {[
+                    { label: "Dashboard", active: true },
+                    { label: "Ventas",    active: false },
+                    { label: "Productos", active: false },
+                    { label: "Clientes",  active: false },
+                    { label: "Métricas",  active: false },
+                  ].map(item => (
+                    <div key={item.label} style={{
+                      padding: "7px 8px", borderRadius: 6, display: "flex", alignItems: "center", gap: 6,
+                      background: item.active ? "#DBEAFE" : "transparent",
+                      borderLeft: item.active ? "2px solid #1E3A8A" : "2px solid transparent",
+                    }}>
+                      <div style={{ width: 5, height: 5, borderRadius: 2, background: item.active ? "#1E3A8A" : "#9CA3AF", flexShrink: 0 }} />
+                      <span style={{ fontSize: 10, fontWeight: item.active ? 700 : 500, color: item.active ? "#1E3A8A" : "#9CA3AF" }}>
+                        {item.label}
+                      </span>
+                    </div>
                   ))}
                 </div>
 
-                {/* Content */}
-                <div>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, marginBottom: 12 }}>
+                {/* Contenido dashboard */}
+                <div style={{ background: "#F9FAFB", padding: 14, display: "flex", flexDirection: "column", gap: 10, overflowY: "hidden" }}>
+
+                  {/* Header */}
+                  <div>
+                    <div style={{ fontSize: 9, fontWeight: 600, color: "#9CA3AF", marginBottom: 2 }}>Hoy, miércoles 16 de abril</div>
+                    <div style={{ fontSize: 13, fontWeight: 800, color: "#111827", letterSpacing: "-0.02em" }}>Buenos días, Martín</div>
+                  </div>
+
+                  {/* Stat cards */}
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 7 }}>
                     {[
-                      { label: "Ventas hoy", value: "$124.500", sub: "+12%",    hero: true },
-                      { label: "Tickets",    value: "47",        sub: "+6%",    hero: false },
-                      { label: "Stock bajo", value: "3 items",   sub: "reponer", warn: true },
+                      { label: "Ventas hoy",  value: "$124.500", sub: "+12% vs ayer",  accent: true,  warn: false },
+                      { label: "Tickets",      value: "47",       sub: "+6 esta hora",  accent: false, warn: false },
+                      { label: "Stock bajo",   value: "3",        sub: "productos",      accent: false, warn: true  },
                     ].map((m, i) => (
                       <div key={i} style={{
-                        background: m.hero ? "rgba(30,58,138,.85)" : "rgba(255,255,255,.04)",
-                        border: `1px solid ${m.hero ? "rgba(96,165,250,.3)" : "rgba(255,255,255,.07)"}`,
-                        borderRadius: 8, padding: "10px 11px",
+                        background: "#fff",
+                        border: `1px solid ${m.warn ? "#FDE68A" : "#E9EAEC"}`,
+                        borderRadius: 8, padding: "10px 10px",
                       }}>
-                        <div style={{ fontSize: 9, color: m.hero ? "rgba(255,255,255,.6)" : "rgba(255,255,255,.35)", marginBottom: 4, fontWeight: 600 }}>{m.label}</div>
-                        <div style={{ fontSize: 16, fontWeight: 900, color: m.warn ? "#F59E0B" : "#fff", letterSpacing: "-0.03em", lineHeight: 1 }}>{m.value}</div>
-                        <div style={{ fontSize: 9, color: m.warn ? "#F59E0B" : "#4ADE80", marginTop: 3, fontWeight: 700 }}>{m.sub}</div>
+                        <div style={{ fontSize: 8, fontWeight: 600, color: "#9CA3AF", marginBottom: 4 }}>{m.label}</div>
+                        <div style={{ fontSize: 15, fontWeight: 900, color: m.warn ? "#D97706" : "#111827", letterSpacing: "-0.03em", lineHeight: 1 }}>{m.value}</div>
+                        <div style={{ fontSize: 8, color: m.warn ? "#D97706" : "#16A34A", marginTop: 3, fontWeight: 700 }}>{m.sub}</div>
                       </div>
                     ))}
                   </div>
 
-                  <div style={{ border: "1px solid rgba(255,255,255,.07)", borderRadius: 8, overflow: "hidden" }}>
-                    <div style={{ padding: "7px 11px", background: "rgba(255,255,255,.04)", borderBottom: "1px solid rgba(255,255,255,.06)" }}>
-                      <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,.35)" }}>Últimas ventas</span>
+                  {/* Últimas ventas */}
+                  <div style={{ background: "#fff", border: "1px solid #E9EAEC", borderRadius: 8, overflow: "hidden" }}>
+                    <div style={{ padding: "7px 10px", borderBottom: "1px solid #F1F3F5" }}>
+                      <span style={{ fontSize: 9, fontWeight: 700, color: "#111827" }}>Últimas ventas</span>
                     </div>
                     {[
                       ["Coca-Cola 2.25L",  "$1.200"],
                       ["Pan lactal 400g",  "$850"],
                       ["Leche entera x1L", "$750"],
-                      ["Galletitas Oreo",  "$620"],
                     ].map(([prod, precio], i) => (
-                      <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "7px 11px", borderBottom: i < 3 ? "1px solid rgba(255,255,255,.05)" : "none" }}>
-                        <span style={{ fontSize: 11, color: "rgba(255,255,255,.55)", fontWeight: 500 }}>{prod}</span>
-                        <span style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,.80)" }}>{precio}</span>
+                      <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "6px 10px", borderBottom: i < 2 ? "1px solid #F8F9FB" : "none" }}>
+                        <span style={{ fontSize: 9, color: "#6B7280", fontWeight: 500 }}>{prod}</span>
+                        <span style={{ fontSize: 9, fontWeight: 700, color: "#111827" }}>{precio}</span>
                       </div>
                     ))}
                   </div>
 
-                  <div style={{ marginTop: 10, padding: "8px 11px", borderRadius: 8, background: "rgba(10,110,69,.14)", border: "1px solid rgba(34,197,94,.22)", display: "flex", alignItems: "center", gap: 7 }}>
-                    <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#22C55E", flexShrink: 0 }} />
-                    <span style={{ fontSize: 10, fontWeight: 700, color: "#4ADE80" }}>Soporte en línea · &lt; 5 min de respuesta</span>
+                  {/* Alerta stock */}
+                  <div style={{ background: "#FFFBEB", border: "1px solid #FDE68A", borderRadius: 8, padding: "7px 10px", display: "flex", alignItems: "center", gap: 7 }}>
+                    <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#D97706", flexShrink: 0 }} />
+                    <span style={{ fontSize: 9, fontWeight: 600, color: "#B45309" }}>Stock bajo: Coca Cola (3) · Pan (2)</span>
                   </div>
+
                 </div>
               </div>
             </div>
