@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { ArrowRight, Check, Monitor, Globe, RefreshCw } from "lucide-react";
+import { ArrowRight, Check, Monitor, Globe, RefreshCw, LayoutDashboard, Package, ShoppingCart, BarChart2, CreditCard } from "lucide-react";
 import { C } from "./tokens";
 
 const MICRO = [
@@ -11,7 +11,13 @@ const MICRO = [
   { icon: RefreshCw, label: "Todo se sincroniza automáticamente"     },
 ];
 
-const NAV_ITEMS = ["Dashboard", "Caja", "Productos", "Ventas", "Métricas"];
+const NAV_ITEMS = [
+  { label: "Dashboard", icon: LayoutDashboard },
+  { label: "Caja",      icon: CreditCard      },
+  { label: "Productos", icon: Package         },
+  { label: "Ventas",    icon: ShoppingCart    },
+  { label: "Métricas",  icon: BarChart2       },
+];
 
 const SALE_POOL = [
   { prod: "Gaseosa 1.5L",    price: "$950",   amount: 950   },
@@ -342,8 +348,8 @@ export default function LandingHero() {
     const id = setInterval(() => {
       if (Date.now() < pausedUntil.current) return;
       setActive(prev => {
-        const i = NAV_ITEMS.indexOf(prev);
-        return NAV_ITEMS[(i + 1) % NAV_ITEMS.length];
+        const i = NAV_ITEMS.findIndex(n => n.label === prev);
+        return NAV_ITEMS[(i + 1) % NAV_ITEMS.length].label;
       });
     }, 4000);
     return () => clearInterval(id);
@@ -418,26 +424,43 @@ export default function LandingHero() {
               <div style={{ display: "grid", gridTemplateColumns: "100px 1fr", height: 330, overflow: "hidden" }}>
 
                 {/* Sidebar navegable */}
-                <div style={{ background: "#F3F4F6", borderRight: "1px solid #E5E7EB", padding: "12px 8px", display: "flex", flexDirection: "column", gap: 2, overflow: "hidden" }}>
-                  <div style={{ padding: "6px 8px 10px", marginBottom: 2 }}>
-                    <div style={{ height: 8, width: "80%", borderRadius: 4, background: "#1E3A8A", opacity: 0.85 }} />
+                <div style={{ background: "#F3F4F6", borderRight: "1px solid #E5E7EB", padding: "10px 7px 10px", display: "flex", flexDirection: "column", gap: 1, overflow: "hidden" }}>
+
+                  {/* Logo */}
+                  <div style={{ padding: "2px 6px 8px" }}>
+                    <span style={{ fontSize: 10.5, fontWeight: 900, color: "#1E3A8A", letterSpacing: "-0.03em" }}>VentaSimple</span>
+                    <div style={{ display: "flex", alignItems: "center", gap: 5, marginTop: 7 }}>
+                      <div style={{ width: 18, height: 18, borderRadius: 5, background: "#1E3A8A", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 8, fontWeight: 800, color: "#fff", flexShrink: 0 }}>M</div>
+                      <div>
+                        <div style={{ fontSize: 8, fontWeight: 600, color: "#111827", lineHeight: 1.1 }}>Martín</div>
+                        <div style={{ fontSize: 7, color: "#9CA3AF" }}>Propietario</div>
+                      </div>
+                    </div>
                   </div>
-                  {NAV_ITEMS.map(item => (
+
+                  <div style={{ height: 1, background: "#E5E7EB", margin: "0 2px 5px" }} />
+
+                  {/* Sección label */}
+                  <div style={{ padding: "0 6px 3px" }}>
+                    <span style={{ fontSize: 7, fontWeight: 800, color: "#C4C9D4", letterSpacing: "0.1em", textTransform: "uppercase" }}>Navegación</span>
+                  </div>
+
+                  {NAV_ITEMS.map(({ label, icon: Icon }) => (
                     <div
-                      key={item}
-                      onClick={() => handleNavClick(item)}
+                      key={label}
+                      onClick={() => handleNavClick(label)}
                       style={{
-                        padding: "7px 8px", borderRadius: 6,
+                        padding: "6px 7px", borderRadius: 6,
                         display: "flex", alignItems: "center", gap: 6,
                         cursor: "pointer", userSelect: "none",
-                        background: active === item ? "#DBEAFE" : "transparent",
-                        borderLeft: active === item ? "2px solid #1E3A8A" : "2px solid transparent",
+                        background: active === label ? "#DBEAFE" : "transparent",
+                        borderLeft: active === label ? "2px solid #1E3A8A" : "2px solid transparent",
                         transition: "background .12s, border-left-color .12s",
                       }}
                     >
-                      <div style={{ width: 5, height: 5, borderRadius: 2, background: active === item ? "#1E3A8A" : "#9CA3AF", flexShrink: 0 }} />
-                      <span style={{ fontSize: 10, fontWeight: active === item ? 700 : 500, color: active === item ? "#1E3A8A" : "#9CA3AF" }}>
-                        {item}
+                      <Icon size={10} strokeWidth={active === label ? 2.2 : 1.8} style={{ color: active === label ? "#1E3A8A" : "#9CA3AF", flexShrink: 0 }} />
+                      <span style={{ fontSize: 9.5, fontWeight: active === label ? 700 : 500, color: active === label ? "#1E3A8A" : "#9CA3AF" }}>
+                        {label}
                       </span>
                     </div>
                   ))}
