@@ -626,6 +626,14 @@ details[open] > summary span:last-child { transform: rotate(45deg); display: inl
 }
 @keyframes fade-in-dot { from { opacity: 0; } to { opacity: 1; } }
 
+/* Cobrar success bounce */
+@keyframes cobrar-bounce {
+  0%   { transform: scale(.8);   opacity: 0; }
+  55%  { transform: scale(1.06); opacity: 1; }
+  100% { transform: scale(1);    opacity: 1; }
+}
+.cobrar-success { animation: cobrar-bounce 380ms cubic-bezier(.34,1.56,.64,1) both; }
+
 /* Mockup screen transition */
 @keyframes mockup-screen-in {
   from { opacity: 0; transform: translateY(4px); }
