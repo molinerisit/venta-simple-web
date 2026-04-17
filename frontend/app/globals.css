@@ -404,11 +404,14 @@
 }
 @media (max-width: 960px) { .l-solucion-grid { grid-template-columns: 1fr; gap: 48px; } }
 
-/* CAMBIO comparison rows */
-@media (max-width: 680px) {
-  .l-cambio-row { grid-template-columns: 1fr !important; }
-  .l-cambio-row > :first-child { font-size: 13px; font-weight: 700; }
+/* CAMBIO 2-column comparison */
+.l-cambio-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: start;
 }
+@media (max-width: 680px) { .l-cambio-grid { grid-template-columns: 1fr; } }
 
 /* FEATURES sticky layout */
 .l-features-grid {
