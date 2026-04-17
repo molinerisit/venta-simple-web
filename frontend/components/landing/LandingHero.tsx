@@ -10,8 +10,8 @@ import { C } from "./tokens";
 
 const MICRO = [
   { icon: Wifi,        label: "Vendé sin conexión"              },
-  { icon: Smartphone,  label: "Control desde el celular"        },
-  { icon: RefreshCw,   label: "Todo se sincroniza automático"   },
+  { icon: Smartphone,  label: "Control total desde el celular"  },
+  { icon: RefreshCw,   label: "Sincronización automática"       },
 ];
 
 const NAV_ITEMS = [
@@ -313,7 +313,8 @@ export default function LandingHero() {
             </h1>
 
             <p style={{ fontSize: 16, lineHeight: 1.75, color: "rgba(255,255,255,.60)", maxWidth: 440, margin: "0 0 44px" }}>
-              Mirá tus ventas en tiempo real y controlá tu negocio desde cualquier lugar.
+              Mirá tus ventas en tiempo real y controlá tu negocio desde cualquier lugar.<br />
+              Todo en un solo lugar.
             </p>
 
             <div className="l-hero-btns">
@@ -321,7 +322,7 @@ export default function LandingHero() {
                 Empezar gratis — sin tarjeta <ArrowRight size={15} />
               </Link>
               <a href="#como-funciona" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "15px 22px", borderRadius: 8, fontWeight: 600, fontSize: 14, textDecoration: "none", color: "rgba(255,255,255,.80)", border: "1px solid rgba(255,255,255,.28)" }}>
-                Ver cómo funciona
+                Ver cómo funciona →
               </a>
             </div>
 
@@ -338,7 +339,7 @@ export default function LandingHero() {
           {/* Mockup PC + Phone */}
           <div className="l-hero-mockup" style={{ overflow: "visible" }}>
             <div style={{ marginBottom: 10, textAlign: "center" }}>
-              <span style={{ fontSize: 12, color: "rgba(255,255,255,.38)", fontWeight: 500 }}>Tus ventas, en tiempo real →</span>
+              <span style={{ fontSize: 12, color: "rgba(255,255,255,.38)", fontWeight: 500 }}>Mirá tus ventas en tiempo real →</span>
             </div>
 
             <div className="l-mockup-pc-wrap" style={{ position: "relative", paddingBottom: 84 }}>
