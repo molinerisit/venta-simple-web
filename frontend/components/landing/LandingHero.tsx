@@ -396,15 +396,15 @@ export default function LandingHero() {
           </div>
 
           {/* Mockup PC + Mobile */}
-          <div className="l-hero-mockup">
+          <div className="l-hero-mockup" style={{ overflow: "visible" }}>
             <div style={{ marginBottom: 10, textAlign: "center" }}>
               <span style={{ fontSize: 12, color: "rgba(255,255,255,.38)", fontWeight: 500 }}>Probalo en vivo →</span>
             </div>
 
-            <div style={{ position: "relative", paddingBottom: 56 }}>
+            <div className="l-mockup-pc-wrap" style={{ position: "relative", paddingBottom: 84 }}>
 
               {/* PC Frame */}
-              <div style={{ borderRadius: 10, overflow: "hidden", border: "1px solid rgba(255,255,255,.12)", boxShadow: "0 16px 48px rgba(0,0,0,.28)", background: "#F3F4F6" }}>
+              <div className="l-mockup-pc" style={{ borderRadius: 10, overflow: "hidden", border: "1px solid rgba(255,255,255,.12)", boxShadow: "0 16px 48px rgba(0,0,0,.28)", background: "#F3F4F6" }}>
 
                 {/* Title bar */}
                 <div style={{ padding: "8px 14px", background: "#F9FAFB", borderBottom: "1px solid #E5E7EB", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -460,7 +460,7 @@ export default function LandingHero() {
               </div>
 
               {/* Phone overlay */}
-              <div style={{ position: "absolute", bottom: 0, right: 8, width: 168, background: "#111827", borderRadius: 24, padding: "13px 8px 10px", boxShadow: "0 20px 56px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.09)" }}>
+              <div className="l-mockup-phone" style={{ position: "absolute", bottom: -24, right: -18, width: 168, background: "#111827", borderRadius: 24, padding: "13px 8px 10px", boxShadow: "0 20px 56px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.09)" }}>
                 <div style={{ width: 38, height: 4, borderRadius: 2, background: "#374151", margin: "0 auto 10px" }} />
                 <div style={{ background: "#F9FAFB", borderRadius: 14, overflow: "hidden" }}>
                   <MobileScreen total={phoneTotal} tickets={tickets} />

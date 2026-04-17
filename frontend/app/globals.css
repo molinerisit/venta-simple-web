@@ -360,8 +360,11 @@
   .l-hero-mockup { width: 380px !important; min-width: 380px !important; max-width: 380px !important; }
 }
 @media (max-width: 900px) {
-  .l-hero-grid { grid-template-columns: 1fr; gap: 48px; }
-  .l-hero-mockup { display: none !important; }
+  .l-hero-grid { grid-template-columns: 1fr; gap: 40px; }
+  .l-hero-mockup { display: flex !important; width: 100% !important; min-width: 0 !important; max-width: 100% !important; flex-direction: column; align-items: center; }
+  .l-mockup-pc  { display: none !important; }
+  .l-mockup-pc-wrap { display: flex !important; flex-direction: column; align-items: center; padding-bottom: 0 !important; }
+  .l-mockup-phone { position: static !important; width: 200px !important; right: auto !important; bottom: auto !important; margin: 0 auto; }
 }
 
 /* HERO buttons: stack en pantallas chicas */
