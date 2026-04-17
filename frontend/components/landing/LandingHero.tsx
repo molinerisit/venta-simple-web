@@ -7,18 +7,6 @@ export default function LandingHero() {
     <section style={{ background: C.heroBg, padding: "96px 0 88px" }}>
       <div className="l-container" style={{ position: "relative", zIndex: 1 }}>
 
-        <div style={{
-          display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 40,
-          padding: "5px 14px", borderRadius: 99,
-          border: "1px solid rgba(255,255,255,.12)",
-          background: "rgba(255,255,255,.04)",
-        }}>
-          <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#22C55E", flexShrink: 0 }} />
-          <span style={{ fontSize: 12, color: "rgba(255,255,255,.50)", fontWeight: 500 }}>
-            +500 negocios · funciona 100% offline
-          </span>
-        </div>
-
         <div className="l-hero-grid">
 
           {/* Columna izquierda */}
