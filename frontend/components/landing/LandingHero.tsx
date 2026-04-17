@@ -77,29 +77,29 @@ function VentasScreen({ rows, total }: { rows: VentasRow[]; total: number }) {
 
 function MobileScreen({ total, tickets }: { total: number; tickets: number }) {
   return (
-    <div style={{ padding: "8px 8px 6px", display: "flex", flexDirection: "column", gap: 5 }}>
-      <div style={{ fontSize: 7.5, fontWeight: 600, color: "#9CA3AF" }}>Hoy · jue 17</div>
+    <div style={{ padding: "10px 10px 8px", display: "flex", flexDirection: "column", gap: 7 }}>
+      <div style={{ fontSize: 8.5, fontWeight: 600, color: "#9CA3AF" }}>Hoy · jue 17 de abril</div>
 
-      <div style={{ background: "#1E3A8A", borderRadius: 8, padding: "8px 9px" }}>
-        <div style={{ fontSize: 6.5, fontWeight: 600, color: "rgba(255,255,255,.55)", marginBottom: 2 }}>Ventas hoy</div>
-        <div style={{ fontSize: 14, fontWeight: 900, color: "#fff", letterSpacing: "-0.03em", lineHeight: 1 }}>${total.toLocaleString("es-AR")}</div>
-        <div style={{ fontSize: 6.5, color: "#4ADE80", marginTop: 3, fontWeight: 700 }}>+12% vs ayer</div>
+      <div style={{ background: "#1E3A8A", borderRadius: 9, padding: "10px 11px" }}>
+        <div style={{ fontSize: 7.5, fontWeight: 600, color: "rgba(255,255,255,.55)", marginBottom: 3 }}>Ventas hoy</div>
+        <div style={{ fontSize: 17, fontWeight: 900, color: "#fff", letterSpacing: "-0.03em", lineHeight: 1 }}>${total.toLocaleString("es-AR")}</div>
+        <div style={{ fontSize: 7.5, color: "#4ADE80", marginTop: 4, fontWeight: 700 }}>+12% vs ayer</div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 4 }}>
-        <div style={{ background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: 7, padding: "5px 6px" }}>
-          <div style={{ fontSize: 6, color: "#16A34A", fontWeight: 600 }}>Tickets</div>
-          <div style={{ fontSize: 12, fontWeight: 900, color: "#15803D", letterSpacing: "-0.02em" }}>{tickets}</div>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 5 }}>
+        <div style={{ background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: 8, padding: "7px 8px" }}>
+          <div style={{ fontSize: 7, color: "#16A34A", fontWeight: 600 }}>Tickets</div>
+          <div style={{ fontSize: 14, fontWeight: 900, color: "#15803D", letterSpacing: "-0.02em" }}>{tickets}</div>
         </div>
-        <div style={{ background: "#FFFBEB", border: "1px solid #FDE68A", borderRadius: 7, padding: "5px 6px" }}>
-          <div style={{ fontSize: 6, color: "#D97706", fontWeight: 600 }}>Stock ⚠</div>
-          <div style={{ fontSize: 12, fontWeight: 900, color: "#D97706", letterSpacing: "-0.02em" }}>3</div>
+        <div style={{ background: "#FFFBEB", border: "1px solid #FDE68A", borderRadius: 8, padding: "7px 8px" }}>
+          <div style={{ fontSize: 7, color: "#D97706", fontWeight: 600 }}>Stock ⚠</div>
+          <div style={{ fontSize: 14, fontWeight: 900, color: "#D97706", letterSpacing: "-0.02em" }}>3</div>
         </div>
       </div>
 
-      <div style={{ display: "flex", alignItems: "center", gap: 4, padding: "4px 6px", background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: 6 }}>
-        <span className="sync-dot" style={{ width: 4, height: 4 }} />
-        <span style={{ fontSize: 6.5, color: "#16A34A", fontWeight: 600 }}>Sincronizado</span>
+      <div style={{ display: "flex", alignItems: "center", gap: 5, padding: "5px 7px", background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: 7 }}>
+        <span className="sync-dot" style={{ width: 5, height: 5 }} />
+        <span style={{ fontSize: 7.5, color: "#16A34A", fontWeight: 600 }}>Sincronizado</span>
       </div>
     </div>
   );
@@ -150,15 +150,17 @@ export default function LandingHero() {
               </span>
             </div>
 
-            <h1 style={{ fontSize: "clamp(40px, 5.2vw, 64px)", fontWeight: 900, lineHeight: 1.06, letterSpacing: "-0.04em", color: "#FFFFFF", margin: "0 0 28px" }}>
-              Vendé más, controlá<br />
-              tu stock y hacé<br />
-              crecer tu negocio.
+            <h1 style={{ fontSize: "clamp(38px, 5vw, 60px)", fontWeight: 900, lineHeight: 1.06, letterSpacing: "-0.04em", color: "#FFFFFF", margin: "0 0 28px" }}>
+              Vendé en tu negocio.<br />
+              Controlá todo en<br />
+              tiempo real desde<br />
+              tu celular.
             </h1>
 
-            <p style={{ fontSize: 16, lineHeight: 1.75, color: "rgba(255,255,255,.60)", maxWidth: 440, margin: "0 0 44px" }}>
-              Cobrá más rápido, evitá errores y tené el control de tu negocio en todo momento.
-              Funciona sin internet y se sincroniza automáticamente cuando volvés a tener conexión.
+            <p style={{ fontSize: 15.5, lineHeight: 1.8, color: "rgba(255,255,255,.60)", maxWidth: 440, margin: "0 0 44px" }}>
+              Sistema de ventas para PC + panel web.<br />
+              Mirá ventas, stock y métricas en tiempo real.<br />
+              Cambiá precios, controlá tu negocio y tomá decisiones desde cualquier lugar.
             </p>
 
             <div className="l-hero-btns">
@@ -183,7 +185,7 @@ export default function LandingHero() {
           {/* Mockup PC + Mobile */}
           <div className="l-hero-mockup">
             <div style={{ marginBottom: 10, textAlign: "center" }}>
-              <span style={{ fontSize: 12, color: "rgba(255,255,255,.38)", fontWeight: 500 }}>Vendé en la PC. Controlá desde tu celular →</span>
+              <span style={{ fontSize: 12, color: "rgba(255,255,255,.38)", fontWeight: 500 }}>PC + celular, en tiempo real →</span>
             </div>
 
             <div style={{ position: "relative", paddingBottom: 56 }}>
@@ -239,9 +241,9 @@ export default function LandingHero() {
               </div>
 
               {/* Phone overlay */}
-              <div style={{ position: "absolute", bottom: 0, right: 20, width: 118, background: "#111827", borderRadius: 18, padding: "10px 6px 13px", boxShadow: "0 12px 40px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.07)" }}>
-                <div style={{ width: 30, height: 4, borderRadius: 2, background: "#374151", margin: "0 auto 7px" }} />
-                <div style={{ background: "#F9FAFB", borderRadius: 11, overflow: "hidden" }}>
+              <div style={{ position: "absolute", bottom: 0, right: 12, width: 152, background: "#111827", borderRadius: 22, padding: "12px 8px 16px", boxShadow: "0 16px 48px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.09)" }}>
+                <div style={{ width: 36, height: 4, borderRadius: 2, background: "#374151", margin: "0 auto 9px" }} />
+                <div style={{ background: "#F9FAFB", borderRadius: 13, overflow: "hidden" }}>
                   <MobileScreen total={phoneTotal} tickets={tickets} />
                 </div>
               </div>
