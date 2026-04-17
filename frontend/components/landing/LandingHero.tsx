@@ -15,7 +15,7 @@ export default function LandingHero() {
         }}>
           <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#22C55E", flexShrink: 0 }} />
           <span style={{ fontSize: 12, color: "rgba(255,255,255,.50)", fontWeight: 500 }}>
-            +500 negocios activos en Argentina
+            +500 negocios · funciona 100% offline
           </span>
         </div>
 
