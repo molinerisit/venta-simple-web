@@ -1,17 +1,16 @@
 import { C } from "./tokens";
 
 const STATS = [
-  { n: "+500",       sub: "negocios activos",    accent: false },
-  { n: "+1.200.000", sub: "ventas procesadas",   accent: true  },
-  { n: "100%",       sub: "funciona offline",    accent: false },
-  { n: "< 5 min",    sub: "tiempo de respuesta", accent: false },
+  { n: "+500",       sub: "negocios activos",       accent: false },
+  { n: "+1.200.000", sub: "ventas registradas",     accent: true  },
+  { n: "Sin red",    sub: "funciona sin conexión",  accent: false },
 ];
 
 export default function LandingStats() {
   return (
-    <section style={{ background: C.surface, borderBottom: `1px solid ${C.border}`, padding: "56px 0" }}>
+    <section style={{ background: C.surface, borderBottom: `1px solid ${C.border}`, padding: "64px 0" }}>
       <div className="l-container">
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 0 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 0 }}>
           {STATS.map((s, i) => (
             <div key={s.n} style={{
               textAlign: "center",

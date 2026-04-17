@@ -4,7 +4,7 @@ import { C } from "./tokens";
 
 export default function LandingHero() {
   return (
-    <section style={{ background: C.heroBg, padding: "96px 0 88px" }}>
+    <section style={{ background: C.heroBg, padding: "96px 0 120px" }}>
       <div className="l-container" style={{ position: "relative", zIndex: 1 }}>
 
         <div className="l-hero-grid">
@@ -19,8 +19,8 @@ export default function LandingHero() {
               controlá tu negocio.
             </h1>
 
-            <p style={{ fontSize: 17, lineHeight: 1.70, color: "rgba(255,255,255,.55)", maxWidth: 420, margin: "0 0 36px" }}>
-              App de escritorio para Windows. Ventas, stock y reportes en un solo lugar. Funciona sin internet. Soporte humano 24/7.
+            <p style={{ fontSize: 17, lineHeight: 1.70, color: "rgba(255,255,255,.62)", maxWidth: 420, margin: "0 0 36px" }}>
+              App de escritorio para Windows con ventas, stock y reportes en tiempo real. Funciona sin internet y se sincroniza automáticamente.
             </p>
 
             <div className="l-hero-btns">
@@ -44,10 +44,10 @@ export default function LandingHero() {
               </a>
             </div>
 
-            <div style={{ display: "flex", gap: 22, flexWrap: "wrap" }}>
+            <div style={{ display: "flex", gap: 28, flexWrap: "wrap" }}>
               {["Sin tarjeta de crédito", "Listo en 5 minutos", "Cancelás cuando querés"].map(t => (
-                <span key={t} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "rgba(255,255,255,.35)" }}>
-                  <Check size={11} strokeWidth={3} style={{ color: "#22C55E", flexShrink: 0 }} />
+                <span key={t} style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 13, color: "rgba(255,255,255,.60)" }}>
+                  <Check size={12} strokeWidth={3} style={{ color: "#22C55E", flexShrink: 0 }} />
                   {t}
                 </span>
               ))}
@@ -59,7 +59,7 @@ export default function LandingHero() {
             <div style={{
               borderRadius: 12, overflow: "hidden",
               border: "1px solid rgba(255,255,255,.12)",
-              boxShadow: "0 20px 48px rgba(0,0,0,.40)",
+              boxShadow: "0 20px 60px rgba(0,0,0,0.25)",
               background: "#F3F4F6",
             }}>
               {/* Title bar — app Windows */}
