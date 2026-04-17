@@ -393,6 +393,7 @@
 }
 @media (max-width: 900px) { .l-problems-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 560px) { .l-problems-grid { grid-template-columns: 1fr; } }
+.l-problem-card:hover { background: #FAFAFA !important; box-shadow: inset 0 0 0 1px #FECACA; }
 
 /* FEATURES sticky layout */
 .l-features-grid {

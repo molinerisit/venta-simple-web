@@ -37,10 +37,10 @@ export const T = {
 };
 
 export const PROBLEMS = [
-  { icon: TrendingDown, text: "No sabés cuánto stock te queda hasta que se acaba" },
-  { icon: Clock,        text: "Cada cierre de caja es un caos de papeles y calculadora" },
-  { icon: PhoneOff,     text: "Si algo falla, nadie te ayuda en el momento" },
-  { icon: BarChart2,    text: "No podés ver si tu negocio creció o bajó este mes" },
+  { icon: TrendingDown, text: "No sabés qué stock te queda hasta que ya es tarde" },
+  { icon: Clock,        text: "Cada cierre de caja es lento, manual y propenso a errores" },
+  { icon: PhoneOff,     text: "Perdés ventas por no tener precios actualizados o controlados" },
+  { icon: BarChart2,    text: "No tenés claridad de cuánto ganás realmente" },
 ];
 
 export const SUPPORT_CARDS = [
