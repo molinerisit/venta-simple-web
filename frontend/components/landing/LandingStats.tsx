@@ -1,9 +1,24 @@
 import { C } from "./tokens";
 
 const STATS = [
-  { n: "+500",       sub: "negocios activos",        accent: false },
-  { n: "+1.200.000", sub: "ventas registradas",      accent: true  },
-  { n: "Sin internet", sub: "funciona sin conexión", accent: false },
+  {
+    n:    "+500",
+    sub:  "negocios activos",
+    ctx:  "ferreterías, almacenes, kioscos y más",
+    accent: false,
+  },
+  {
+    n:    "+1.200.000",
+    sub:  "ventas procesadas",
+    ctx:  "en negocios reales, todos los días",
+    accent: true,
+  },
+  {
+    n:    "Desde 2022",
+    sub:  "en el mercado",
+    ctx:  "3 años de historial real, no somos nuevos",
+    accent: false,
+  },
 ];
 
 export default function LandingStats() {
@@ -14,7 +29,7 @@ export default function LandingStats() {
           {STATS.map((s, i) => (
             <div key={s.n} style={{
               textAlign: "center",
-              padding: "0 24px",
+              padding: "0 28px",
               borderRight: i < STATS.length - 1 ? `1px solid ${C.border}` : "none",
             }}>
               <div style={{
@@ -26,7 +41,8 @@ export default function LandingStats() {
               }}>
                 {s.n}
               </div>
-              <div style={{ fontSize: 13, color: C.muted, marginTop: 10, fontWeight: 500 }}>{s.sub}</div>
+              <div style={{ fontSize: 14, color: C.text, marginTop: 10, fontWeight: 700 }}>{s.sub}</div>
+              <div style={{ fontSize: 12, color: C.light, marginTop: 5, fontWeight: 400, fontStyle: "italic" }}>{s.ctx}</div>
             </div>
           ))}
         </div>
