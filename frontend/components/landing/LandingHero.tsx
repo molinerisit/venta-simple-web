@@ -6,12 +6,12 @@ import { ArrowRight, Check, Monitor, Globe, RefreshCw } from "lucide-react";
 import { C } from "./tokens";
 
 const MICRO = [
-  { icon: Monitor,   label: "No dependés de internet"      },
-  { icon: Globe,     label: "Accedé desde cualquier lugar" },
-  { icon: RefreshCw, label: "Todo se sincroniza solo"      },
+  { icon: Monitor,   label: "Funciona sin conexión"                  },
+  { icon: Globe,     label: "Accedé desde cualquier lugar"           },
+  { icon: RefreshCw, label: "Todo se sincroniza automáticamente"     },
 ];
 
-const NAV_ITEMS = ["Dashboard", "Ventas", "Productos", "Caja", "Métricas"];
+const NAV_ITEMS = ["Dashboard", "Caja", "Productos", "Ventas", "Métricas"];
 
 const SALE_POOL = [
   { prod: "Gaseosa 1.5L",    price: "$950",   amount: 950   },
@@ -297,8 +297,9 @@ export default function LandingHero() {
     { time: "14:08", prod: "Leche entera 1L",   price: "$750",   key: 14, isNew: false },
   ]);
   const [cajaSuccess, setCajaSuccess] = useState(false);
-  const keyRef      = useRef(3);
-  const ventasKey   = useRef(15);
+  const keyRef        = useRef(3);
+  const ventasKey     = useRef(15);
+  const pausedUntil   = useRef(0);
 
   useEffect(() => {
     if (active !== "Dashboard") return;
@@ -332,6 +333,22 @@ export default function LandingHero() {
     setTimeout(() => setCajaSuccess(false), 2000);
   };
 
+  const handleNavClick = (item: string) => {
+    setActive(item);
+    pausedUntil.current = Date.now() + 12000;
+  };
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      if (Date.now() < pausedUntil.current) return;
+      setActive(prev => {
+        const i = NAV_ITEMS.indexOf(prev);
+        return NAV_ITEMS[(i + 1) % NAV_ITEMS.length];
+      });
+    }, 4000);
+    return () => clearInterval(id);
+  }, []);
+
   return (
     <section style={{ background: C.heroBg, padding: "104px 0 132px" }}>
       <div className="l-container" style={{ position: "relative", zIndex: 1 }}>
@@ -347,15 +364,14 @@ export default function LandingHero() {
             </div>
 
             <h1 style={{ fontSize: "clamp(40px, 5.2vw, 64px)", fontWeight: 900, lineHeight: 1.06, letterSpacing: "-0.04em", color: "#FFFFFF", margin: "0 0 28px" }}>
-              Vendé más,<br />
-              controlá tu stock<br />
-              y dejá de perder{" "}
-              <span className="hero-accent">plata</span>.
+              Vendé más, controlá<br />
+              tu stock y hacé<br />
+              crecer tu negocio.
             </h1>
 
-            <p style={{ fontSize: 16, lineHeight: 1.75, color: "rgba(255,255,255,.60)", maxWidth: 420, margin: "0 0 44px" }}>
-              App de escritorio + panel web, siempre sincronizados.<br />
-              Vendé sin internet y controlá tu negocio desde cualquier lugar.
+            <p style={{ fontSize: 16, lineHeight: 1.75, color: "rgba(255,255,255,.60)", maxWidth: 440, margin: "0 0 44px" }}>
+              Cobrá más rápido, evitá errores y tené el control de tu negocio en todo momento.
+              Funciona sin internet y se sincroniza automáticamente cuando volvés a tener conexión.
             </p>
 
             <div className="l-hero-btns">
@@ -368,7 +384,7 @@ export default function LandingHero() {
             </div>
 
             <div style={{ display: "flex", gap: 32, flexWrap: "wrap" }}>
-              {["Sin tarjeta de crédito", "Empezás en 5 minutos", "Cancelás cuando quieras"].map(t => (
+              {["Sin tarjeta de crédito", "Empezás en minutos", "Cancelás cuando quieras"].map(t => (
                 <span key={t} style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 13, fontWeight: 500, color: "rgba(255,255,255,.62)" }}>
                   <Check size={12} strokeWidth={3} style={{ color: "#22C55E", flexShrink: 0 }} />
                   {t}
@@ -379,6 +395,9 @@ export default function LandingHero() {
 
           {/* Mockup interactivo */}
           <div className="l-hero-mockup">
+            <div style={{ marginBottom: 10, textAlign: "center" }}>
+              <span style={{ fontSize: 12, color: "rgba(255,255,255,.38)", fontWeight: 500 }}>Probá el sistema en acción →</span>
+            </div>
             <div style={{ width: "100%", borderRadius: 12, overflow: "hidden", border: "1px solid rgba(255,255,255,.12)", boxShadow: "0 20px 60px rgba(0,0,0,0.25)", background: "#F3F4F6" }}>
 
               {/* Title bar */}
@@ -406,7 +425,7 @@ export default function LandingHero() {
                   {NAV_ITEMS.map(item => (
                     <div
                       key={item}
-                      onClick={() => setActive(item)}
+                      onClick={() => handleNavClick(item)}
                       style={{
                         padding: "7px 8px", borderRadius: 6,
                         display: "flex", alignItems: "center", gap: 6,
