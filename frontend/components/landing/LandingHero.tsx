@@ -298,8 +298,8 @@ export default function LandingHero() {
           </div>
 
           {/* Mockup interactivo */}
-          <div className="l-hero-mockup" style={{ maxWidth: 400, marginLeft: "auto" }}>
-            <div style={{ borderRadius: 12, overflow: "hidden", border: "1px solid rgba(255,255,255,.12)", boxShadow: "0 20px 60px rgba(0,0,0,0.25)", background: "#F3F4F6" }}>
+          <div className="l-hero-mockup" style={{ width: 400, flexShrink: 0, marginLeft: "auto" }}>
+            <div style={{ width: "100%", borderRadius: 12, overflow: "hidden", border: "1px solid rgba(255,255,255,.12)", boxShadow: "0 20px 60px rgba(0,0,0,0.25)", background: "#F3F4F6" }}>
 
               {/* Title bar */}
               <div style={{ padding: "9px 14px", background: "#F9FAFB", borderBottom: "1px solid #E5E7EB", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
