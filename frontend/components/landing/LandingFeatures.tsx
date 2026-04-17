@@ -1,28 +1,27 @@
 import Link from "next/link";
-import { Receipt, Package, LineChart, Cloud } from "lucide-react";
-import { ArrowRight } from "lucide-react";
+import { Receipt, Package, LineChart, Cloud, ArrowRight } from "lucide-react";
 import { C, T } from "./tokens";
 
 const FEATURES = [
   {
-    icon: Receipt, n: "01",
+    icon: Receipt,
     title: "Punto de venta y caja",
-    desc: "Cobrá rápido con búsqueda por nombre o código. Cierre de caja en 2 minutos. Tickets automáticos.",
+    desc: "Cobrá rápido y sin errores. Atendé más clientes en menos tiempo.",
   },
   {
-    icon: Package, n: "02",
-    title: "Control de stock en tiempo real",
-    desc: "Alertas automáticas cuando un producto está por agotarse. Ingreso de mercadería y ajustes de inventario.",
+    icon: Package,
+    title: "Control de stock",
+    desc: "Sabé siempre qué tenés y qué falta. Evitá quedarte sin stock sin darte cuenta.",
   },
   {
-    icon: LineChart, n: "03",
-    title: "Reportes y métricas",
-    desc: "Productos más vendidos, horarios pico, comparativas por período. Exportes en PDF y CSV.",
+    icon: LineChart,
+    title: "Reportes y Ganancias",
+    desc: "Entendé qué te deja plata y qué no. Tomá decisiones con datos reales.",
   },
   {
-    icon: Cloud, n: "04",
-    title: "Multi-PC · Funciona offline",
-    desc: "Cajero, depósito y administración sincronizados. Si se va internet, seguís vendiendo sin límite.",
+    icon: Cloud,
+    title: "Conexión y Offline",
+    desc: "Tu negocio sigue funcionando siempre. Aunque se corte internet, no frenás.",
   },
 ];
 
@@ -31,34 +30,40 @@ export default function LandingFeatures() {
     <section style={{ background: C.surface, padding: "112px 0", borderTop: `1px solid ${C.border}` }}>
       <div className="l-container">
 
-        <div style={{ textAlign: "center", marginBottom: 64 }}>
+        <div style={{ textAlign: "center", marginBottom: 56 }}>
           <div style={{ ...T.label, marginBottom: 16 }}>Funcionalidades</div>
           <h2 style={{ ...T.h2, margin: "0 0 16px" }}>
-            Todo lo que necesitás,<br />en un solo lugar.
+            Todo lo que necesitás para<br />manejar tu negocio sin complicarte.
           </h2>
-          <p style={{ ...T.body, maxWidth: 500, margin: "0 auto" }}>
-            Pensado para dueños de negocio que necesitan resultados, no un manual de 200 páginas.
+          <p style={{ ...T.body, maxWidth: 480, margin: "0 auto" }}>
+            Hecho para que vendas más y pierdas menos tiempo.
           </p>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2, background: C.border, borderRadius: 20, overflow: "hidden" }}>
-          {FEATURES.map((f) => (
-            <div key={f.n} style={{
-              background: C.surface,
-              padding: "40px 36px",
-              display: "flex", flexDirection: "column", gap: 20,
+        <p style={{
+          textAlign: "center", marginBottom: 40,
+          fontSize: 15, fontWeight: 700, color: C.blue,
+          letterSpacing: "-0.01em",
+        }}>
+          Todo lo que hoy hacés manual, acá se resuelve solo.
+        </p>
+
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+          {FEATURES.map((f, i) => (
+            <div key={i} className="l-feature-card" style={{
+              background: C.surface, padding: "36px 32px",
+              border: `1px solid ${C.border}`, borderRadius: 16,
+              display: "flex", flexDirection: "column", gap: 18,
+              transition: "box-shadow .2s, transform .2s",
             }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                <div style={{
-                  width: 52, height: 52, borderRadius: 14,
-                  background: C.blueBg, display: "grid", placeItems: "center",
-                }}>
-                  <f.icon size={22} style={{ color: C.blue }} />
-                </div>
-                <span style={{ fontSize: 11, fontWeight: 800, color: C.orange, letterSpacing: "0.1em" }}>{f.n}</span>
+              <div style={{
+                width: 52, height: 52, borderRadius: 14,
+                background: C.blueBg, display: "grid", placeItems: "center",
+              }}>
+                <f.icon size={22} strokeWidth={2} style={{ color: C.blue }} />
               </div>
               <div>
-                <h3 style={{ fontSize: 18, fontWeight: 800, color: C.text, margin: "0 0 10px", letterSpacing: "-0.02em" }}>
+                <h3 style={{ fontSize: 17, fontWeight: 800, color: C.text, margin: "0 0 10px", letterSpacing: "-0.02em" }}>
                   {f.title}
                 </h3>
                 <p style={{ ...T.body, fontSize: 14, margin: 0, lineHeight: 1.7 }}>{f.desc}</p>
