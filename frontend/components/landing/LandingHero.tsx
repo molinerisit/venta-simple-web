@@ -180,12 +180,16 @@ export default function LandingHero() {
 
             <h1 style={{ fontSize: "clamp(40px, 5.2vw, 64px)", fontWeight: 900, lineHeight: 1.06, letterSpacing: "-0.04em", color: "#FFFFFF", margin: "0 0 28px" }}>
               <span style={{ color: C.orange }}>Vendé</span> en tu negocio.<br />
-              Controlá desde el celular.
+              Controlá desde tu celular.
             </h1>
 
-            <p style={{ fontSize: 16, lineHeight: 1.75, color: "rgba(255,255,255,.60)", maxWidth: 440, margin: "0 0 44px" }}>
+            <p style={{ fontSize: 16, lineHeight: 1.75, color: "rgba(255,255,255,.60)", maxWidth: 440, margin: "0 0 20px" }}>
               Mirá lo que vendés en tiempo real.<br />
               Controlá stock, cambiá precios y tomá decisiones desde cualquier lugar.
+            </p>
+
+            <p style={{ fontSize: 15, lineHeight: 1.6, color: "rgba(255,255,255,.85)", maxWidth: 420, margin: "0 0 36px", fontWeight: 600 }}>
+              Cobrá más rápido y atendé más clientes sin sumar personal.
             </p>
 
             <div className="l-hero-btns">
@@ -210,7 +214,7 @@ export default function LandingHero() {
           {/* Mockup PC + Phone */}
           <div className="l-hero-mockup" style={{ overflow: "visible" }}>
             <div style={{ marginBottom: 10, textAlign: "center" }}>
-              <span style={{ fontSize: 12, color: "rgba(255,255,255,.38)", fontWeight: 500 }}>Probalo en vivo →</span>
+              <span style={{ fontSize: 12, color: "rgba(255,255,255,.38)", fontWeight: 500 }}>Mirá tu negocio en vivo →</span>
             </div>
 
             <div className="l-mockup-pc-wrap" style={{ position: "relative", paddingBottom: 84 }}>
