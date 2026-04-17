@@ -581,6 +581,17 @@ details[open] > summary span:last-child { transform: rotate(45deg); display: inl
    PANEL — mejoras UI globales
    ══════════════════════════════════════════════════════════════ */
 
+/* Hero accent — fade in naranja */
+@keyframes hero-accent-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.hero-accent {
+  color: #F97316;
+  animation: hero-accent-in 200ms ease both;
+  animation-delay: 120ms;
+}
+
 /* Shimmer skeleton */
 @keyframes shimmer {
   0%   { background-position: 100% 50%; }
