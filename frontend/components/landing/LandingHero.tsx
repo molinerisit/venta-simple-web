@@ -26,7 +26,7 @@ export default function LandingHero() {
             }}>
               <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#22C55E", flexShrink: 0 }} />
               <span style={{ fontSize: 12.5, color: "rgba(255,255,255,.58)", fontWeight: 500 }}>
-                Soporte real · respondemos en &lt;5 min
+                Soporte real · respondemos en menos de 5 min
               </span>
             </div>
 
