@@ -4,17 +4,17 @@ import { C } from "./tokens";
 
 export default function LandingHero() {
   return (
-    <section style={{ background: C.heroBg, padding: "96px 0 120px" }}>
+    <section style={{ background: C.heroBg, padding: "104px 0 132px" }}>
       <div className="l-container" style={{ position: "relative", zIndex: 1 }}>
 
         <div className="l-hero-grid">
 
-          {/* Columna izquierda */}
+          {/* Columna izquierda — texto */}
           <div>
 
             {/* Badge soporte */}
             <div style={{
-              display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 32,
+              display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 36,
               padding: "5px 14px 5px 10px", borderRadius: 99,
               border: "1px solid rgba(255,255,255,.14)",
             }}>
@@ -26,7 +26,7 @@ export default function LandingHero() {
 
             <h1 style={{
               fontSize: "clamp(40px, 5.2vw, 64px)", fontWeight: 900, lineHeight: 1.06,
-              letterSpacing: "-0.04em", color: "#FFFFFF", margin: "0 0 24px",
+              letterSpacing: "-0.04em", color: "#FFFFFF", margin: "0 0 28px",
             }}>
               Vendé más,<br />
               controlá tu stock<br />
@@ -34,7 +34,7 @@ export default function LandingHero() {
               <span className="hero-accent">plata</span>.
             </h1>
 
-            <p style={{ fontSize: 16, lineHeight: 1.75, color: "rgba(255,255,255,.60)", maxWidth: 420, margin: "0 0 36px" }}>
+            <p style={{ fontSize: 16, lineHeight: 1.75, color: "rgba(255,255,255,.60)", maxWidth: 420, margin: "0 0 44px" }}>
               App de escritorio + panel web, siempre sincronizados.<br />
               Vendé sin internet y controlá tu negocio desde cualquier lugar.
             </p>
@@ -60,7 +60,7 @@ export default function LandingHero() {
               </a>
             </div>
 
-            <div style={{ display: "flex", gap: 28, flexWrap: "wrap" }}>
+            <div style={{ display: "flex", gap: 32, flexWrap: "wrap" }}>
               {["Sin tarjeta de crédito", "Empezás en 5 minutos", "Cancelás cuando quieras"].map(t => (
                 <span key={t} style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 13, fontWeight: 500, color: "rgba(255,255,255,.62)" }}>
                   <Check size={12} strokeWidth={3} style={{ color: "#22C55E", flexShrink: 0 }} />
@@ -71,7 +71,7 @@ export default function LandingHero() {
           </div>
 
           {/* Mockup */}
-          <div className="l-hero-mockup" style={{ maxWidth: 400, marginLeft: "auto" }}>
+          <div className="l-hero-mockup" style={{ maxWidth: 370, marginLeft: "auto" }}>
             <div style={{
               borderRadius: 12, overflow: "hidden",
               border: "1px solid rgba(255,255,255,.12)",
@@ -84,14 +84,20 @@ export default function LandingHero() {
                 borderBottom: "1px solid #E5E7EB",
                 display: "flex", alignItems: "center", justifyContent: "space-between",
               }}>
-                <span style={{ fontSize: 11, fontWeight: 600, color: "#6B7280" }}>VentaSimple</span>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <span style={{ fontSize: 11, fontWeight: 600, color: "#6B7280" }}>VentaSimple</span>
+                  <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                    <span className="sync-dot" />
+                    <span style={{ fontSize: 9, fontWeight: 600, color: "#16A34A" }}>Sincronizado</span>
+                  </div>
+                </div>
                 <div style={{ display: "flex", gap: 6 }}>
                   {[0,1,2].map(i => <span key={i} style={{ width: 10, height: 10, borderRadius: "50%", background: "#E5E7EB" }} />)}
                 </div>
               </div>
 
               {/* App layout */}
-              <div style={{ display: "grid", gridTemplateColumns: "110px 1fr", height: 300 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "100px 1fr", height: 295 }}>
 
                 {/* Sidebar */}
                 <div style={{ background: "#F3F4F6", borderRight: "1px solid #E5E7EB", padding: "12px 8px", display: "flex", flexDirection: "column", gap: 2 }}>
@@ -102,7 +108,7 @@ export default function LandingHero() {
                     { label: "Dashboard", active: true  },
                     { label: "Ventas",    active: false },
                     { label: "Productos", active: false },
-                    { label: "Clientes",  active: false },
+                    { label: "Caja",      active: false },
                     { label: "Métricas",  active: false },
                   ].map(item => (
                     <div key={item.label} style={{
@@ -161,7 +167,7 @@ export default function LandingHero() {
                   </div>
 
                   <div style={{ background: "#FFFBEB", border: "1.5px solid #FCD34D", borderRadius: 8, padding: "8px 10px", display: "flex", alignItems: "center", gap: 7 }}>
-                    <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#D97706", flexShrink: 0, boxShadow: "0 0 0 2px rgba(217,119,6,.20)" }} />
+                    <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#D97706", flexShrink: 0 }} />
                     <span style={{ fontSize: 9, fontWeight: 800, color: "#92400E", letterSpacing: "-0.01em" }}>⚠ Stock bajo: Coca Cola (3) · Pan lactal (2)</span>
                   </div>
 

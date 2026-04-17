@@ -349,8 +349,8 @@
 /* HERO grid */
 .l-hero-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 64px;
+  grid-template-columns: 1.08fr 0.92fr;
+  gap: 80px;
   align-items: center;
 }
 @media (max-width: 900px) {
@@ -590,6 +590,17 @@ details[open] > summary span:last-child { transform: rotate(45deg); display: inl
   color: #F97316;
   animation: hero-accent-in 200ms ease both;
   animation-delay: 120ms;
+}
+
+/* Sync dot — pulso verde en mockup */
+@keyframes sync-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: .35; transform: scale(.8); }
+}
+.sync-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #22C55E; flex-shrink: 0;
+  animation: sync-pulse 2s ease-in-out infinite;
 }
 
 /* Shimmer skeleton */
