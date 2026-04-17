@@ -30,14 +30,13 @@ export default function LandingHero() {
             }}>
               Vendé más,<br />
               controlá tu stock<br />
-              y dejá de{" "}
-              <span className="hero-accent">perder plata</span>.
+              y dejá de perder{" "}
+              <span className="hero-accent">plata</span>.
             </h1>
 
             <p style={{ fontSize: 16, lineHeight: 1.75, color: "rgba(255,255,255,.60)", maxWidth: 420, margin: "0 0 36px" }}>
-              Sistema de ventas para Windows.<br />
-              Controlá ventas, stock y reportes en tiempo real.<br />
-              Funciona sin internet y se sincroniza automáticamente.
+              App de escritorio + panel web, siempre sincronizados.<br />
+              Vendé sin internet y controlá tu negocio desde cualquier lugar.
             </p>
 
             <div className="l-hero-btns">
@@ -62,7 +61,7 @@ export default function LandingHero() {
             </div>
 
             <div style={{ display: "flex", gap: 28, flexWrap: "wrap" }}>
-              {["Sin tarjeta", "Listo en 5 min", "Cancelás cuando querés"].map(t => (
+              {["Sin tarjeta de crédito", "Empezás en 5 minutos", "Cancelás cuando quieras"].map(t => (
                 <span key={t} style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 13, fontWeight: 500, color: "rgba(255,255,255,.62)" }}>
                   <Check size={12} strokeWidth={3} style={{ color: "#22C55E", flexShrink: 0 }} />
                   {t}
@@ -72,7 +71,7 @@ export default function LandingHero() {
           </div>
 
           {/* Mockup */}
-          <div className="l-hero-mockup" style={{ maxWidth: 440, marginLeft: "auto" }}>
+          <div className="l-hero-mockup" style={{ maxWidth: 400, marginLeft: "auto" }}>
             <div style={{
               borderRadius: 12, overflow: "hidden",
               border: "1px solid rgba(255,255,255,.12)",
@@ -161,9 +160,9 @@ export default function LandingHero() {
                     ))}
                   </div>
 
-                  <div style={{ background: "#FFFBEB", border: "1px solid #FDE68A", borderRadius: 8, padding: "7px 10px", display: "flex", alignItems: "center", gap: 7 }}>
-                    <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#D97706", flexShrink: 0 }} />
-                    <span style={{ fontSize: 9, fontWeight: 700, color: "#B45309" }}>Stock bajo: Coca Cola (3) · Pan lactal (2)</span>
+                  <div style={{ background: "#FFFBEB", border: "1.5px solid #FCD34D", borderRadius: 8, padding: "8px 10px", display: "flex", alignItems: "center", gap: 7 }}>
+                    <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#D97706", flexShrink: 0, boxShadow: "0 0 0 2px rgba(217,119,6,.20)" }} />
+                    <span style={{ fontSize: 9, fontWeight: 800, color: "#92400E", letterSpacing: "-0.01em" }}>⚠ Stock bajo: Coca Cola (3) · Pan lactal (2)</span>
                   </div>
 
                 </div>
