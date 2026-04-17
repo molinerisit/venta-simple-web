@@ -21,7 +21,7 @@ export default function LandingProblem() {
               background: "#fff", padding: "26px 24px",
               display: "flex", gap: 16, alignItems: "flex-start",
               border: `1px solid ${C.border}`, borderRadius: 12,
-              transition: "box-shadow .2s",
+              transition: "box-shadow .2s, transform .2s",
             }}>
               <div style={{
                 width: 32, height: 32, borderRadius: 8, flexShrink: 0,
