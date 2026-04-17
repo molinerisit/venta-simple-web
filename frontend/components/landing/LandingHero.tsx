@@ -180,7 +180,7 @@ export default function LandingHero() {
 
             <h1 style={{ fontSize: "clamp(40px, 5.2vw, 64px)", fontWeight: 900, lineHeight: 1.06, letterSpacing: "-0.04em", color: "#FFFFFF", margin: "0 0 28px" }}>
               <span style={{ color: C.orange }}>Vendé</span> en tu negocio.<br />
-              Controlá desde tu celular.
+              Controlá desde el celular.
             </h1>
 
             <p style={{ fontSize: 16, lineHeight: 1.75, color: "rgba(255,255,255,.60)", maxWidth: 440, margin: "0 0 44px" }}>
