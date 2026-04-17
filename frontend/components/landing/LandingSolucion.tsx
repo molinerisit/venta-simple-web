@@ -34,16 +34,7 @@ export default function LandingSolucion() {
               ))}
             </div>
 
-            <a href="#pricing" style={{
-              display: "inline-flex", alignItems: "center", gap: 8,
-              background: C.orange, color: "#fff",
-              padding: "14px 28px", borderRadius: 10,
-              fontSize: 15, fontWeight: 700, textDecoration: "none",
-              transition: "background .15s",
-            }}
-              onMouseOver={e => (e.currentTarget.style.background = C.orangeDark)}
-              onMouseOut={e => (e.currentTarget.style.background = C.orange)}
-            >
+            <a href="#pricing" className="l-cta-btn">
               Empezar gratis <ArrowRight size={16} />
             </a>
           </div>
