@@ -14,9 +14,9 @@ const STATS = [
     accent: true,
   },
   {
-    n:    "Desde 2022",
-    sub:  "en el mercado",
-    ctx:  "3 años de historial real, no somos nuevos",
+    n:    "Siempre activo",
+    sub:  "tengas internet o no",
+    ctx:  "vendé offline, se sincroniza solo al reconectar",
     accent: false,
   },
 ];

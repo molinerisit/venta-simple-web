@@ -1,6 +1,12 @@
 import Link from "next/link";
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowRight, Check, Monitor, Globe, RefreshCw } from "lucide-react";
 import { C } from "./tokens";
+
+const MICRO = [
+  { icon: Monitor,    label: "No dependés de internet"       },
+  { icon: Globe,      label: "Accedé desde cualquier lugar"  },
+  { icon: RefreshCw,  label: "Todo se sincroniza solo"       },
+];
 
 export default function LandingHero() {
   return (
@@ -177,6 +183,21 @@ export default function LandingHero() {
           </div>
 
         </div>
+
+        {/* Micro bloque — iconos azul */}
+        <div style={{
+          display: "flex", gap: 32, flexWrap: "wrap", justifyContent: "center",
+          marginTop: 56, paddingTop: 40,
+          borderTop: "1px solid rgba(255,255,255,.08)",
+        }}>
+          {MICRO.map(({ icon: Icon, label }) => (
+            <div key={label} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <Icon size={16} style={{ color: "#60A5FA", flexShrink: 0 }} />
+              <span style={{ fontSize: 13, fontWeight: 500, color: "rgba(255,255,255,.62)" }}>{label}</span>
+            </div>
+          ))}
+        </div>
+
       </div>
     </section>
   );
