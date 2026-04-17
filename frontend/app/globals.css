@@ -603,6 +603,20 @@ details[open] > summary span:last-child { transform: rotate(45deg); display: inl
   animation: sync-pulse 2s ease-in-out infinite;
 }
 
+/* Mockup screen transition */
+@keyframes mockup-screen-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.mockup-screen { animation: mockup-screen-in 180ms ease both; }
+
+/* Mockup new row */
+@keyframes mockup-row-in {
+  from { opacity: 0; transform: translateY(-5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.mockup-row-new { animation: mockup-row-in 280ms ease both; }
+
 /* Shimmer skeleton */
 @keyframes shimmer {
   0%   { background-position: 100% 50%; }

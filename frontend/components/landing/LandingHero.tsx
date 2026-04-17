@@ -1,39 +1,272 @@
+"use client";
+
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { ArrowRight, Check, Monitor, Globe, RefreshCw } from "lucide-react";
 import { C } from "./tokens";
 
 const MICRO = [
-  { icon: Monitor,    label: "No dependés de internet"       },
-  { icon: Globe,      label: "Accedé desde cualquier lugar"  },
-  { icon: RefreshCw,  label: "Todo se sincroniza solo"       },
+  { icon: Monitor,   label: "No dependés de internet"      },
+  { icon: Globe,     label: "Accedé desde cualquier lugar" },
+  { icon: RefreshCw, label: "Todo se sincroniza solo"      },
 ];
 
+const NAV_ITEMS = ["Dashboard", "Ventas", "Productos", "Caja", "Métricas"];
+
+const SALE_POOL = [
+  { prod: "Gaseosa 1.5L",    price: "$950",   amount: 950   },
+  { prod: "Yerba 500g",      price: "$1.450", amount: 1450  },
+  { prod: "Aceite 900ml",    price: "$2.100", amount: 2100  },
+  { prod: "Fideos 500g",     price: "$620",   amount: 620   },
+  { prod: "Jabón x500ml",    price: "$1.200", amount: 1200  },
+  { prod: "Galletitas 200g", price: "$480",   amount: 480   },
+];
+
+type Sale = { prod: string; price: string; key: number; isNew: boolean };
+
+function LiveBadge() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+      <span className="sync-dot" style={{ width: 5, height: 5 }} />
+      <span style={{ fontSize: 7.5, color: "#16A34A", fontWeight: 600 }}>en vivo</span>
+    </div>
+  );
+}
+
+function DashboardScreen({ total, tickets, sales }: { total: number; tickets: number; sales: Sale[] }) {
+  return (
+    <div style={{ padding: 13, display: "flex", flexDirection: "column", gap: 8, height: "100%", overflow: "hidden" }}>
+      <div>
+        <div style={{ fontSize: 8.5, fontWeight: 600, color: "#9CA3AF" }}>Hoy, jueves 17 de abril</div>
+        <div style={{ fontSize: 12, fontWeight: 800, color: "#111827", letterSpacing: "-0.02em" }}>Buenos días, Martín</div>
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 5 }}>
+        <div style={{ background: "#1E3A8A", borderRadius: 7, padding: "8px" }}>
+          <div style={{ fontSize: 7, fontWeight: 600, color: "rgba(255,255,255,.55)", marginBottom: 3 }}>Ventas hoy</div>
+          <div style={{ fontSize: 11, fontWeight: 900, color: "#fff", letterSpacing: "-0.03em", lineHeight: 1 }}>
+            ${total.toLocaleString("es-AR")}
+          </div>
+          <div style={{ fontSize: 7, color: "#4ADE80", marginTop: 2, fontWeight: 700 }}>+12% vs ayer</div>
+        </div>
+        <div style={{ background: "#fff", border: "1px solid #E9EAEC", borderRadius: 7, padding: "8px" }}>
+          <div style={{ fontSize: 7, fontWeight: 600, color: "#9CA3AF", marginBottom: 3 }}>Tickets</div>
+          <div style={{ fontSize: 11, fontWeight: 900, color: "#111827", letterSpacing: "-0.03em", lineHeight: 1 }}>{tickets}</div>
+          <div style={{ fontSize: 7, color: "#16A34A", marginTop: 2, fontWeight: 700 }}>hoy</div>
+        </div>
+        <div style={{ background: "#FFFBEB", border: "1px solid #FDE68A", borderRadius: 7, padding: "8px" }}>
+          <div style={{ fontSize: 7, fontWeight: 600, color: "#D97706", marginBottom: 3 }}>Stock bajo</div>
+          <div style={{ fontSize: 11, fontWeight: 900, color: "#D97706", letterSpacing: "-0.03em", lineHeight: 1 }}>3</div>
+          <div style={{ fontSize: 7, color: "#D97706", marginTop: 2, fontWeight: 700 }}>productos</div>
+        </div>
+      </div>
+
+      <div style={{ background: "#fff", border: "1px solid #E9EAEC", borderRadius: 7, overflow: "hidden", flex: 1, minHeight: 0 }}>
+        <div style={{ padding: "5px 9px", borderBottom: "1px solid #F1F3F5", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <span style={{ fontSize: 8.5, fontWeight: 700, color: "#111827" }}>Últimas ventas</span>
+          <LiveBadge />
+        </div>
+        {sales.slice(0, 4).map((s, i) => (
+          <div
+            key={s.key}
+            className={s.isNew ? "mockup-row-new" : undefined}
+            style={{
+              display: "flex", justifyContent: "space-between",
+              padding: "5px 9px",
+              borderBottom: i < 3 ? "1px solid #F8F9FB" : "none",
+              background: s.isNew ? "#F0FDF4" : "transparent",
+              transition: "background 1.2s ease",
+            }}
+          >
+            <span style={{ fontSize: 8.5, color: "#6B7280", fontWeight: 500 }}>{s.prod}</span>
+            <span style={{ fontSize: 8.5, fontWeight: 700, color: "#111827" }}>{s.price}</span>
+          </div>
+        ))}
+      </div>
+
+      <div style={{ background: "#FFFBEB", border: "1.5px solid #FCD34D", borderRadius: 7, padding: "6px 9px", display: "flex", alignItems: "center", gap: 6 }}>
+        <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#D97706", flexShrink: 0 }} />
+        <span style={{ fontSize: 8, fontWeight: 800, color: "#92400E" }}>⚠ Stock bajo: Coca Cola (3) · Pan lactal (2)</span>
+      </div>
+    </div>
+  );
+}
+
+function VentasScreen() {
+  const rows = [
+    { time: "14:32", prod: "Coca-Cola 2.25L",  price: "$1.200", live: true  },
+    { time: "14:28", prod: "Yerba mate 500g",   price: "$1.450", live: false },
+    { time: "14:21", prod: "Aceite 900ml",      price: "$2.100", live: false },
+    { time: "14:15", prod: "Pan lactal 400g",   price: "$850",   live: false },
+    { time: "14:08", prod: "Leche entera 1L",   price: "$750",   live: false },
+  ];
+  return (
+    <div style={{ padding: 13, display: "flex", flexDirection: "column", gap: 8, height: "100%", overflow: "hidden" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div style={{ fontSize: 12, fontWeight: 800, color: "#111827" }}>Ventas de hoy</div>
+        <LiveBadge />
+      </div>
+      <div style={{ background: "#fff", border: "1px solid #E9EAEC", borderRadius: 7, overflow: "hidden", flex: 1 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "36px 1fr 50px", padding: "5px 9px", borderBottom: "1px solid #F1F3F5", gap: 6 }}>
+          {["Hora", "Producto", "Monto"].map(h => (
+            <span key={h} style={{ fontSize: 7.5, fontWeight: 700, color: "#9CA3AF" }}>{h}</span>
+          ))}
+        </div>
+        {rows.map((r, i) => (
+          <div key={i} style={{ display: "grid", gridTemplateColumns: "36px 1fr 50px", padding: "6px 9px", borderBottom: i < rows.length - 1 ? "1px solid #F8F9FB" : "none", gap: 6, alignItems: "center", background: r.live ? "#F0FDF4" : "transparent" }}>
+            <span style={{ fontSize: 8, color: "#9CA3AF" }}>{r.time}</span>
+            <span style={{ fontSize: 8.5, color: "#374151", fontWeight: r.live ? 700 : 500 }}>{r.prod}</span>
+            <span style={{ fontSize: 8.5, fontWeight: 700, color: "#111827", textAlign: "right" }}>{r.price}</span>
+          </div>
+        ))}
+      </div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "#EFF6FF", borderRadius: 7, padding: "7px 9px", border: "1px solid #BFDBFE" }}>
+        <span style={{ fontSize: 9, fontWeight: 700, color: "#1D4ED8" }}>Total del día</span>
+        <span style={{ fontSize: 10, fontWeight: 900, color: "#1D4ED8" }}>$124.500</span>
+      </div>
+    </div>
+  );
+}
+
+function ProductosScreen() {
+  const prods = [
+    { name: "Coca-Cola 2.25L",  stock: 3,  max: 24, warn: true  },
+    { name: "Yerba 500g",       stock: 18, max: 30, warn: false },
+    { name: "Aceite 900ml",     stock: 2,  max: 12, warn: true  },
+    { name: "Leche 1L",         stock: 24, max: 36, warn: false },
+    { name: "Pan lactal 400g",  stock: 2,  max: 20, warn: true  },
+  ];
+  return (
+    <div style={{ padding: 13, display: "flex", flexDirection: "column", gap: 8, height: "100%", overflow: "hidden" }}>
+      <div style={{ fontSize: 12, fontWeight: 800, color: "#111827" }}>Inventario</div>
+      <div style={{ background: "#F3F4F6", borderRadius: 6, padding: "5px 9px", fontSize: 8.5, color: "#9CA3AF" }}>
+        🔍 Buscar producto...
+      </div>
+      <div style={{ flex: 1, overflow: "hidden", display: "flex", flexDirection: "column", gap: 5 }}>
+        {prods.map((p, i) => (
+          <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, background: "#fff", border: `1px solid ${p.warn ? "#FDE68A" : "#E9EAEC"}`, borderRadius: 6, padding: "6px 9px" }}>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 8.5, fontWeight: 600, color: "#111827", marginBottom: 4 }}>{p.name}</div>
+              <div style={{ height: 3, borderRadius: 2, background: "#F3F4F6", overflow: "hidden" }}>
+                <div style={{ height: "100%", width: `${(p.stock / p.max) * 100}%`, background: p.warn ? "#F97316" : "#22C55E", borderRadius: 2 }} />
+              </div>
+            </div>
+            <span style={{ fontSize: 9, fontWeight: 700, color: p.warn ? "#D97706" : "#374151", flexShrink: 0, width: 28, textAlign: "right" }}>{p.stock}u.</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function CajaScreen() {
+  const items = [
+    { prod: "Coca-Cola 2.25L",  qty: 2, price: "$2.400" },
+    { prod: "Pan lactal 400g",  qty: 1, price: "$850"   },
+    { prod: "Leche 1L",         qty: 3, price: "$2.250" },
+  ];
+  return (
+    <div style={{ padding: 13, display: "flex", flexDirection: "column", gap: 8, height: "100%", overflow: "hidden" }}>
+      <div style={{ fontSize: 12, fontWeight: 800, color: "#111827" }}>Caja — Venta actual</div>
+      <div style={{ background: "#fff", border: "1px solid #E9EAEC", borderRadius: 7, overflow: "hidden", flex: 1 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 28px 50px", padding: "5px 9px", borderBottom: "1px solid #F1F3F5", gap: 4 }}>
+          {["Producto", "Cant", "Total"].map(h => (
+            <span key={h} style={{ fontSize: 7.5, fontWeight: 700, color: "#9CA3AF" }}>{h}</span>
+          ))}
+        </div>
+        {items.map((r, i) => (
+          <div key={i} style={{ display: "grid", gridTemplateColumns: "1fr 28px 50px", padding: "6px 9px", borderBottom: i < items.length - 1 ? "1px solid #F8F9FB" : "none", gap: 4, alignItems: "center" }}>
+            <span style={{ fontSize: 8.5, color: "#374151" }}>{r.prod}</span>
+            <span style={{ fontSize: 8.5, color: "#6B7280", textAlign: "center" }}>{r.qty}</span>
+            <span style={{ fontSize: 8.5, fontWeight: 700, color: "#111827", textAlign: "right" }}>{r.price}</span>
+          </div>
+        ))}
+      </div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "#1E3A8A", borderRadius: 7, padding: "9px 12px" }}>
+        <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,.7)" }}>Total</span>
+        <span style={{ fontSize: 14, fontWeight: 900, color: "#fff", letterSpacing: "-0.03em" }}>$5.500</span>
+      </div>
+      <div style={{ background: C.orange, borderRadius: 6, padding: "7px", textAlign: "center", cursor: "default" }}>
+        <span style={{ fontSize: 9, fontWeight: 800, color: "#fff" }}>Cobrar $5.500</span>
+      </div>
+    </div>
+  );
+}
+
+function MetricasScreen() {
+  const days = [
+    { d: "L", v: 55 }, { d: "M", v: 70 }, { d: "X", v: 45 },
+    { d: "J", v: 80 }, { d: "V", v: 65 }, { d: "S", v: 100 }, { d: "D", v: 35 },
+  ];
+  return (
+    <div style={{ padding: 13, display: "flex", flexDirection: "column", gap: 8, height: "100%", overflow: "hidden" }}>
+      <div style={{ fontSize: 12, fontWeight: 800, color: "#111827" }}>Esta semana</div>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
+        <div style={{ background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: 7, padding: "8px" }}>
+          <div style={{ fontSize: 7.5, color: "#16A34A", fontWeight: 600 }}>Mejor día</div>
+          <div style={{ fontSize: 13, fontWeight: 900, color: "#15803D", letterSpacing: "-0.03em" }}>$189K</div>
+          <div style={{ fontSize: 7.5, color: "#16A34A" }}>sábado</div>
+        </div>
+        <div style={{ background: "#EFF6FF", border: "1px solid #BFDBFE", borderRadius: 7, padding: "8px" }}>
+          <div style={{ fontSize: 7.5, color: "#1D4ED8", fontWeight: 600 }}>Promedio/día</div>
+          <div style={{ fontSize: 13, fontWeight: 900, color: "#1D4ED8", letterSpacing: "-0.03em" }}>$124K</div>
+          <div style={{ fontSize: 7.5, color: "#1D4ED8" }}>esta semana</div>
+        </div>
+      </div>
+      <div style={{ flex: 1, background: "#fff", border: "1px solid #E9EAEC", borderRadius: 7, padding: "8px 9px", display: "flex", flexDirection: "column", gap: 6 }}>
+        <div style={{ fontSize: 8.5, fontWeight: 700, color: "#111827" }}>Ventas por día</div>
+        <div style={{ flex: 1, display: "flex", alignItems: "flex-end", gap: 3, paddingBottom: 4 }}>
+          {days.map(({ d, v }) => (
+            <div key={d} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 3 }}>
+              <div style={{ width: "100%", borderRadius: "3px 3px 0 0", background: d === "S" ? "#1E3A8A" : "#DBEAFE", height: `${v * 0.58}px` }} />
+              <span style={{ fontSize: 7.5, color: d === "S" ? "#1E3A8A" : "#9CA3AF", fontWeight: d === "S" ? 700 : 500 }}>{d}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function LandingHero() {
+  const [active, setActive] = useState("Dashboard");
+  const [total, setTotal]   = useState(124500);
+  const [tickets, setTickets] = useState(47);
+  const [sales, setSales]   = useState<Sale[]>([
+    { prod: "Coca-Cola 2.25L",  price: "$1.200", key: 0, isNew: false },
+    { prod: "Pan lactal 400g",  price: "$850",   key: 1, isNew: false },
+    { prod: "Leche entera 1L",  price: "$750",   key: 2, isNew: false },
+  ]);
+  const keyRef = useRef(3);
+
+  useEffect(() => {
+    if (active !== "Dashboard") return;
+    const id = setInterval(() => {
+      const s   = SALE_POOL[Math.floor(Math.random() * SALE_POOL.length)];
+      const key = keyRef.current++;
+      setSales(prev => [{ prod: s.prod, price: s.price, key, isNew: true }, ...prev.slice(0, 3)]);
+      setTotal(prev => prev + s.amount);
+      setTickets(prev => prev + 1);
+      setTimeout(() => setSales(prev => prev.map(r => r.key === key ? { ...r, isNew: false } : r)), 900);
+    }, 2500);
+    return () => clearInterval(id);
+  }, [active]);
+
   return (
     <section style={{ background: C.heroBg, padding: "104px 0 132px" }}>
       <div className="l-container" style={{ position: "relative", zIndex: 1 }}>
-
         <div className="l-hero-grid">
 
-          {/* Columna izquierda — texto */}
+          {/* Columna texto */}
           <div>
-
-            {/* Badge soporte */}
-            <div style={{
-              display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 36,
-              padding: "5px 14px 5px 10px", borderRadius: 99,
-              border: "1px solid rgba(255,255,255,.14)",
-            }}>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 36, padding: "5px 14px 5px 10px", borderRadius: 99, border: "1px solid rgba(255,255,255,.14)" }}>
               <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#22C55E", flexShrink: 0 }} />
               <span style={{ fontSize: 12.5, color: "rgba(255,255,255,.58)", fontWeight: 500 }}>
                 Soporte real · respondemos en menos de 5 min
               </span>
             </div>
 
-            <h1 style={{
-              fontSize: "clamp(40px, 5.2vw, 64px)", fontWeight: 900, lineHeight: 1.06,
-              letterSpacing: "-0.04em", color: "#FFFFFF", margin: "0 0 28px",
-            }}>
+            <h1 style={{ fontSize: "clamp(40px, 5.2vw, 64px)", fontWeight: 900, lineHeight: 1.06, letterSpacing: "-0.04em", color: "#FFFFFF", margin: "0 0 28px" }}>
               Vendé más,<br />
               controlá tu stock<br />
               y dejá de perder{" "}
@@ -46,22 +279,10 @@ export default function LandingHero() {
             </p>
 
             <div className="l-hero-btns">
-              <Link href="/registro" style={{
-                display: "inline-flex", alignItems: "center", gap: 8,
-                padding: "15px 30px", borderRadius: 8,
-                fontWeight: 800, fontSize: 15, textDecoration: "none",
-                background: C.orange, color: "#fff",
-                letterSpacing: "-0.01em",
-              }}>
+              <Link href="/registro" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "15px 30px", borderRadius: 8, fontWeight: 800, fontSize: 15, textDecoration: "none", background: C.orange, color: "#fff", letterSpacing: "-0.01em" }}>
                 Empezar gratis — sin tarjeta <ArrowRight size={15} />
               </Link>
-              <a href="#como-funciona" style={{
-                display: "inline-flex", alignItems: "center", gap: 8,
-                padding: "15px 22px", borderRadius: 8,
-                fontWeight: 600, fontSize: 14, textDecoration: "none",
-                color: "rgba(255,255,255,.80)",
-                border: "1px solid rgba(255,255,255,.28)",
-              }}>
+              <a href="#como-funciona" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "15px 22px", borderRadius: 8, fontWeight: 600, fontSize: 14, textDecoration: "none", color: "rgba(255,255,255,.80)", border: "1px solid rgba(255,255,255,.28)" }}>
                 Ver cómo funciona
               </a>
             </div>
@@ -76,20 +297,12 @@ export default function LandingHero() {
             </div>
           </div>
 
-          {/* Mockup */}
+          {/* Mockup interactivo */}
           <div className="l-hero-mockup" style={{ maxWidth: 370, marginLeft: "auto" }}>
-            <div style={{
-              borderRadius: 12, overflow: "hidden",
-              border: "1px solid rgba(255,255,255,.12)",
-              boxShadow: "0 20px 60px rgba(0,0,0,0.25)",
-              background: "#F3F4F6",
-            }}>
+            <div style={{ borderRadius: 12, overflow: "hidden", border: "1px solid rgba(255,255,255,.12)", boxShadow: "0 20px 60px rgba(0,0,0,0.25)", background: "#F3F4F6" }}>
+
               {/* Title bar */}
-              <div style={{
-                padding: "9px 14px", background: "#F9FAFB",
-                borderBottom: "1px solid #E5E7EB",
-                display: "flex", alignItems: "center", justifyContent: "space-between",
-              }}>
+              <div style={{ padding: "9px 14px", background: "#F9FAFB", borderBottom: "1px solid #E5E7EB", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                   <span style={{ fontSize: 11, fontWeight: 600, color: "#6B7280" }}>VentaSimple</span>
                   <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
@@ -98,86 +311,48 @@ export default function LandingHero() {
                   </div>
                 </div>
                 <div style={{ display: "flex", gap: 6 }}>
-                  {[0,1,2].map(i => <span key={i} style={{ width: 10, height: 10, borderRadius: "50%", background: "#E5E7EB" }} />)}
+                  {[0, 1, 2].map(i => <span key={i} style={{ width: 10, height: 10, borderRadius: "50%", background: "#E5E7EB" }} />)}
                 </div>
               </div>
 
               {/* App layout */}
-              <div style={{ display: "grid", gridTemplateColumns: "100px 1fr", height: 295 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "100px 1fr", height: 310 }}>
 
-                {/* Sidebar */}
+                {/* Sidebar navegable */}
                 <div style={{ background: "#F3F4F6", borderRight: "1px solid #E5E7EB", padding: "12px 8px", display: "flex", flexDirection: "column", gap: 2 }}>
                   <div style={{ padding: "6px 8px 10px", marginBottom: 2 }}>
                     <div style={{ height: 8, width: "80%", borderRadius: 4, background: "#1E3A8A", opacity: 0.85 }} />
                   </div>
-                  {[
-                    { label: "Dashboard", active: true  },
-                    { label: "Ventas",    active: false },
-                    { label: "Productos", active: false },
-                    { label: "Caja",      active: false },
-                    { label: "Métricas",  active: false },
-                  ].map(item => (
-                    <div key={item.label} style={{
-                      padding: "7px 8px", borderRadius: 6, display: "flex", alignItems: "center", gap: 6,
-                      background: item.active ? "#DBEAFE" : "transparent",
-                      borderLeft: item.active ? "2px solid #1E3A8A" : "2px solid transparent",
-                    }}>
-                      <div style={{ width: 5, height: 5, borderRadius: 2, background: item.active ? "#1E3A8A" : "#9CA3AF", flexShrink: 0 }} />
-                      <span style={{ fontSize: 10, fontWeight: item.active ? 700 : 500, color: item.active ? "#1E3A8A" : "#9CA3AF" }}>
-                        {item.label}
+                  {NAV_ITEMS.map(item => (
+                    <div
+                      key={item}
+                      onClick={() => setActive(item)}
+                      style={{
+                        padding: "7px 8px", borderRadius: 6,
+                        display: "flex", alignItems: "center", gap: 6,
+                        cursor: "pointer", userSelect: "none",
+                        background: active === item ? "#DBEAFE" : "transparent",
+                        borderLeft: active === item ? "2px solid #1E3A8A" : "2px solid transparent",
+                        transition: "background .12s, border-left-color .12s",
+                      }}
+                    >
+                      <div style={{ width: 5, height: 5, borderRadius: 2, background: active === item ? "#1E3A8A" : "#9CA3AF", flexShrink: 0 }} />
+                      <span style={{ fontSize: 10, fontWeight: active === item ? 700 : 500, color: active === item ? "#1E3A8A" : "#9CA3AF" }}>
+                        {item}
                       </span>
                     </div>
                   ))}
                 </div>
 
-                {/* Contenido */}
-                <div style={{ background: "#F9FAFB", padding: 13, display: "flex", flexDirection: "column", gap: 9 }}>
-
-                  <div>
-                    <div style={{ fontSize: 9, fontWeight: 600, color: "#9CA3AF", marginBottom: 2 }}>Hoy, jueves 17 de abril</div>
-                    <div style={{ fontSize: 13, fontWeight: 800, color: "#111827", letterSpacing: "-0.02em" }}>Buenos días, Martín</div>
-                  </div>
-
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6 }}>
-                    <div style={{ background: "#1E3A8A", borderRadius: 8, padding: "10px 9px" }}>
-                      <div style={{ fontSize: 8, fontWeight: 600, color: "rgba(255,255,255,.55)", marginBottom: 4 }}>Ventas hoy</div>
-                      <div style={{ fontSize: 14, fontWeight: 900, color: "#fff", letterSpacing: "-0.03em", lineHeight: 1 }}>$124.500</div>
-                      <div style={{ fontSize: 8, color: "#4ADE80", marginTop: 3, fontWeight: 700 }}>+12% vs ayer</div>
-                    </div>
-                    <div style={{ background: "#fff", border: "1px solid #E9EAEC", borderRadius: 8, padding: "10px 9px" }}>
-                      <div style={{ fontSize: 8, fontWeight: 600, color: "#9CA3AF", marginBottom: 4 }}>Tickets</div>
-                      <div style={{ fontSize: 14, fontWeight: 900, color: "#111827", letterSpacing: "-0.03em", lineHeight: 1 }}>47</div>
-                      <div style={{ fontSize: 8, color: "#16A34A", marginTop: 3, fontWeight: 700 }}>+6 esta hora</div>
-                    </div>
-                    <div style={{ background: "#FFFBEB", border: "1px solid #FDE68A", borderRadius: 8, padding: "10px 9px" }}>
-                      <div style={{ fontSize: 8, fontWeight: 600, color: "#D97706", marginBottom: 4 }}>Stock bajo</div>
-                      <div style={{ fontSize: 14, fontWeight: 900, color: "#D97706", letterSpacing: "-0.03em", lineHeight: 1 }}>3</div>
-                      <div style={{ fontSize: 8, color: "#D97706", marginTop: 3, fontWeight: 700 }}>productos</div>
-                    </div>
-                  </div>
-
-                  <div style={{ background: "#fff", border: "1px solid #E9EAEC", borderRadius: 8, overflow: "hidden" }}>
-                    <div style={{ padding: "6px 10px", borderBottom: "1px solid #F1F3F5" }}>
-                      <span style={{ fontSize: 9, fontWeight: 700, color: "#111827" }}>Últimas ventas</span>
-                    </div>
-                    {[
-                      ["Coca-Cola 2.25L",  "$1.200"],
-                      ["Pan lactal 400g",  "$850"],
-                      ["Leche entera x1L", "$750"],
-                    ].map(([prod, precio], i) => (
-                      <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "6px 10px", borderBottom: i < 2 ? "1px solid #F8F9FB" : "none" }}>
-                        <span style={{ fontSize: 9, color: "#6B7280", fontWeight: 500 }}>{prod}</span>
-                        <span style={{ fontSize: 9, fontWeight: 700, color: "#111827" }}>{precio}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div style={{ background: "#FFFBEB", border: "1.5px solid #FCD34D", borderRadius: 8, padding: "8px 10px", display: "flex", alignItems: "center", gap: 7 }}>
-                    <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#D97706", flexShrink: 0 }} />
-                    <span style={{ fontSize: 9, fontWeight: 800, color: "#92400E", letterSpacing: "-0.01em" }}>⚠ Stock bajo: Coca Cola (3) · Pan lactal (2)</span>
-                  </div>
-
+                {/* Pantalla activa */}
+                <div key={active} className="mockup-screen" style={{ background: "#F9FAFB", overflow: "hidden" }}>
+                  {active === "Dashboard" && <DashboardScreen total={total} tickets={tickets} sales={sales} />}
+                  {active === "Ventas"    && <VentasScreen />}
+                  {active === "Productos" && <ProductosScreen />}
+                  {active === "Caja"      && <CajaScreen />}
+                  {active === "Métricas"  && <MetricasScreen />}
                 </div>
+
               </div>
             </div>
           </div>
@@ -185,11 +360,7 @@ export default function LandingHero() {
         </div>
 
         {/* Micro bloque — iconos azul */}
-        <div style={{
-          display: "flex", gap: 32, flexWrap: "wrap", justifyContent: "center",
-          marginTop: 56, paddingTop: 40,
-          borderTop: "1px solid rgba(255,255,255,.08)",
-        }}>
+        <div style={{ display: "flex", gap: 32, flexWrap: "wrap", justifyContent: "center", marginTop: 56, paddingTop: 40, borderTop: "1px solid rgba(255,255,255,.08)" }}>
           {MICRO.map(({ icon: Icon, label }) => (
             <div key={label} style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <Icon size={16} style={{ color: "#60A5FA", flexShrink: 0 }} />
