@@ -194,32 +194,75 @@ function CajaScreen() {
 }
 
 function MetricasScreen() {
-  const days = [
-    { d: "L", v: 55 }, { d: "M", v: 70 }, { d: "X", v: 45 },
-    { d: "J", v: 80 }, { d: "V", v: 65 }, { d: "S", v: 100 }, { d: "D", v: 35 },
-  ];
+  const days = ["L", "M", "X", "J", "V", "S", "D"];
+  const lineVals = [42, 55, 48, 68, 72, 85, 95];
+  const barVals  = [55, 70, 45, 80, 65, 100, 35];
+
+  const W = 260, H = 52;
+  const max = Math.max(...lineVals);
+  const pts = lineVals.map((v, i) => {
+    const x = (i / (lineVals.length - 1)) * W;
+    const y = H - (v / max) * (H - 6) - 3;
+    return { x, y };
+  });
+  const polyline = pts.map(p => `${p.x},${p.y}`).join(" ");
+  const areaPath = `0,${H} ${polyline} ${W},${H}`;
+
   return (
-    <div style={{ padding: 13, display: "flex", flexDirection: "column", gap: 8, height: "100%", minHeight: 0, overflow: "hidden" }}>
+    <div style={{ padding: 13, display: "flex", flexDirection: "column", gap: 7, height: "100%", minHeight: 0, overflow: "hidden" }}>
       <div style={{ fontSize: 12, fontWeight: 800, color: "#111827" }}>Esta semana</div>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
-        <div style={{ background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: 7, padding: "8px" }}>
-          <div style={{ fontSize: 7.5, color: "#16A34A", fontWeight: 600 }}>Mejor día</div>
-          <div style={{ fontSize: 13, fontWeight: 900, color: "#15803D", letterSpacing: "-0.03em" }}>$189K</div>
-          <div style={{ fontSize: 7.5, color: "#16A34A" }}>sábado</div>
-        </div>
-        <div style={{ background: "#EFF6FF", border: "1px solid #BFDBFE", borderRadius: 7, padding: "8px" }}>
-          <div style={{ fontSize: 7.5, color: "#1D4ED8", fontWeight: 600 }}>Promedio/día</div>
-          <div style={{ fontSize: 13, fontWeight: 900, color: "#1D4ED8", letterSpacing: "-0.03em" }}>$124K</div>
-          <div style={{ fontSize: 7.5, color: "#1D4ED8" }}>esta semana</div>
+
+      {/* Gráfico lineal animado */}
+      <div style={{ background: "#fff", border: "1px solid #E9EAEC", borderRadius: 7, padding: "7px 9px" }}>
+        <div style={{ fontSize: 7.5, fontWeight: 600, color: "#9CA3AF", marginBottom: 5 }}>Tendencia de ventas ↑</div>
+        <svg width="100%" height={H} viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" style={{ overflow: "visible" }}>
+          <defs>
+            <linearGradient id="mg" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#1E3A8A" stopOpacity="0.18" />
+              <stop offset="100%" stopColor="#1E3A8A" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          <polygon points={areaPath} fill="url(#mg)" />
+          <polyline
+            points={polyline}
+            fill="none" stroke="#1E3A8A" strokeWidth="2"
+            strokeLinecap="round" strokeLinejoin="round"
+            className="line-chart-path"
+          />
+          {pts.map((p, i) => (
+            <circle
+              key={i} cx={p.x} cy={p.y} r="2.5"
+              fill="#fff" stroke="#1E3A8A" strokeWidth="1.5"
+              className="line-chart-dot"
+              style={{ animationDelay: `${0.15 + (i / (pts.length - 1)) * 1.25}s` }}
+            />
+          ))}
+        </svg>
+        <div style={{ display: "flex", justifyContent: "space-between", marginTop: 3 }}>
+          {days.map(d => <span key={d} style={{ fontSize: 7, color: "#C4C9D4" }}>{d}</span>)}
         </div>
       </div>
-      <div style={{ flex: 1, background: "#fff", border: "1px solid #E9EAEC", borderRadius: 7, padding: "8px 9px", display: "flex", flexDirection: "column", gap: 6 }}>
-        <div style={{ fontSize: 8.5, fontWeight: 700, color: "#111827" }}>Ventas por día</div>
-        <div style={{ flex: 1, display: "flex", alignItems: "flex-end", gap: 3, paddingBottom: 4 }}>
-          {days.map(({ d, v }) => (
-            <div key={d} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 3 }}>
-              <div style={{ width: "100%", borderRadius: "3px 3px 0 0", background: d === "S" ? "#1E3A8A" : "#DBEAFE", height: `${v * 0.58}px` }} />
-              <span style={{ fontSize: 7.5, color: d === "S" ? "#1E3A8A" : "#9CA3AF", fontWeight: d === "S" ? 700 : 500 }}>{d}</span>
+
+      {/* Stats compactos */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
+        <div style={{ background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: 7, padding: "7px" }}>
+          <div style={{ fontSize: 7.5, color: "#16A34A", fontWeight: 600 }}>Mejor día</div>
+          <div style={{ fontSize: 12, fontWeight: 900, color: "#15803D", letterSpacing: "-0.03em" }}>$189K</div>
+        </div>
+        <div style={{ background: "#EFF6FF", border: "1px solid #BFDBFE", borderRadius: 7, padding: "7px" }}>
+          <div style={{ fontSize: 7.5, color: "#1D4ED8", fontWeight: 600 }}>Promedio/día</div>
+          <div style={{ fontSize: 12, fontWeight: 900, color: "#1D4ED8", letterSpacing: "-0.03em" }}>$124K</div>
+        </div>
+      </div>
+
+      {/* Barras por día */}
+      <div style={{ flex: 1, background: "#fff", border: "1px solid #E9EAEC", borderRadius: 7, padding: "7px 9px", display: "flex", flexDirection: "column", gap: 5, minHeight: 0 }}>
+        <div style={{ fontSize: 8, fontWeight: 700, color: "#111827" }}>Ventas por día</div>
+        <div style={{ flex: 1, display: "flex", alignItems: "flex-end", gap: 3, minHeight: 0 }}>
+          {barVals.map((v, i) => (
+            <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
+              <div style={{ width: "100%", borderRadius: "2px 2px 0 0", background: days[i] === "S" ? "#1E3A8A" : "#DBEAFE", height: `${v * 0.32}px` }} />
+              <span style={{ fontSize: 7, color: days[i] === "S" ? "#1E3A8A" : "#9CA3AF", fontWeight: days[i] === "S" ? 700 : 500 }}>{days[i]}</span>
             </div>
           ))}
         </div>

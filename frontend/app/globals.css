@@ -609,6 +609,23 @@ details[open] > summary span:last-child { transform: rotate(45deg); display: inl
   animation: sync-pulse 2s ease-in-out infinite;
 }
 
+/* Line chart draw animation */
+@keyframes line-draw {
+  from { stroke-dashoffset: 400; }
+  to   { stroke-dashoffset: 0; }
+}
+.line-chart-path {
+  stroke-dasharray: 400;
+  stroke-dashoffset: 400;
+  animation: line-draw 1.4s cubic-bezier(.4,0,.2,1) both;
+  animation-delay: 0.15s;
+}
+.line-chart-dot {
+  opacity: 0;
+  animation: line-draw 0ms both, fade-in-dot 200ms ease both;
+}
+@keyframes fade-in-dot { from { opacity: 0; } to { opacity: 1; } }
+
 /* Mockup screen transition */
 @keyframes mockup-screen-in {
   from { opacity: 0; transform: translateY(4px); }
