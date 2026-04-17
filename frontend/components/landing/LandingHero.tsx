@@ -319,7 +319,7 @@ export default function LandingHero() {
 
             <div className="l-hero-btns">
               <Link href="/registro" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "15px 30px", borderRadius: 8, fontWeight: 800, fontSize: 15, textDecoration: "none", background: C.orange, color: "#fff", letterSpacing: "-0.01em" }}>
-                Empezar gratis — sin tarjeta <ArrowRight size={15} />
+                Empezar gratis <ArrowRight size={15} />
               </Link>
               <a href="#como-funciona" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "15px 22px", borderRadius: 8, fontWeight: 600, fontSize: 14, textDecoration: "none", color: "rgba(255,255,255,.80)", border: "1px solid rgba(255,255,255,.28)" }}>
                 Ver cómo funciona →
