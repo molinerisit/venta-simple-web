@@ -22,7 +22,8 @@ const SALE_POOL = [
   { prod: "Galletitas 200g", price: "$480",   amount: 480   },
 ];
 
-type Sale = { prod: string; price: string; key: number; isNew: boolean };
+type Sale      = { prod: string; price: string; key: number; isNew: boolean };
+type VentasRow = Sale & { time: string };
 
 function LiveBadge() {
   return (
@@ -92,37 +93,34 @@ function DashboardScreen({ total, tickets, sales }: { total: number; tickets: nu
   );
 }
 
-function VentasScreen() {
-  const rows = [
-    { time: "14:32", prod: "Coca-Cola 2.25L",  price: "$1.200", live: true  },
-    { time: "14:28", prod: "Yerba mate 500g",   price: "$1.450", live: false },
-    { time: "14:21", prod: "Aceite 900ml",      price: "$2.100", live: false },
-    { time: "14:15", prod: "Pan lactal 400g",   price: "$850",   live: false },
-    { time: "14:08", prod: "Leche entera 1L",   price: "$750",   live: false },
-  ];
+function VentasScreen({ rows, total }: { rows: VentasRow[]; total: number }) {
   return (
     <div style={{ padding: 13, display: "flex", flexDirection: "column", gap: 8, height: "100%", minHeight: 0, overflow: "hidden" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div style={{ fontSize: 12, fontWeight: 800, color: "#111827" }}>Ventas de hoy</div>
         <LiveBadge />
       </div>
-      <div style={{ background: "#fff", border: "1px solid #E9EAEC", borderRadius: 7, overflow: "hidden", flex: 1 }}>
+      <div style={{ background: "#fff", border: "1px solid #E9EAEC", borderRadius: 7, overflow: "hidden", flex: 1, minHeight: 0 }}>
         <div style={{ display: "grid", gridTemplateColumns: "36px 1fr 50px", padding: "5px 9px", borderBottom: "1px solid #F1F3F5", gap: 6 }}>
           {["Hora", "Producto", "Monto"].map(h => (
             <span key={h} style={{ fontSize: 7.5, fontWeight: 700, color: "#9CA3AF" }}>{h}</span>
           ))}
         </div>
         {rows.map((r, i) => (
-          <div key={i} style={{ display: "grid", gridTemplateColumns: "36px 1fr 50px", padding: "6px 9px", borderBottom: i < rows.length - 1 ? "1px solid #F8F9FB" : "none", gap: 6, alignItems: "center", background: r.live ? "#F0FDF4" : "transparent" }}>
+          <div
+            key={r.key}
+            className={r.isNew ? "mockup-row-new" : undefined}
+            style={{ display: "grid", gridTemplateColumns: "36px 1fr 50px", padding: "6px 9px", borderBottom: i < rows.length - 1 ? "1px solid #F8F9FB" : "none", gap: 6, alignItems: "center", background: r.isNew ? "#F0FDF4" : "transparent", transition: "background 1.2s ease" }}
+          >
             <span style={{ fontSize: 8, color: "#9CA3AF" }}>{r.time}</span>
-            <span style={{ fontSize: 8.5, color: "#374151", fontWeight: r.live ? 700 : 500 }}>{r.prod}</span>
+            <span style={{ fontSize: 8.5, color: "#374151", fontWeight: r.isNew ? 700 : 500 }}>{r.prod}</span>
             <span style={{ fontSize: 8.5, fontWeight: 700, color: "#111827", textAlign: "right" }}>{r.price}</span>
           </div>
         ))}
       </div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "#EFF6FF", borderRadius: 7, padding: "7px 9px", border: "1px solid #BFDBFE" }}>
         <span style={{ fontSize: 9, fontWeight: 700, color: "#1D4ED8" }}>Total del día</span>
-        <span style={{ fontSize: 10, fontWeight: 900, color: "#1D4ED8" }}>$124.500</span>
+        <span style={{ fontSize: 10, fontWeight: 900, color: "#1D4ED8" }}>${total.toLocaleString("es-AR")}</span>
       </div>
     </div>
   );
@@ -159,7 +157,7 @@ function ProductosScreen() {
   );
 }
 
-function CajaScreen() {
+function CajaScreen({ success, onCobrar }: { success: boolean; onCobrar: () => void }) {
   const items = [
     { prod: "Coca-Cola 2.25L",  qty: 2, price: "$2.400" },
     { prod: "Pan lactal 400g",  qty: 1, price: "$850"   },
@@ -175,7 +173,7 @@ function CajaScreen() {
           ))}
         </div>
         {items.map((r, i) => (
-          <div key={i} style={{ display: "grid", gridTemplateColumns: "1fr 28px 50px", padding: "6px 9px", borderBottom: i < items.length - 1 ? "1px solid #F8F9FB" : "none", gap: 4, alignItems: "center" }}>
+          <div key={i} style={{ display: "grid", gridTemplateColumns: "1fr 28px 50px", padding: "6px 9px", borderBottom: i < items.length - 1 ? "1px solid #F8F9FB" : "none", gap: 4, alignItems: "center", opacity: success ? 0.4 : 1, transition: "opacity .3s" }}>
             <span style={{ fontSize: 8.5, color: "#374151" }}>{r.prod}</span>
             <span style={{ fontSize: 8.5, color: "#6B7280", textAlign: "center" }}>{r.qty}</span>
             <span style={{ fontSize: 8.5, fontWeight: 700, color: "#111827", textAlign: "right" }}>{r.price}</span>
@@ -186,9 +184,19 @@ function CajaScreen() {
         <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,.7)" }}>Total</span>
         <span style={{ fontSize: 14, fontWeight: 900, color: "#fff", letterSpacing: "-0.03em" }}>$5.500</span>
       </div>
-      <div style={{ background: C.orange, borderRadius: 6, padding: "7px", textAlign: "center", cursor: "default" }}>
-        <span style={{ fontSize: 9, fontWeight: 800, color: "#fff" }}>Cobrar $5.500</span>
-      </div>
+
+      {success ? (
+        <div className="cobrar-success" style={{ background: "#16A34A", borderRadius: 6, padding: "9px", textAlign: "center" }}>
+          <span style={{ fontSize: 10, fontWeight: 800, color: "#fff" }}>✓ ¡Venta registrada!</span>
+        </div>
+      ) : (
+        <div
+          onClick={onCobrar}
+          style={{ background: C.orange, borderRadius: 6, padding: "7px", textAlign: "center", cursor: "pointer" }}
+        >
+          <span style={{ fontSize: 9, fontWeight: 800, color: "#fff" }}>Cobrar</span>
+        </div>
+      )}
     </div>
   );
 }
@@ -272,15 +280,25 @@ function MetricasScreen() {
 }
 
 export default function LandingHero() {
-  const [active, setActive] = useState("Dashboard");
-  const [total, setTotal]   = useState(124500);
-  const [tickets, setTickets] = useState(47);
-  const [sales, setSales]   = useState<Sale[]>([
+  const [active, setActive]         = useState("Dashboard");
+  const [total, setTotal]           = useState(124500);
+  const [tickets, setTickets]       = useState(47);
+  const [sales, setSales]           = useState<Sale[]>([
     { prod: "Coca-Cola 2.25L",  price: "$1.200", key: 0, isNew: false },
     { prod: "Pan lactal 400g",  price: "$850",   key: 1, isNew: false },
     { prod: "Leche entera 1L",  price: "$750",   key: 2, isNew: false },
   ]);
-  const keyRef = useRef(3);
+  const [ventasTotal, setVentasTotal] = useState(124500);
+  const [ventasRows, setVentasRows] = useState<VentasRow[]>([
+    { time: "14:32", prod: "Coca-Cola 2.25L",  price: "$1.200", key: 10, isNew: false },
+    { time: "14:28", prod: "Yerba mate 500g",   price: "$1.450", key: 11, isNew: false },
+    { time: "14:21", prod: "Aceite 900ml",      price: "$2.100", key: 12, isNew: false },
+    { time: "14:15", prod: "Pan lactal 400g",   price: "$850",   key: 13, isNew: false },
+    { time: "14:08", prod: "Leche entera 1L",   price: "$750",   key: 14, isNew: false },
+  ]);
+  const [cajaSuccess, setCajaSuccess] = useState(false);
+  const keyRef      = useRef(3);
+  const ventasKey   = useRef(15);
 
   useEffect(() => {
     if (active !== "Dashboard") return;
@@ -294,6 +312,25 @@ export default function LandingHero() {
     }, 2500);
     return () => clearInterval(id);
   }, [active]);
+
+  useEffect(() => {
+    if (active !== "Ventas") return;
+    const id = setInterval(() => {
+      const s   = SALE_POOL[Math.floor(Math.random() * SALE_POOL.length)];
+      const key = ventasKey.current++;
+      const now = new Date();
+      const time = `${now.getHours()}:${String(now.getMinutes()).padStart(2, "0")}`;
+      setVentasRows(prev => [{ prod: s.prod, price: s.price, key, isNew: true, time }, ...prev.slice(0, 4)]);
+      setVentasTotal(prev => prev + s.amount);
+      setTimeout(() => setVentasRows(prev => prev.map(r => r.key === key ? { ...r, isNew: false } : r)), 900);
+    }, 2500);
+    return () => clearInterval(id);
+  }, [active]);
+
+  const handleCobrar = () => {
+    setCajaSuccess(true);
+    setTimeout(() => setCajaSuccess(false), 2000);
+  };
 
   return (
     <section style={{ background: C.heroBg, padding: "104px 0 132px" }}>
@@ -390,9 +427,9 @@ export default function LandingHero() {
                 {/* Pantalla activa */}
                 <div key={active} className="mockup-screen" style={{ background: "#F9FAFB", overflow: "hidden", height: "100%", minHeight: 0 }}>
                   {active === "Dashboard" && <DashboardScreen total={total} tickets={tickets} sales={sales} />}
-                  {active === "Ventas"    && <VentasScreen />}
+                  {active === "Ventas"    && <VentasScreen rows={ventasRows} total={ventasTotal} />}
                   {active === "Productos" && <ProductosScreen />}
-                  {active === "Caja"      && <CajaScreen />}
+                  {active === "Caja"      && <CajaScreen success={cajaSuccess} onCobrar={handleCobrar} />}
                   {active === "Métricas"  && <MetricasScreen />}
                 </div>
 
