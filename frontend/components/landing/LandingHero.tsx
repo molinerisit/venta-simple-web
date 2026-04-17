@@ -314,7 +314,7 @@ export default function LandingHero() {
 
             <p style={{ fontSize: 16, lineHeight: 1.75, color: "rgba(255,255,255,.60)", maxWidth: 440, margin: "0 0 44px" }}>
               Mirá tus ventas en tiempo real y controlá tu negocio desde cualquier lugar.<br />
-              Todo en un solo lugar.
+              Todo centralizado en un solo sistema.
             </p>
 
             <div className="l-hero-btns">
