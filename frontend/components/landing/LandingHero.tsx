@@ -9,9 +9,9 @@ import {
 import { C } from "./tokens";
 
 const MICRO = [
-  { icon: Wifi,        label: "Vendé aunque se corte internet"      },
-  { icon: Smartphone,  label: "Control total desde el celular"      },
-  { icon: RefreshCw,   label: "Todo se sincroniza automáticamente"  },
+  { icon: Wifi,        label: "Vendé sin conexión"              },
+  { icon: Smartphone,  label: "Control desde el celular"        },
+  { icon: RefreshCw,   label: "Todo se sincroniza automático"   },
 ];
 
 const NAV_ITEMS = [
@@ -183,15 +183,9 @@ export default function LandingHero() {
               Controlá desde tu celular.
             </h1>
 
-            <p style={{ fontSize: 16, lineHeight: 1.75, color: "rgba(255,255,255,.60)", maxWidth: 440, margin: "0 0 20px" }}>
-              Mirá lo que vendés en tiempo real y controlá tu negocio desde cualquier lugar.<br />
-              Cambiá precios, gestioná stock y tomá decisiones al instante.
+            <p style={{ fontSize: 16, lineHeight: 1.75, color: "rgba(255,255,255,.60)", maxWidth: 440, margin: "0 0 44px" }}>
+              Mirá tus ventas en tiempo real y controlá tu negocio desde cualquier lugar.
             </p>
-
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 9, margin: "0 0 36px", padding: "10px 16px", borderRadius: 8, background: "rgba(255,255,255,.07)", border: "1px solid rgba(255,255,255,.14)" }}>
-              <span style={{ fontSize: 16 }}>⚡</span>
-              <span style={{ fontSize: 15, fontWeight: 700, color: "#FFFFFF", letterSpacing: "-0.01em" }}>Atendé más clientes sin sumar personal</span>
-            </div>
 
             <div className="l-hero-btns">
               <Link href="/registro" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "15px 30px", borderRadius: 8, fontWeight: 800, fontSize: 15, textDecoration: "none", background: C.orange, color: "#fff", letterSpacing: "-0.01em" }}>
