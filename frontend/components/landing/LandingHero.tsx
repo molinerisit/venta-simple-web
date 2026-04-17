@@ -35,7 +35,7 @@ function LiveBadge() {
 
 function DashboardScreen({ total, tickets, sales }: { total: number; tickets: number; sales: Sale[] }) {
   return (
-    <div style={{ padding: 13, display: "flex", flexDirection: "column", gap: 8, height: "100%", overflow: "hidden" }}>
+    <div style={{ padding: 13, display: "flex", flexDirection: "column", gap: 8, height: "100%", minHeight: 0, overflow: "hidden" }}>
       <div>
         <div style={{ fontSize: 8.5, fontWeight: 600, color: "#9CA3AF" }}>Hoy, jueves 17 de abril</div>
         <div style={{ fontSize: 12, fontWeight: 800, color: "#111827", letterSpacing: "-0.02em" }}>Buenos días, Martín</div>
@@ -101,7 +101,7 @@ function VentasScreen() {
     { time: "14:08", prod: "Leche entera 1L",   price: "$750",   live: false },
   ];
   return (
-    <div style={{ padding: 13, display: "flex", flexDirection: "column", gap: 8, height: "100%", overflow: "hidden" }}>
+    <div style={{ padding: 13, display: "flex", flexDirection: "column", gap: 8, height: "100%", minHeight: 0, overflow: "hidden" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div style={{ fontSize: 12, fontWeight: 800, color: "#111827" }}>Ventas de hoy</div>
         <LiveBadge />
@@ -137,7 +137,7 @@ function ProductosScreen() {
     { name: "Pan lactal 400g",  stock: 2,  max: 20, warn: true  },
   ];
   return (
-    <div style={{ padding: 13, display: "flex", flexDirection: "column", gap: 8, height: "100%", overflow: "hidden" }}>
+    <div style={{ padding: 13, display: "flex", flexDirection: "column", gap: 8, height: "100%", minHeight: 0, overflow: "hidden" }}>
       <div style={{ fontSize: 12, fontWeight: 800, color: "#111827" }}>Inventario</div>
       <div style={{ background: "#F3F4F6", borderRadius: 6, padding: "5px 9px", fontSize: 8.5, color: "#9CA3AF" }}>
         🔍 Buscar producto...
@@ -166,7 +166,7 @@ function CajaScreen() {
     { prod: "Leche 1L",         qty: 3, price: "$2.250" },
   ];
   return (
-    <div style={{ padding: 13, display: "flex", flexDirection: "column", gap: 8, height: "100%", overflow: "hidden" }}>
+    <div style={{ padding: 13, display: "flex", flexDirection: "column", gap: 8, height: "100%", minHeight: 0, overflow: "hidden" }}>
       <div style={{ fontSize: 12, fontWeight: 800, color: "#111827" }}>Caja — Venta actual</div>
       <div style={{ background: "#fff", border: "1px solid #E9EAEC", borderRadius: 7, overflow: "hidden", flex: 1 }}>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 28px 50px", padding: "5px 9px", borderBottom: "1px solid #F1F3F5", gap: 4 }}>
@@ -199,7 +199,7 @@ function MetricasScreen() {
     { d: "J", v: 80 }, { d: "V", v: 65 }, { d: "S", v: 100 }, { d: "D", v: 35 },
   ];
   return (
-    <div style={{ padding: 13, display: "flex", flexDirection: "column", gap: 8, height: "100%", overflow: "hidden" }}>
+    <div style={{ padding: 13, display: "flex", flexDirection: "column", gap: 8, height: "100%", minHeight: 0, overflow: "hidden" }}>
       <div style={{ fontSize: 12, fontWeight: 800, color: "#111827" }}>Esta semana</div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
         <div style={{ background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: 7, padding: "8px" }}>
@@ -345,7 +345,7 @@ export default function LandingHero() {
                 </div>
 
                 {/* Pantalla activa */}
-                <div key={active} className="mockup-screen" style={{ background: "#F9FAFB", overflow: "hidden" }}>
+                <div key={active} className="mockup-screen" style={{ background: "#F9FAFB", overflow: "hidden", height: "100%", minHeight: 0 }}>
                   {active === "Dashboard" && <DashboardScreen total={total} tickets={tickets} sales={sales} />}
                   {active === "Ventas"    && <VentasScreen />}
                   {active === "Productos" && <ProductosScreen />}
