@@ -11,16 +11,17 @@ export default function LandingProblem() {
           </h2>
           <p style={{ ...T.body, maxWidth: 480 }}>
             Cada día sin control es plata que perdés.<br />
-            Errores en el stock, ventas sin registrar y decisiones a ciegas.
+            Y muchas veces ni siquiera te das cuenta.
           </p>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 1, background: C.border, borderRadius: 16, overflow: "hidden" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 16 }}>
           {PROBLEMS.map((p, i) => (
             <div key={i} className="l-problem-card" style={{
-              background: C.surface, padding: "28px 26px",
+              background: "#fff", padding: "26px 24px",
               display: "flex", gap: 16, alignItems: "flex-start",
-              transition: "background .15s, box-shadow .15s",
+              border: `1px solid ${C.border}`, borderRadius: 12,
+              transition: "box-shadow .2s",
             }}>
               <div style={{
                 width: 32, height: 32, borderRadius: 8, flexShrink: 0,

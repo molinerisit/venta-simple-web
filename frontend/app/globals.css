@@ -395,6 +395,21 @@
 @media (max-width: 560px) { .l-problems-grid { grid-template-columns: 1fr; } }
 .l-problem-card:hover { background: #FAFAFA !important; box-shadow: inset 0 0 0 1px #FECACA; }
 
+/* SOLUCION */
+.l-solucion-grid {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 64px;
+  align-items: start;
+}
+@media (max-width: 960px) { .l-solucion-grid { grid-template-columns: 1fr; gap: 48px; } }
+
+/* CAMBIO comparison rows */
+@media (max-width: 680px) {
+  .l-cambio-row { grid-template-columns: 1fr !important; }
+  .l-cambio-row > :first-child { font-size: 13px; font-weight: 700; }
+}
+
 /* FEATURES sticky layout */
 .l-features-grid {
   display: grid;

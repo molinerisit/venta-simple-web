@@ -5,6 +5,8 @@ import LandingNavbar      from "@/components/landing/LandingNavbar";
 import LandingHero        from "@/components/landing/LandingHero";
 import LandingStats       from "@/components/landing/LandingStats";
 import LandingProblem     from "@/components/landing/LandingProblem";
+import LandingSolucion    from "@/components/landing/LandingSolucion";
+import LandingCambio      from "@/components/landing/LandingCambio";
 import LandingFeatures    from "@/components/landing/LandingFeatures";
 import LandingSteps       from "@/components/landing/LandingSteps";
 import LandingSupport     from "@/components/landing/LandingSupport";
@@ -29,6 +31,8 @@ export default function LandingPage() {
       <LandingHero />
       <LandingStats />
       <LandingProblem />
+      <LandingSolucion />
+      <LandingCambio />
       <LandingFeatures />
       <LandingSteps />
       <LandingSupport />
