@@ -298,7 +298,7 @@ export default function LandingHero() {
           </div>
 
           {/* Mockup interactivo */}
-          <div className="l-hero-mockup" style={{ maxWidth: 370, marginLeft: "auto" }}>
+          <div className="l-hero-mockup" style={{ maxWidth: 400, marginLeft: "auto" }}>
             <div style={{ borderRadius: 12, overflow: "hidden", border: "1px solid rgba(255,255,255,.12)", boxShadow: "0 20px 60px rgba(0,0,0,0.25)", background: "#F3F4F6" }}>
 
               {/* Title bar */}
@@ -316,10 +316,10 @@ export default function LandingHero() {
               </div>
 
               {/* App layout */}
-              <div style={{ display: "grid", gridTemplateColumns: "100px 1fr", height: 310 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "100px 1fr", height: 330, overflow: "hidden" }}>
 
                 {/* Sidebar navegable */}
-                <div style={{ background: "#F3F4F6", borderRight: "1px solid #E5E7EB", padding: "12px 8px", display: "flex", flexDirection: "column", gap: 2 }}>
+                <div style={{ background: "#F3F4F6", borderRight: "1px solid #E5E7EB", padding: "12px 8px", display: "flex", flexDirection: "column", gap: 2, overflow: "hidden" }}>
                   <div style={{ padding: "6px 8px 10px", marginBottom: 2 }}>
                     <div style={{ height: 8, width: "80%", borderRadius: 4, background: "#1E3A8A", opacity: 0.85 }} />
                   </div>
