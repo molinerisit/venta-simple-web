@@ -7,7 +7,7 @@ export default function LandingProblem() {
         <div style={{ maxWidth: 580, marginBottom: 64 }}>
           <div style={{ ...T.label, marginBottom: 16 }}>El problema</div>
           <h2 style={{ ...T.h2, margin: "0 0 20px" }}>
-            ¿Seguís manejando<br />tu negocio sin un sistema?
+            ¿Tu negocio depende<br />de lo que te acordás?
           </h2>
           <p style={{ ...T.body, maxWidth: 480 }}>
             Cada día sin control es plata que perdés.<br />
@@ -24,16 +24,23 @@ export default function LandingProblem() {
               transition: "box-shadow .2s, transform .2s",
             }}>
               <div style={{
-                width: 32, height: 32, borderRadius: 8, flexShrink: 0,
-                background: "#FDF2F2", border: "1px solid #FECACA",
+                width: 36, height: 36, borderRadius: 8, flexShrink: 0,
+                background: "rgba(185,28,28,0.08)",
                 display: "grid", placeItems: "center",
               }}>
-                <p.icon size={13} style={{ color: "#B91C1C" }} />
+                <p.icon size={15} strokeWidth={2.5} style={{ color: "#B91C1C" }} />
               </div>
               <p style={{ fontSize: 14, color: C.muted, lineHeight: 1.65, fontWeight: 500, margin: 0 }}>{p.text}</p>
             </div>
           ))}
         </div>
+
+        <p style={{
+          marginTop: 32, fontSize: 14, fontWeight: 700,
+          color: C.muted, textAlign: "center", letterSpacing: "-0.01em",
+        }}>
+          Esto no es falta de esfuerzo. Es falta de herramientas.
+        </p>
       </div>
     </section>
   );
