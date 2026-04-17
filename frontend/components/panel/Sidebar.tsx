@@ -125,7 +125,7 @@ export default function Sidebar() {
       <div style={{ padding: "22px 20px 16px" }}>
         <div>
           <Image
-            src="/brand/texto.png"
+            src="/brand/logoletras.png"
             alt="VentaSimple"
             width={320} height={100}
             style={{

@@ -13,7 +13,7 @@ export default function LandingNavbar() {
     }}>
       <div className="l-container" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: 68 }}>
         <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center" }}>
-          <Image src="/brand/texto.png" alt="VentaSimple" width={320} height={100}
+          <Image src="/brand/logoletras.png" alt="VentaSimple" width={320} height={100}
             style={{ height: 46, width: "auto", objectFit: "contain" }} priority />
         </Link>
 

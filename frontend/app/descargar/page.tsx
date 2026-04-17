@@ -202,7 +202,7 @@ export default function DescargarPage() {
       <nav className="border-b bg-background/90 backdrop-blur sticky top-0 z-50" style={{ borderColor: "var(--border)" }}>
         <div style={{ maxWidth: 960, margin: "0 auto", padding: "0 24px", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center" }}>
-            <Image src="/brand/texto.png" alt="Venta Simple" width={320} height={100}
+            <Image src="/brand/logoletras.png" alt="Venta Simple" width={320} height={100}
               style={{ height: 38, width: "auto", objectFit: "contain" }} priority />
           </Link>
           <Link href="/dashboard" style={{

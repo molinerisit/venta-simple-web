@@ -35,7 +35,7 @@ export default function ForgotPasswordPage() {
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="flex items-center justify-center mb-8">
-          <Image src="/brand/texto.png" alt="Venta Simple" width={320} height={100}
+          <Image src="/brand/logoletras.png" alt="Venta Simple" width={320} height={100}
             style={{ height: 56, width: "auto", objectFit: "contain" }} priority />
         </div>
 

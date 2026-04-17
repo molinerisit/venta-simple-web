@@ -41,7 +41,7 @@ export default function LandingPage() {
         <div className="l-container" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 20 }}>
           <div>
             <div style={{ marginBottom: 8 }}>
-              <Image src="/brand/texto.png" alt="VentaSimple" width={320} height={100}
+              <Image src="/brand/logoletras.png" alt="VentaSimple" width={320} height={100}
                 style={{ height: 32, width: "auto", objectFit: "contain", filter: "brightness(0) invert(1) opacity(.75)" }} />
             </div>
             <p style={{ margin: 0, fontSize: 12, color: "rgba(255,255,255,.28)" }}>

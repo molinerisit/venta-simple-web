@@ -10,8 +10,8 @@ export const metadata: Metadata = {
   title: "VentaSimple · Panel Administrativo",
   description: "Gestioná tu negocio con VentaSimple. Panel web para sincronizar, analizar y operar tu punto de venta.",
   icons: {
-    icon: "/brand/texto.png",
-    apple: "/brand/texto.png",
+    icon: "/brand/logoletras.png",
+    apple: "/brand/logoletras.png",
   },
 };
 
