@@ -10,7 +10,7 @@ import { C } from "./tokens";
 
 const MICRO = [
   { icon: Wifi,        label: "Vendé aunque se corte internet"      },
-  { icon: Smartphone,  label: "Mirá tu negocio desde el celular"    },
+  { icon: Smartphone,  label: "Control total desde el celular"      },
   { icon: RefreshCw,   label: "Todo se sincroniza automáticamente"  },
 ];
 
@@ -184,13 +184,14 @@ export default function LandingHero() {
             </h1>
 
             <p style={{ fontSize: 16, lineHeight: 1.75, color: "rgba(255,255,255,.60)", maxWidth: 440, margin: "0 0 20px" }}>
-              Mirá lo que vendés en tiempo real.<br />
-              Controlá stock, cambiá precios y tomá decisiones desde cualquier lugar.
+              Mirá lo que vendés en tiempo real y controlá tu negocio desde cualquier lugar.<br />
+              Cambiá precios, gestioná stock y tomá decisiones al instante.
             </p>
 
-            <p style={{ fontSize: 15, lineHeight: 1.6, color: "rgba(255,255,255,.85)", maxWidth: 420, margin: "0 0 36px", fontWeight: 600 }}>
-              Cobrá más rápido y atendé más clientes sin sumar personal.
-            </p>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 9, margin: "0 0 36px", padding: "10px 16px", borderRadius: 8, background: "rgba(255,255,255,.07)", border: "1px solid rgba(255,255,255,.14)" }}>
+              <span style={{ fontSize: 16 }}>⚡</span>
+              <span style={{ fontSize: 15, fontWeight: 700, color: "#FFFFFF", letterSpacing: "-0.01em" }}>Atendé más clientes sin sumar personal</span>
+            </div>
 
             <div className="l-hero-btns">
               <Link href="/registro" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "15px 30px", borderRadius: 8, fontWeight: 800, fontSize: 15, textDecoration: "none", background: C.orange, color: "#fff", letterSpacing: "-0.01em" }}>
@@ -214,7 +215,7 @@ export default function LandingHero() {
           {/* Mockup PC + Phone */}
           <div className="l-hero-mockup" style={{ overflow: "visible" }}>
             <div style={{ marginBottom: 10, textAlign: "center" }}>
-              <span style={{ fontSize: 12, color: "rgba(255,255,255,.38)", fontWeight: 500 }}>Mirá tu negocio en vivo →</span>
+              <span style={{ fontSize: 12, color: "rgba(255,255,255,.38)", fontWeight: 500 }}>Tus ventas, en tiempo real →</span>
             </div>
 
             <div className="l-mockup-pc-wrap" style={{ position: "relative", paddingBottom: 84 }}>
