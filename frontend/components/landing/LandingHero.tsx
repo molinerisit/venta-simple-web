@@ -322,7 +322,7 @@ export default function LandingHero() {
                 Empezar gratis <ArrowRight size={15} />
               </Link>
               <a href="#como-funciona" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "15px 22px", borderRadius: 8, fontWeight: 600, fontSize: 14, textDecoration: "none", color: "rgba(255,255,255,.80)", border: "1px solid rgba(255,255,255,.28)" }}>
-                Ver cómo funciona →
+                Ver cómo funciona
               </a>
             </div>
 
