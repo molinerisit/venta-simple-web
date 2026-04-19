@@ -691,6 +691,35 @@ details[open] > summary span:last-child { transform: rotate(45deg); display: inl
 }
 .mockup-row-new { animation: mockup-row-in 280ms ease both; }
 
+/* POS Demo — scanner laser sweep */
+@keyframes pos-laser-sweep {
+  0%   { transform: scaleX(0); transform-origin: left; opacity: .95; }
+  65%  { transform: scaleX(1); transform-origin: left; opacity: .95; }
+  100% { transform: scaleX(1); transform-origin: left; opacity: 0; }
+}
+.pos-laser { animation: pos-laser-sweep 0.52s ease both; }
+
+/* POS Demo — ticket paper ejecting */
+@keyframes pos-paper-out {
+  from { height: 0; opacity: 0; }
+  to   { height: 90px; opacity: 1; }
+}
+.pos-paper { animation: pos-paper-out 1.5s ease-out both; }
+
+/* POS Demo — cart row slide in */
+@keyframes pos-row-enter {
+  from { opacity: 0; transform: translateX(-10px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.pos-row-new { animation: pos-row-enter 360ms ease both; }
+
+/* POS Demo — success overlay pop */
+@keyframes pos-success-pop {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.pos-success { animation: pos-success-pop 320ms cubic-bezier(.34,1.56,.64,1) both; }
+
 /* Shimmer skeleton */
 @keyframes shimmer {
   0%   { background-position: 100% 50%; }
@@ -791,4 +820,130 @@ input, select, textarea {
 .vs-stat-card-accent::before {
   background: var(--vs-accent);
   opacity: 1;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PROBLEM SECTION — header grid + chart animation
+   ══════════════════════════════════════════════════════════════ */
+.l-problem-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: center;
+  margin-bottom: 64px;
+}
+@media (max-width: 820px) {
+  .l-problem-header { grid-template-columns: 1fr; gap: 36px; }
+}
+
+@keyframes problem-line-draw {
+  from { stroke-dashoffset: 1; }
+  to   { stroke-dashoffset: 0; }
+}
+@keyframes problem-fill-in {
+  from { opacity: 0; }
+  to   { opacity: 0.12; }
+}
+@keyframes problem-dot-pulse {
+  0%, 100% { r: 3; opacity: 1; }
+  50%       { r: 5; opacity: .6; }
+}
+.problem-line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+.problem-line.drawn {
+  animation: problem-line-draw 5s cubic-bezier(.2,.6,.4,1) forwards;
+}
+.problem-fill { opacity: 0; }
+.problem-fill.drawn {
+  animation: problem-fill-in 5s ease forwards;
+}
+.problem-dot { animation: problem-dot-pulse 2s ease-in-out infinite; }
+
+/* ══════════════════════════════════════════════════════════════
+   POS DEMO — mobile responsive
+   ══════════════════════════════════════════════════════════════ */
+.l-pos-demo-frame {
+  display: grid;
+  grid-template-columns: 180px 1fr 240px;
+  height: 460px;
+  background: #F8FAFC;
+}
+.l-pos-sidebar { display: flex; }
+
+@media (max-width: 860px) {
+  .l-pos-demo-frame {
+    grid-template-columns: 1fr 200px;
+    height: 420px;
+  }
+  .l-pos-sidebar { display: none; }
+}
+
+@media (max-width: 600px) {
+  .l-pos-demo-frame {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+  .l-pos-payment-panel { display: none; }
+}
+
+/* SUPPORT — online dot pulse */
+@keyframes support-dot-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: .4; transform: scale(.75); }
+}
+.l-support-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--l-green); flex-shrink: 0;
+  animation: support-dot-pulse 2s ease-in-out infinite;
+  display: inline-block;
+}
+
+/* STEPS — timeline horizontal */
+.l-steps-timeline-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  position: relative;
+}
+.l-steps-line-track {
+  position: absolute;
+  top: 40px;
+  left: calc(16.66% + 40px);
+  right: calc(16.66% + 40px);
+  height: 2px;
+  background: var(--l-border);
+  border-radius: 1px;
+  overflow: hidden;
+}
+@media (max-width: 620px) {
+  .l-steps-timeline-grid { grid-template-columns: 1fr; gap: 40px; }
+  .l-steps-line-track { display: none; }
+}
+.l-steps-node { transition: transform 0.18s ease, box-shadow 0.18s ease; }
+.l-steps-node:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,.1) !important; }
+.l-steps-node-highlight { transition: transform 0.18s ease, box-shadow 0.18s ease; }
+.l-steps-node-highlight:hover { transform: translateY(-3px) scale(1.04); }
+.l-steps-cta { transition: background 0.15s, transform 0.1s !important; }
+.l-steps-cta:hover { background: #EA6C00 !important; transform: translateY(-1px); }
+
+/* LOCAL — 2-column hardware section */
+.l-local-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 72px;
+  align-items: center;
+}
+@media (max-width: 960px) {
+  .l-local-grid { grid-template-columns: 1fr; gap: 48px; }
+}
+
+/* HW chip hover */
+.l-local-hw-card {
+  transition: transform 0.18s ease, box-shadow 0.18s ease !important;
+}
+.l-local-hw-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,.08) !important;
 }
