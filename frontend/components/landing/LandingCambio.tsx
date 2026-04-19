@@ -4,19 +4,19 @@ import { C, T } from "./tokens";
 
 const METRICS = [
   {
-    label: "Velocidad de cobro",
-    before: { text: "2–3 min por cliente",    pct: 88 },
-    after:  { text: "menos de 30 seg",         pct: 16 },
+    label: "Tiempo por cliente en caja",
+    before: { text: "2–3 min buscando precios a mano", pct: 88 },
+    after:  { text: "menos de 30 seg con el sistema",  pct: 16 },
   },
   {
-    label: "Carga operativa",
-    before: { text: "Flujo desordenado",       pct: 92 },
-    after:  { text: "Flujo estable",            pct: 20 },
+    label: "Cierre de caja",
+    before: { text: "40 min con diferencias",  pct: 88 },
+    after:  { text: "5 min sin errores",        pct: 10 },
   },
   {
-    label: "Personal en caja",
-    before: { text: "2 personas",              pct: 66 },
-    after:  { text: "1 persona",               pct: 33 },
+    label: "Costo de personal en caja",
+    before: { text: "2 personas — doble sueldo",    pct: 66 },
+    after:  { text: "1 persona — un sueldo ahorrado", pct: 33 },
   },
 ];
 
@@ -83,7 +83,7 @@ export default function LandingCambio() {
         <div style={{ maxWidth: 540, marginBottom: 56 }}>
           <div style={{ ...T.label, marginBottom: 14 }}>Impacto real</div>
           <h2 style={{ ...T.h2, margin: "0 0 16px" }}>
-            Así cambia tu negocio<br />en pocos días
+            Así cambia tu negocio<br />en la primera semana.
           </h2>
           <p style={{ ...T.body, margin: 0 }}>
             No hablamos de teoría. Estos son los cambios concretos que ven los negocios que empiezan a usar VentaSimple.
@@ -148,7 +148,7 @@ export default function LandingCambio() {
           background: C.greenBg, border: `1px solid ${C.greenBdr}`, borderRadius: 12,
         }}>
           <p style={{ fontSize: 15, fontWeight: 700, color: C.green, margin: 0, letterSpacing: "-0.01em" }}>
-            Más ventas, menos caos. Así de simple.
+            Un sueldo de ahorro. Por empezar a usar el sistema.
           </p>
         </div>
 

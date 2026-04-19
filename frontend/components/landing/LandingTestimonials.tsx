@@ -2,9 +2,9 @@ import { Star } from "lucide-react";
 import { C, T } from "./tokens";
 
 const TESTIMONIALS = [
-  { q: "Antes cerraba la caja con una calculadora y me tardaba 40 minutos. Ahora son 5 minutos y sé exactamente qué vendí.", name: "Laura G.", biz: "Minimercado · Buenos Aires", stars: 5 },
-  { q: "Lo que más me convenció fue el soporte. Tuve una duda a la noche y en minutos me lo resolvieron. Antes esperaba días.", name: "Diego F.", biz: "Kiosco · Córdoba", stars: 5 },
-  { q: "Por fin sé cuáles son mis 10 productos más vendidos. Cambié el pedido al proveedor y mejoré el margen notablemente.", name: "Carlos M.", biz: "Ferretería · Rosario", stars: 5 },
+  { q: "Antes cerraba la caja con una calculadora y me tardaba 40 minutos. Ahora son 5 minutos y tengo todo claro: qué vendí y cuánto.", name: "Laura G.", biz: "Minimercado · Buenos Aires", stars: 5 },
+  { q: "El primer mes que usé los reportes descubrí que las galletitas me dejaban más plata que las gaseosas. Cambié el pedido y vendí lo mismo ganando más.", name: "Diego F.", biz: "Kiosco · Córdoba", stars: 5 },
+  { q: "Antes llamaba al local tres veces por día para saber cómo iba. Ahora abro el celular y en cinco segundos sé todo. Hace meses que no llamo.", name: "Carlos M.", biz: "Ferretería · Rosario", stars: 5 },
 ];
 
 export default function LandingTestimonials() {

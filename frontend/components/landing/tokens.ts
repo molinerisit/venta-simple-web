@@ -37,10 +37,10 @@ export const T = {
 };
 
 export const PROBLEMS = [
-  { icon: TrendingDown, text: "Te enterás que falta stock cuando ya es tarde" },
-  { icon: Clock,        text: "Cerrar la caja te lleva tiempo y siempre hay errores" },
-  { icon: PhoneOff,     text: "Perdés ventas por no tener precios claros o actualizados" },
-  { icon: BarChart2,    text: "No sabés realmente cuánto estás ganando" },
+  { icon: Clock,        text: "Buscás el precio a mano mientras el cliente espera — y la fila crece" },
+  { icon: TrendingDown, text: "Cerrar la caja te lleva 40 minutos con calculadora y nunca cierra exacto" },
+  { icon: PhoneOff,     text: "Se va internet y el sistema para — la venta también" },
+  { icon: BarChart2,    text: "Al final del día no sabés cuánto ganaste hasta que hacés las cuentas a mano" },
 ];
 
 export const SUPPORT_CARDS = [

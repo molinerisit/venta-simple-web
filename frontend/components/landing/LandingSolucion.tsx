@@ -2,10 +2,10 @@ import { CheckCircle2, ArrowRight } from "lucide-react";
 import { C, T } from "./tokens";
 
 const BENEFITS = [
-  { text: "Control de stock en tiempo real — sin perder una venta por falta de producto" },
-  { text: "Cierre de caja automático — sin errores, sin tiempo perdido" },
-  { text: "Lista de precios siempre actualizada — desde el celular, en segundos" },
-  { text: "Dashboard de ganancias — sabés exactamente cuánto entrá cada día" },
+  { text: "Cobrás en segundos — la fila no espera más" },
+  { text: "La caja cierra sola — sin calculadora, sin diferencias" },
+  { text: "Seguís vendiendo aunque se corte internet" },
+  { text: "Ganancia exacta del día — en tiempo real, desde el celular" },
 ];
 
 export default function LandingSolucion() {
@@ -18,11 +18,12 @@ export default function LandingSolucion() {
           <div>
             <div style={{ ...T.label, marginBottom: 16 }}>La solución</div>
             <h2 style={{ ...T.h2, margin: "0 0 20px" }}>
-              Pasá de improvisar a tener<br />el control total de tu negocio.
+              Sin buscar precios. Sin contar caja. Sin adivinar.<br />
+              Sabés exactamente cuánto ganás — desde hoy.
             </h2>
             <p style={{ ...T.body, maxWidth: 440, marginBottom: 40 }}>
-              Cada problema que te frena hoy tiene una respuesta concreta dentro de VentaSimple.
-              Sin planillas, sin papel, sin depender de nadie.
+              VentaSimple reemplaza el cuaderno, la calculadora y el caos.
+              Lo instalás hoy — y desde esa tarde cobrás diferente.
             </p>
 
             <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: 44 }}>
@@ -45,12 +46,12 @@ export default function LandingSolucion() {
             padding: "32px 28px", display: "flex", flexDirection: "column", gap: 0,
           }}>
             <div style={{ marginBottom: 24 }}>
-              <div style={{ ...T.label, marginBottom: 12 }}>Sin sistema</div>
+              <div style={{ ...T.label, marginBottom: 12 }}>Hoy, sin VentaSimple</div>
               {[
-                "Stock en cuadernos o de memoria",
-                "Caja que cierra con errores",
-                "Precios desactualizados",
-                "Sin idea de la ganancia real",
+                "Buscás el precio a mano — la fila espera",
+                "Caja que cierra en 40 minutos con calculadora",
+                "Se corta internet y dejás de vender",
+                "Vendés pero no sabés si realmente ganaste",
               ].map((t, i) => (
                 <div key={i} style={{
                   display: "flex", alignItems: "center", gap: 10,
@@ -65,12 +66,12 @@ export default function LandingSolucion() {
             <div style={{ height: 1, background: C.bgAlt, marginBottom: 24 }} />
 
             <div>
-              <div style={{ ...T.label, color: C.green, marginBottom: 12 }}>Con VentaSimple</div>
+              <div style={{ ...T.label, color: C.green, marginBottom: 12 }}>Con VentaSimple — desde hoy</div>
               {[
-                "Stock actualizado automáticamente",
-                "Caja que se cierra sola, sin errores",
-                "Precios editables desde el celular",
-                "Dashboard con ganancia en tiempo real",
+                "Cobrás en 10 segundos — ticket impreso automático",
+                "La caja se cierra sola, sin errores, en 5 minutos",
+                "Funciona sin internet — seguís vendiendo igual",
+                "Ganancia exacta del día, en tiempo real",
               ].map((t, i) => (
                 <div key={i} style={{
                   display: "flex", alignItems: "center", gap: 10,

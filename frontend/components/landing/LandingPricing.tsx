@@ -47,7 +47,7 @@ function PricingCard({ name, badge, price, features, cta, href, highlight }: {
         )}
       </div>
       <p style={{ fontSize: 12, color: highlight ? "rgba(255,255,255,.35)" : C.light, margin: "0 0 28px" }}>
-        {price === 0 ? "Sin tarjeta de crédito" : "Pesos argentinos · cancelás cuando querés"}
+        {price === 0 ? "Para conocer el sistema — sin tarjeta" : price === PRICE_BASIC ? "Pesos argentinos · 7 días de prueba · cancelás cuando querés" : "Pesos argentinos · cancelás cuando querés"}
       </p>
 
       <div style={{ height: 1, background: highlight ? "rgba(255,255,255,.08)" : C.border, marginBottom: 22 }} />
@@ -84,25 +84,25 @@ export default function LandingPricing() {
           <div style={{ ...T.label, marginBottom: 16 }}>Precios</div>
           <h2 style={{ ...T.h2, margin: "0 0 14px" }}>Sin contratos. Sin sorpresas.</h2>
           <p style={{ ...T.body, maxWidth: 420, margin: "0 auto" }}>
-            Empezá gratis. Cuando tu negocio lo necesite, escalás.
+            7 días de prueba en el plan Básico, sin tarjeta. Si no es para vos, no cobramos nada.
           </p>
         </div>
 
         <div className="l-pricing-grid" style={{ alignItems: "center" }}>
           <PricingCard
-            name="Gratis" badge={null} price={0}
-            features={["Ventas y cobros básicos", "1 dispositivo", "Historial 30 días", "Soporte por email"]}
+            name="Básico gratis" badge={null} price={0}
+            features={["Ventas y cobros básicos", "1 dispositivo", "Historial 30 días", "Soporte por email (48hs)"]}
             cta="Crear cuenta gratis" href="/registro" highlight={false}
           />
           <PricingCard
             name="Básico" badge="Más elegido" price={PRICE_BASIC}
-            features={["Sincronización en la nube", "KPIs, reportes y heatmap", "Exportes PDF / CSV", "Soporte 24/7 por WhatsApp"]}
-            cta="Empezar con Básico" href="/login?next=/cuenta" highlight={true}
+            features={["Todo sincronizado — celular, PC y nube en tiempo real", "Sabés qué productos te dejan plata y cuáles no", "Cerrás la caja en 5 minutos, sin errores", "Soporte 24/7 por WhatsApp — te responde una persona, no un bot"]}
+            cta="Empezar — 7 días gratis" href="/login?next=/cuenta" highlight={true}
           />
           <PricingCard
             name="Pro" badge={null} price={PRICE_PRO}
-            features={["Hasta 3 PCs sincronizadas", "Análisis avanzado", "Soporte 24/7 prioritario", "Add-ons disponibles"]}
-            cta="Empezar con Pro" href="/login?next=/cuenta" highlight={false}
+            features={["Hasta 3 PCs o cajas sincronizadas", "Reportes avanzados y exportación completa", "Soporte 24/7 prioritario", "Configuración personalizada incluida"]}
+            cta="Empezar — 7 días gratis" href="/login?next=/cuenta" highlight={false}
           />
         </div>
 

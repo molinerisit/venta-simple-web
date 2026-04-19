@@ -1,12 +1,14 @@
 import { C, T } from "./tokens";
 
 const FAQS = [
-  { q: "¿Funciona si se va internet o la conexión es mala?",     a: "Sí. La app funciona offline sin límite de tiempo. Seguís vendiendo con normalidad y cuando vuelve la conexión, todo se sincroniza automáticamente." },
-  { q: "¿Qué pasa si tengo un problema en medio de una venta?",  a: "Nos escribís por WhatsApp y respondemos en menos de 5 minutos, las 24 horas. Soporte humano, no un bot que te manda artículos de ayuda." },
-  { q: "¿Es difícil migrar desde Excel o de otro sistema?",       a: "No. Podés importar tus productos en minutos desde un archivo CSV. El equipo de soporte te acompaña en la migración sin costo adicional." },
-  { q: "¿Puedo cancelar cuando quiero?",                          a: "Sí, en cualquier momento. Sin contratos anuales, sin cargos por cancelación. La suscripción es mensual y la controlás vos." },
-  { q: "¿Qué incluye exactamente el soporte 24/7?",               a: "Asistencia por WhatsApp con una persona real para resolver dudas, problemas técnicos y configuraciones. En el plan Pro tenés prioridad de atención." },
-  { q: "¿Funciona en cualquier PC con Windows?",                  a: "Sí. La app funciona en Windows 10 y 11. El panel administrativo web funciona en cualquier navegador moderno desde cualquier dispositivo." },
+  { q: "¿Funciona si se va internet o la conexión es mala?",             a: "Sí. La app funciona offline sin límite de tiempo. Seguís vendiendo con normalidad y cuando vuelve la conexión, todo se sincroniza automáticamente." },
+  { q: "¿Qué pasa si tengo un problema en medio de una venta?",          a: "Nos escribís por WhatsApp y respondemos en menos de 5 minutos, las 24 horas. Soporte humano, no un bot que te manda artículos de ayuda." },
+  { q: "¿Funciona con mi impresora de tickets y lector de barras?",      a: "Sí. VentaSimple es compatible con impresoras térmicas de tickets y lectores de código de barras USB estándar. No necesitás comprar hardware nuevo para arrancar. Si tenés dudas sobre tu equipo, el soporte confirma compatibilidad en minutos." },
+  { q: "¿Qué pasa con mis datos si se rompe la PC?",                     a: "Nada. Todo se sincroniza automáticamente en la nube con backup diario. Si se rompe la PC, comprás una nueva, instalás la app y en minutos tu historial, productos y configuración están intactos." },
+  { q: "¿Es difícil migrar desde Excel o de otro sistema?",              a: "No. Podés importar tus productos en minutos desde un archivo CSV o Excel. El equipo de soporte te acompaña en la migración sin costo adicional." },
+  { q: "¿Puedo cancelar cuando quiero?",                                  a: "Sí, en cualquier momento. Sin contratos anuales, sin cargos por cancelación. La suscripción es mensual y la controlás vos." },
+  { q: "¿Qué incluye exactamente el soporte 24/7?",                      a: "Asistencia por WhatsApp con una persona real para resolver dudas, problemas técnicos y configuraciones. En el plan Pro tenés prioridad de atención." },
+  { q: "¿Funciona en cualquier PC con Windows?",                          a: "Sí. La app funciona en Windows 10 y 11. El panel administrativo web funciona en cualquier navegador moderno desde cualquier dispositivo." },
 ];
 
 export default function LandingFaq() {

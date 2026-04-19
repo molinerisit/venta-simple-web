@@ -1,27 +1,27 @@
 import Link from "next/link";
-import { Receipt, Package, LineChart, Cloud, ArrowRight } from "lucide-react";
+import { Receipt, Smartphone, LineChart, Cloud, ArrowRight } from "lucide-react";
 import { C, T } from "./tokens";
 
 const FEATURES = [
   {
     icon: Receipt,
-    title: "Punto de venta y caja",
-    desc: "Cobrá rápido y sin errores. Atendé más clientes en menos tiempo.",
-  },
-  {
-    icon: Package,
-    title: "Control de stock",
-    desc: "Sabé siempre qué tenés y qué falta. Evitá quedarte sin stock sin darte cuenta.",
-  },
-  {
-    icon: LineChart,
-    title: "Reportes y Ganancias",
-    desc: "Entendé qué te deja plata y qué no. Tomá decisiones con datos reales.",
+    title: "Cobrás en segundos, no en minutos",
+    desc: "Punto de venta en PC diseñado para el mostrador. Buscás el producto, cobrás e imprimís ticket en menos de 10 segundos.",
   },
   {
     icon: Cloud,
-    title: "Conexión y Offline",
-    desc: "Tu negocio sigue funcionando siempre. Aunque se corte internet, no frenás.",
+    title: "Funciona aunque se corte internet",
+    desc: "El sistema no depende de la conexión. Seguís cobrando con normalidad — cuando vuelve la señal, sincroniza solo.",
+  },
+  {
+    icon: LineChart,
+    title: "Cierre de caja automático — sin calculadora",
+    desc: "Al final del día el sistema cierra la caja solo. Sin sumas manuales, sin diferencias, sin 40 minutos perdidos.",
+  },
+  {
+    icon: Smartphone,
+    title: "Todo desde el celular — sin moverte del negocio",
+    desc: "Ventas, stock y ganancias en tiempo real desde cualquier lugar. El negocio bajo control, aunque no estés presente.",
   },
 ];
 
@@ -31,22 +31,11 @@ export default function LandingFeatures() {
       <div className="l-container">
 
         <div style={{ textAlign: "center", marginBottom: 56 }}>
-          <div style={{ ...T.label, marginBottom: 16 }}>Funcionalidades</div>
+          <div style={{ ...T.label, marginBottom: 16 }}>Por qué funciona</div>
           <h2 style={{ ...T.h2, margin: "0 0 16px" }}>
-            Todo lo que necesitás para<br />manejar tu negocio sin complicarte.
+            El sistema de caja que tu negocio<br />necesitaba desde hace tiempo.
           </h2>
-          <p style={{ ...T.body, maxWidth: 480, margin: "0 auto" }}>
-            Hecho para que vendas más y pierdas menos tiempo.
-          </p>
         </div>
-
-        <p style={{
-          textAlign: "center", marginBottom: 40,
-          fontSize: 15, fontWeight: 700, color: C.blue,
-          letterSpacing: "-0.01em",
-        }}>
-          Todo lo que hoy hacés manual, acá se resuelve solo.
-        </p>
 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
           {FEATURES.map((f, i) => (
@@ -78,7 +67,7 @@ export default function LandingFeatures() {
             padding: "14px 32px", borderRadius: 9, fontWeight: 700, fontSize: 14,
             background: C.orange, color: "#fff", textDecoration: "none",
           }}>
-            Ver cómo funciona <ArrowRight size={14} />
+            Empezar gratis <ArrowRight size={14} />
           </Link>
         </div>
 

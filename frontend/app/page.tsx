@@ -8,6 +8,8 @@ import LandingProblem     from "@/components/landing/LandingProblem";
 import LandingSolucion    from "@/components/landing/LandingSolucion";
 import LandingCambio      from "@/components/landing/LandingCambio";
 import LandingFeatures    from "@/components/landing/LandingFeatures";
+import LandingPosDemo     from "@/components/landing/LandingPosDemo";
+import LandingLocal       from "@/components/landing/LandingLocal";
 import LandingSteps       from "@/components/landing/LandingSteps";
 import LandingSupport     from "@/components/landing/LandingSupport";
 import LandingTestimonials from "@/components/landing/LandingTestimonials";
@@ -29,11 +31,13 @@ export default function LandingPage() {
     <div className="vs-landing">
       <LandingNavbar />
       <LandingHero />
+      <LandingPosDemo />
       <LandingStats />
       <LandingProblem />
       <LandingSolucion />
       <LandingCambio />
       <LandingFeatures />
+      <LandingLocal />
       <LandingSteps />
       <LandingSupport />
       <LandingTestimonials />
