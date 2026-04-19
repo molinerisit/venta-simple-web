@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { Check, MessageSquare, AlertTriangle } from "lucide-react";
+import { Check, MessageSquare, Camera } from "lucide-react";
 import { C, T, PRICE_BASIC, PRICE_PRO, money } from "./tokens";
 
-function PricingCard({ name, badge, price, features, cta, href, highlight }: {
-  name: string; badge: string | null; price: number;
+function PricingCard({ name, badge, price, sub, features, cta, href, highlight }: {
+  name: string; badge: string | null; price: number; sub: string;
   features: string[]; cta: string; href: string; highlight: boolean;
 }) {
   return (
@@ -46,8 +46,9 @@ function PricingCard({ name, badge, price, features, cta, href, highlight }: {
           <span style={{ fontSize: 14, color: highlight ? "rgba(255,255,255,.45)" : C.light, fontWeight: 500 }}>/mes</span>
         )}
       </div>
+
       <p style={{ fontSize: 12, color: highlight ? "rgba(255,255,255,.35)" : C.light, margin: "0 0 28px" }}>
-        {price === 0 ? "Para conocer el sistema — sin tarjeta" : price === PRICE_BASIC ? "Pesos argentinos · 7 días de prueba · cancelás cuando querés" : "Pesos argentinos · cancelás cuando querés"}
+        {sub}
       </p>
 
       <div style={{ height: 1, background: highlight ? "rgba(255,255,255,.08)" : C.border, marginBottom: 22 }} />
@@ -80,45 +81,97 @@ export default function LandingPricing() {
   return (
     <section id="pricing" style={{ background: C.bg, padding: "112px 0", borderTop: `1px solid ${C.border}` }}>
       <div className="l-container">
+
         <div style={{ textAlign: "center", marginBottom: 72 }}>
           <div style={{ ...T.label, marginBottom: 16 }}>Precios</div>
-          <h2 style={{ ...T.h2, margin: "0 0 14px" }}>Sin contratos. Sin sorpresas.</h2>
-          <p style={{ ...T.body, maxWidth: 420, margin: "0 auto" }}>
-            7 días de prueba en el plan Básico, sin tarjeta. Si no es para vos, no cobramos nada.
+          <h2 style={{ ...T.h2, margin: "0 0 14px" }}>Elegí el control<br />que necesita tu negocio.</h2>
+          <p style={{ ...T.body, maxWidth: 440, margin: "0 auto" }}>
+            Sin contratos. Sin sorpresas. Probalo 15 días gratis — si no te sirve, no pagás nada.
           </p>
         </div>
 
         <div className="l-pricing-grid" style={{ alignItems: "center" }}>
           <PricingCard
-            name="Básico gratis" badge={null} price={0}
-            features={["Ventas y cobros básicos", "1 dispositivo", "Historial 30 días", "Soporte por email (48hs)"]}
-            cta="Crear cuenta gratis" href="/registro" highlight={false}
+            name="Para arrancar"
+            badge={null}
+            price={0}
+            sub="Sin tarjeta de crédito · para conocer el sistema"
+            features={[
+              "Vendés y cobrás desde el primer día",
+              "1 dispositivo",
+              "Historial de los últimos 30 días",
+              "Soporte por email",
+            ]}
+            cta="Probar gratis"
+            href="/registro"
+            highlight={false}
           />
           <PricingCard
-            name="Básico" badge="Más elegido" price={PRICE_BASIC}
-            features={["Todo sincronizado — celular, PC y nube en tiempo real", "Sabés qué productos te dejan plata y cuáles no", "Cerrás la caja en 5 minutos, sin errores", "Soporte 24/7 por WhatsApp — te responde una persona, no un bot"]}
-            cta="Empezar — 7 días gratis" href="/login?next=/cuenta" highlight={true}
+            name="Para ordenar tu negocio"
+            badge="Más elegido"
+            price={PRICE_BASIC}
+            sub="Pesos argentinos · 15 días de prueba · cancelás cuando querés"
+            features={[
+              "Sabés cuánto ganás todos los días",
+              "Cerrás la caja en 5 minutos, sin errores",
+              "Controlás stock, clientes y ventas desde el celular",
+              "Soporte 24/7 por WhatsApp — persona real, no un bot",
+            ]}
+            cta="Empezar — 15 días gratis"
+            href="/login?next=/cuenta"
+            highlight={true}
           />
           <PricingCard
-            name="Pro" badge={null} price={PRICE_PRO}
-            features={["Hasta 3 PCs o cajas sincronizadas", "Reportes avanzados y exportación completa", "Soporte 24/7 prioritario", "Configuración personalizada incluida"]}
-            cta="Empezar — 7 días gratis" href="/login?next=/cuenta" highlight={false}
+            name="Para tener control total"
+            badge={null}
+            price={PRICE_PRO}
+            sub="Pesos argentinos · cancelás cuando querés"
+            features={[
+              "Todo lo del plan anterior",
+              "Hasta 3 cajas conectadas al mismo tiempo",
+              "Reportes avanzados para decidir mejor",
+              "Soporte prioritario 24/7",
+            ]}
+            cta="Empezar"
+            href="/login?next=/cuenta"
+            highlight={false}
           />
+        </div>
+
+        {/* Guarantee */}
+        <div style={{ textAlign: "center", marginTop: 32, marginBottom: 56 }}>
+          <p style={{ fontSize: 14, fontWeight: 700, color: C.muted, margin: "0 0 6px" }}>
+            Probalo 15 días gratis. Si no te sirve, no pagás nada.
+          </p>
+          <p style={{ fontSize: 13, color: C.light, fontStyle: "italic" }}>
+            Hoy podés empezar y esta noche ya saber cuánto vendiste.
+          </p>
         </div>
 
         {/* Add-ons */}
         <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 14, padding: "22px 26px", maxWidth: 920 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18, flexWrap: "wrap", gap: 8 }}>
-            <h3 style={{ ...T.h3, margin: 0, fontSize: 15 }}>Add-ons disponibles en Básico y Pro</h3>
+            <div>
+              <h3 style={{ ...T.h3, margin: "0 0 2px", fontSize: 15 }}>Potenciá tu negocio</h3>
+              <p style={{ fontSize: 12, color: C.light, margin: 0 }}>Disponibles en planes Básico y Pro</p>
+            </div>
             <a href="mailto:ventas@ventasimple.app" style={{ fontSize: 12, color: C.blue, fontWeight: 700, textDecoration: "none" }}>Consultar precio →</a>
           </div>
           <div>
             {[
-              { icon: MessageSquare, name: "Bot de WhatsApp",          desc: "Respondé consultas de clientes, tomá pedidos y enviá notificaciones automáticamente." },
-              { icon: AlertTriangle, name: "Detección con Cámaras IA", desc: "Conteo de personas en tiempo real, alertas de cola y reportes de afluencia." },
+              {
+                icon: MessageSquare,
+                name: "Atendé por WhatsApp automáticamente",
+                desc: "Respondé clientes y tomá pedidos sin perder tiempo — funciona solo, las 24 horas.",
+              },
+              {
+                icon: Camera,
+                name: "Controlá el flujo de gente con IA",
+                desc: "Sabé cuándo tenés más clientes y optimizá tus horarios con datos reales.",
+              },
             ].map((a, i) => (
               <div key={a.name} style={{ display: "flex", alignItems: "flex-start", gap: 14, padding: "14px 0", borderTop: i === 0 ? `1px solid ${C.border}` : "none" }}>
-                <div style={{ width: 32, height: 32, borderRadius: 9, background: C.blueBg, border: `1px solid rgba(30,58,138,.15)`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+                <div style={{ width: 32, height: 32, borderRadius: 9, background: C.blueBg, border: "1px solid rgba(30,58,138,.15)", display: "grid", placeItems: "center", flexShrink: 0 }}>
                   <a.icon size={14} style={{ color: C.blue }} />
                 </div>
                 <div>
@@ -129,6 +182,7 @@ export default function LandingPricing() {
             ))}
           </div>
         </div>
+
       </div>
     </section>
   );

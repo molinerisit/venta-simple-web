@@ -463,6 +463,7 @@
 .l-testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 @media (max-width: 900px) { .l-testimonials-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 600px) { .l-testimonials-grid { grid-template-columns: 1fr; } }
+.l-testimonial-card:hover { box-shadow: 0 8px 28px rgba(26,24,22,.10); transform: translateY(-3px); }
 
 /* PRICING */
 .l-pricing-grid {

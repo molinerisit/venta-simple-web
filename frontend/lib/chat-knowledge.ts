@@ -34,22 +34,21 @@ VentaSimple es un sistema de gestión para negocios pequeños (kioscos, almacene
 - Sin sincronización en la nube
 - Soporte por email
 
-### Plan Básico — el más elegido
-- Precio: $2.999/mes (pesos argentinos)
-- Todo lo del plan Gratis
-- Sincronización en la nube
-- 1 PC conectada
-- KPIs, reportes y heatmap
-- Exportes PDF / CSV
-- Soporte 24/7 por WhatsApp
+### Para ordenar tu negocio — el más elegido
+- Precio: $45.000/mes (pesos argentinos)
+- Sabés cuánto ganás todos los días
+- Cerrás la caja en 5 minutos, sin errores
+- Controlás stock, clientes y ventas desde el celular
+- Soporte 24/7 por WhatsApp — persona real, no un bot
+- 15 días de prueba gratis
 
-### Plan Pro
-- Precio: $4.499/mes (pesos argentinos)
+### Para tener control total
+- Precio: $70.000/mes (pesos argentinos)
 - Para locales con más de 1 puesto o empleados
-- Todo lo del plan Básico
-- Hasta 3 PCs sincronizadas
-- Análisis avanzado
-- Soporte 24/7 prioritario
+- Todo lo del plan anterior
+- Hasta 3 cajas conectadas al mismo tiempo
+- Reportes avanzados para decidir mejor
+- Soporte prioritario 24/7
 - Add-ons disponibles
 
 ## Soporte
@@ -105,7 +104,7 @@ export const QUICK_ANSWERS: QuickAnswer[] = [
   /* ── Precios ── */
   {
     keywords: ["precio", "costo", "cuánto sale", "cuanto sale", "cuanto cuesta", "cuánto cuesta", "valor", "plan", "planes"],
-    answer: "Los planes son:\n\n• **Gratis** — $0/mes: ventas básicas, 1 dispositivo, soporte por email.\n• **Básico** — $2.999/mes: sincronización en la nube, reportes, soporte 24/7 WhatsApp. El más elegido.\n• **Pro** — $4.499/mes: hasta 3 PCs, análisis avanzado, soporte prioritario.\n\nTodos los precios son en pesos argentinos. Podés empezar gratis sin tarjeta.",
+    answer: "Los planes son:\n\n• **Para arrancar** — Gratis: ventas básicas, 1 dispositivo, sin tarjeta.\n• **Para ordenar tu negocio** — $45.000/mes: sabés cuánto ganás, cerrás la caja en 5 min, soporte 24/7 WhatsApp. El más elegido. 15 días gratis.\n• **Para tener control total** — $70.000/mes: hasta 3 cajas, reportes avanzados, soporte prioritario.\n\nTodos los precios son en pesos argentinos.",
   },
   {
     keywords: ["internet", "offline", "sin conexión", "sin conexion", "luz", "corte"],

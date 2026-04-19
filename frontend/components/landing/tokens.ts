@@ -1,7 +1,7 @@
 import { TrendingDown, Clock, PhoneOff, BarChart2, MessageSquare, UserCheck, Rocket } from "lucide-react";
 
-export const PRICE_BASIC = 2999;
-export const PRICE_PRO   = 4499;
+export const PRICE_BASIC = 45000;
+export const PRICE_PRO   = 70000;
 
 export const money = (n: number) =>
   new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(n);

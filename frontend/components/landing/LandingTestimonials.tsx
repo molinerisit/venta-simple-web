@@ -2,20 +2,32 @@ import { Star } from "lucide-react";
 import { C, T } from "./tokens";
 
 const TESTIMONIALS = [
-  { q: "Antes cerraba la caja con una calculadora y me tardaba 40 minutos. Ahora son 5 minutos y tengo todo claro: qué vendí y cuánto.", name: "Laura G.", biz: "Minimercado · Buenos Aires", stars: 5 },
-  { q: "El primer mes que usé los reportes descubrí que las galletitas me dejaban más plata que las gaseosas. Cambié el pedido y vendí lo mismo ganando más.", name: "Diego F.", biz: "Kiosco · Córdoba", stars: 5 },
-  { q: "Antes llamaba al local tres veces por día para saber cómo iba. Ahora abro el celular y en cinco segundos sé todo. Hace meses que no llamo.", name: "Carlos M.", biz: "Ferretería · Rosario", stars: 5 },
+  {
+    title: "De 40 minutos a 5. Y sin errores.",
+    body: "Antes cerraba con calculadora. Ahora aprieto un botón y listo.",
+    name: "Laura G.", biz: "Minimercado · Buenos Aires", stars: 5,
+  },
+  {
+    title: "Cambié el pedido y gané más vendiendo lo mismo.",
+    body: "Los reportes me mostraron que las galletitas me dejaban más plata que las gaseosas.",
+    name: "Diego F.", biz: "Kiosco · Córdoba", stars: 5,
+  },
+  {
+    title: "Hace meses que no llamo al local.",
+    body: "Antes llamaba tres veces al día para saber cómo iba. Ahora abro el celular y en cinco segundos sé todo.",
+    name: "Carlos M.", biz: "Ferretería · Rosario", stars: 5,
+  },
 ];
 
 export default function LandingTestimonials() {
   return (
     <section style={{ background: C.bg, padding: "112px 0" }}>
       <div className="l-container">
-        {/* Authority badge */}
-        <div style={{ textAlign: "center", marginBottom: 48 }}>
+
+        <div style={{ textAlign: "center", marginBottom: 56 }}>
           <div style={{
             display: "inline-flex", alignItems: "center", gap: 10,
-            background: C.blueBg, border: `1px solid #BFDBFE`,
+            background: C.blueBg, border: "1px solid #BFDBFE",
             borderRadius: 99, padding: "10px 22px", marginBottom: 32,
           }}>
             <span style={{ fontSize: 22 }}>🏪</span>
@@ -23,10 +35,8 @@ export default function LandingTestimonials() {
               +500 negocios ya usan VentaSimple todos los días
             </span>
           </div>
-          <div>
-            <div style={{ ...T.label, marginBottom: 14 }}>Testimonios</div>
-            <h2 style={{ ...T.h2, margin: "0 0 12px" }}>Negocios reales,<br />resultados reales.</h2>
-          </div>
+          <div style={{ ...T.label, marginBottom: 14 }}>Testimonios</div>
+          <h2 style={{ ...T.h2, margin: "0 0 12px" }}>Negocios reales,<br />resultados reales.</h2>
           <div style={{ display: "flex", gap: 2, alignItems: "center", justifyContent: "center", marginTop: 12 }}>
             {[...Array(5)].map((_, i) => (
               <Star key={i} size={16} fill="#F59E0B" style={{ color: "#F59E0B" }} />
@@ -37,20 +47,30 @@ export default function LandingTestimonials() {
 
         <div className="l-testimonials-grid">
           {TESTIMONIALS.map(t => (
-            <div key={t.name} style={{
+            <div key={t.name} className="l-testimonial-card" style={{
               background: C.surface, border: `1px solid ${C.border}`,
-              borderRadius: 16, padding: "26px 26px 22px",
+              borderRadius: 16, padding: "28px 26px 22px",
               display: "flex", flexDirection: "column",
               boxShadow: "0 1px 3px rgba(26,24,22,.04)",
+              transition: "box-shadow .2s, transform .2s",
             }}>
-              <div style={{ display: "flex", gap: 2, marginBottom: 18 }}>
+              <div style={{ display: "flex", gap: 2, marginBottom: 16 }}>
                 {[...Array(t.stars)].map((_, i) => (
                   <Star key={i} size={13} fill="#F59E0B" style={{ color: "#F59E0B" }} />
                 ))}
               </div>
-              <p style={{ ...T.small, margin: "0 0 auto", color: C.text, lineHeight: 1.7, fontWeight: 400, flex: 1 }}>
-                &ldquo;{t.q}&rdquo;
+
+              <p style={{
+                fontSize: 17, fontWeight: 800, lineHeight: 1.35,
+                letterSpacing: "-0.02em", color: C.text, margin: "0 0 10px",
+              }}>
+                &ldquo;{t.title}&rdquo;
               </p>
+
+              <p style={{ ...T.small, margin: "0 0 auto", color: C.muted, lineHeight: 1.65, flex: 1 }}>
+                {t.body}
+              </p>
+
               <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: 16, marginTop: 20 }}>
                 <div style={{ fontSize: 13, fontWeight: 700, color: C.text }}>{t.name}</div>
                 <div style={{ fontSize: 12, color: C.light, marginTop: 2 }}>{t.biz}</div>
@@ -58,6 +78,7 @@ export default function LandingTestimonials() {
             </div>
           ))}
         </div>
+
       </div>
     </section>
   );
