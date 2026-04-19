@@ -8,9 +8,9 @@ const STATS = [
     accent: false,
   },
   {
-    n:    "+1.200.000",
-    sub:  "ventas procesadas",
-    ctx:  "en negocios reales, todos los días",
+    n:    "-80%",
+    sub:  "menos tiempo cerrando la caja",
+    ctx:  "de 40 minutos a menos de 5 — sin errores ni diferencias",
     accent: true,
   },
   {

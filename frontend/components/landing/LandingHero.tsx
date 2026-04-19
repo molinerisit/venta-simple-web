@@ -9,9 +9,9 @@ import {
 import { C } from "./tokens";
 
 const MICRO = [
-  { icon: Wifi,        label: "Vendé sin conexión"              },
-  { icon: Smartphone,  label: "Control total desde el celular"  },
-  { icon: RefreshCw,   label: "Sincronización automática"       },
+  { icon: RefreshCw,   label: "Cobro en segundos — sin buscar precios a mano" },
+  { icon: Wifi,        label: "Se sincroniza cuando tenés internet"            },
+  { icon: Smartphone,  label: "Gestioná desde el panel web — sin moverte"     },
 ];
 
 const NAV_ITEMS = [
@@ -303,31 +303,37 @@ export default function LandingHero() {
             <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 36, padding: "5px 14px 5px 10px", borderRadius: 99, border: "1px solid rgba(255,255,255,.14)" }}>
               <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#22C55E", flexShrink: 0 }} />
               <span style={{ fontSize: 12.5, color: "rgba(255,255,255,.58)", fontWeight: 500 }}>
-                Soporte real · respondemos en menos de 5 min
+                +500 negocios en Argentina ya venden con VentaSimple
               </span>
             </div>
 
-            <h1 style={{ fontSize: "clamp(40px, 5.2vw, 64px)", fontWeight: 900, lineHeight: 1.06, letterSpacing: "-0.04em", color: "#FFFFFF", margin: "0 0 28px" }}>
-              <span style={{ color: C.orange }}>Vendé</span> en tu negocio.<br />
-              Controlá desde el celular.
+            <h1 style={{ fontSize: "clamp(40px, 5.2vw, 64px)", fontWeight: 900, lineHeight: 1.06, letterSpacing: "-0.04em", color: "#FFFFFF", margin: "0 0 24px" }}>
+              Tu negocio funcionando<br />
+              rápido, ordenado y<br />
+              <span style={{ color: C.orange }}>bajo control.</span>
             </h1>
 
-            <p style={{ fontSize: 16, lineHeight: 1.75, color: "rgba(255,255,255,.60)", maxWidth: 440, margin: "0 0 44px" }}>
-              Mirá tus ventas en tiempo real y controlá tu negocio desde cualquier lugar.<br />
-              Todo centralizado en un solo sistema.
+            <p style={{ fontSize: 16, lineHeight: 1.75, color: "rgba(255,255,255,.70)", maxWidth: 440, margin: "0 0 8px" }}>
+              Vendé en tu PC. Controlá todo desde el celular, en tiempo real.
+            </p>
+            <p style={{ fontSize: 14, lineHeight: 1.6, color: "rgba(255,255,255,.42)", maxWidth: 400, margin: "0 0 8px", fontStyle: "italic" }}>
+              Usado por kioscos, almacenes y ferreterías que dejaron de improvisar.
+            </p>
+            <p style={{ fontSize: 13, lineHeight: 1.6, color: "rgba(255,255,255,.50)", maxWidth: 400, margin: "0 0 36px" }}>
+              Cobrás en segundos. Sabés lo que pasa en tu negocio.
             </p>
 
             <div className="l-hero-btns">
               <Link href="/registro" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "15px 30px", borderRadius: 8, fontWeight: 800, fontSize: 15, textDecoration: "none", background: C.orange, color: "#fff", letterSpacing: "-0.01em" }}>
-                Empezar gratis <ArrowRight size={15} />
+                Empezar gratis — probalo en tu negocio
               </Link>
               <a href="#como-funciona" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "15px 22px", borderRadius: 8, fontWeight: 600, fontSize: 14, textDecoration: "none", color: "rgba(255,255,255,.80)", border: "1px solid rgba(255,255,255,.28)" }}>
                 Ver cómo funciona
               </a>
             </div>
 
-            <div style={{ display: "flex", gap: 32, flexWrap: "wrap" }}>
-              {["Sin tarjeta de crédito", "Empezás en minutos", "Cancelás cuando quieras"].map(t => (
+            <div style={{ display: "flex", gap: 28, flexWrap: "wrap" }}>
+              {["Dejás de perder ventas por errores", "Sabés exactamente cuánto ganás"].map(t => (
                 <span key={t} style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 13, fontWeight: 500, color: "rgba(255,255,255,.62)" }}>
                   <Check size={12} strokeWidth={3} style={{ color: "#22C55E", flexShrink: 0 }} />
                   {t}
