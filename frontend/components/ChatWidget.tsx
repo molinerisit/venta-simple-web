@@ -4,20 +4,19 @@ import { useState, useRef, useEffect, useCallback } from "react";
 
 interface Message { role: "user" | "bot"; text: string; }
 
-/* ── Proactive bubbles — one per section ─────────────── */
+/* ── Proactive bubbles ───────────────────────────────── */
 const PROACTIVE: { id: string; section: string | null; delay?: number; text: string }[] = [
-  { id: "idle",    section: null,         delay: 18000, text: "¿Tenés alguna duda sobre VentaSimple?" },
-  { id: "pricing", section: "#pricing",   delay: 0,     text: "¿Querés saber cuál plan te conviene?" },
-  { id: "demo",    section: "#como-funciona", delay: 0, text: "¿Te gustaría probarlo en tu negocio?" },
-  { id: "problem", section: null,         delay: 0,     text: "¿Reconocés este problema en tu negocio?" },
+  { id: "idle",    section: null,             delay: 30000, text: "¿Querés que te muestre cómo funciona en 1 minuto?" },
+  { id: "pricing", section: "#pricing",       delay: 0,     text: "¿Querés que te recomiende el mejor plan para tu negocio?" },
+  { id: "demo",    section: "#como-funciona", delay: 0,     text: "¿Tenés dudas sobre si funciona en tu PC?" },
 ];
 
 /* ── Quick actions ───────────────────────────────────── */
 const QUICK = [
-  { label: "Ver precios",           q: "¿Cuánto cuesta?"                  },
-  { label: "¿Cómo funciona?",       q: "¿Cómo funciona el sistema?"       },
-  { label: "Funciona sin internet", q: "¿Funciona sin conexión a internet?" },
-  { label: "Empezar ahora",         q: "¿Cómo empiezo?"                   },
+  { label: "Cómo funciona",         q: "¿Cómo funciona el sistema?"        },
+  { label: "Ver precios",           q: "¿Cuánto cuesta?"                   },
+  { label: "¿Funciona sin internet?", q: "¿Funciona sin conexión a internet?" },
+  { label: "¿Sirve para mi negocio?", q: "¿Sirve para mi negocio?"          },
 ];
 
 function MarkdownText({ text }: { text: string }) {
@@ -40,7 +39,7 @@ export default function ChatWidget() {
   const [bubble, setBubble]     = useState<string | null>(null);
   const [shownIds, setShownIds] = useState<Set<string>>(new Set());
   const [messages, setMessages] = useState<Message[]>([
-    { role: "bot", text: "Hola, soy el asistente de VentaSimple.\n¿En qué te puedo ayudar?" },
+    { role: "bot", text: "Hola 👋\nSoy el asistente de VentaSimple.\nTe ayudo a ver si el sistema sirve para tu negocio.\n¿En qué estás?" },
   ]);
   const [input, setInput]   = useState("");
   const [loading, setLoading] = useState(false);
@@ -213,18 +212,22 @@ export default function ChatWidget() {
             background: "#1E3A8A",
             display: "flex", alignItems: "center", gap: 11,
           }}>
+            {/* Avatar — icono de chat en lugar de "VS" */}
             <div style={{
-              width: 36, height: 36, borderRadius: 10, flexShrink: 0,
+              width: 36, height: 36, borderRadius: "50%", flexShrink: 0,
               background: "rgba(255,255,255,.15)",
               display: "grid", placeItems: "center",
-              fontSize: 13, fontWeight: 900, color: "#fff",
-            }}>VS</div>
+            }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+            </div>
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>VentaSimple</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", letterSpacing: "-0.01em" }}>VentaSimple</div>
               <div style={{ display: "flex", alignItems: "center", gap: 5, marginTop: 2 }}>
                 <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#4ADE80", display: "inline-block" }}/>
-                <span style={{ fontSize: 11, color: "rgba(255,255,255,.70)", fontWeight: 500 }}>
-                  En línea · responde al instante
+                <span style={{ fontSize: 11, color: "rgba(255,255,255,.65)", fontWeight: 500 }}>
+                  En línea ahora · &lt; 5 min de respuesta
                 </span>
               </div>
             </div>
@@ -327,7 +330,7 @@ export default function ChatWidget() {
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={e => e.key === "Enter" && !e.shiftKey && send(input)}
-              placeholder="Escribí tu pregunta..."
+              placeholder="Escribí tu duda o tocá una opción ↑"
               disabled={loading}
               style={{
                 flex: 1,
@@ -365,7 +368,7 @@ export default function ChatWidget() {
             padding: "5px 14px 9px", textAlign: "center",
             fontSize: 10, color: "#C4C0BB", background: "#fff",
           }}>
-            Respondemos en &lt; 5 min · ventas@ventasimple.app
+            Respuesta en &lt; 5 min · soporte humano real
           </div>
 
         </div>

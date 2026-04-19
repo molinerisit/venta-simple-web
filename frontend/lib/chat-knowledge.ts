@@ -81,6 +81,28 @@ VentaSimple está pensado para dueños de negocios pequeños en Argentina que ne
 interface QuickAnswer { keywords: string[]; answer: string }
 
 export const QUICK_ANSWERS: QuickAnswer[] = [
+  /* ── Saludos y conversación básica ── */
+  {
+    keywords: ["hola", "buenas", "buenos dias", "buenos días", "buenas tardes", "buenas noches", "hey", "hi", "ola"],
+    answer: "Hola 👋\nSoy el asistente de VentaSimple.\nTe ayudo a ver si el sistema sirve para tu negocio.\n\n¿Qué querés saber?",
+  },
+  {
+    keywords: ["gracias", "muchas gracias", "ok gracias", "dale gracias"],
+    answer: "¡De nada! Si tenés más dudas, acá estoy 😊\nO podés arrancar gratis en **ventasimple.app/registro** — sin tarjeta.",
+  },
+  {
+    keywords: ["sirve para mi", "es para mi", "para mi negocio", "funciona para", "aplica para", "puede usar", "puedo usar"],
+    answer: "VentaSimple sirve para cualquier negocio con caja física: **kioscos, almacenes, ferreterías, tiendas de ropa, verdulerías** y más.\n\nFunciona en la PC que ya tenés (Windows 10/11). Probalo gratis sin tarjeta.",
+  },
+  {
+    keywords: ["que es", "qué es", "para que sirve", "para qué sirve", "como funciona", "cómo funciona", "contame", "contame más"],
+    answer: "VentaSimple es un sistema de punto de venta para negocios en Argentina.\n\nSe instala en tu PC (Windows), funciona **sin internet**, y podés ver todo — ventas, stock, reportes — desde el celular.\n\nEn 5 minutos estás operativo. Gratis para empezar.",
+  },
+  {
+    keywords: ["empezar", "empezar ahora", "quiero empezar", "cómo empiezo", "como empiezo", "por donde empiezo"],
+    answer: "Fácil:\n1. Creá tu cuenta gratis en **ventasimple.app/registro** — sin tarjeta\n2. Descargá la app (Windows 10/11)\n3. Cargá tus productos y empezá a cobrar\n\nListo en menos de 5 minutos. El equipo te ayuda en el proceso.",
+  },
+  /* ── Precios ── */
   {
     keywords: ["precio", "costo", "cuánto sale", "cuanto sale", "cuanto cuesta", "cuánto cuesta", "valor", "plan", "planes"],
     answer: "Los planes son:\n\n• **Gratis** — $0/mes: ventas básicas, 1 dispositivo, soporte por email.\n• **Básico** — $2.999/mes: sincronización en la nube, reportes, soporte 24/7 WhatsApp. El más elegido.\n• **Pro** — $4.499/mes: hasta 3 PCs, análisis avanzado, soporte prioritario.\n\nTodos los precios son en pesos argentinos. Podés empezar gratis sin tarjeta.",
