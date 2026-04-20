@@ -3,9 +3,14 @@ import Link from "next/link";
 import { ArrowRight, Check } from "lucide-react";
 import { C, T } from "./tokens";
 
-const CHECKS_QR   = ["Sin escribir montos", "Sin errores de tipeo", "Más rápido que cualquier posnet"];
-const CHECKS_PROD = ["Menos tiempo cargando el catálogo", "Menos errores en precios", "Listo para vender desde el día 1"];
-const CHECKS_IA   = ["Ves transferencias de Mercado Pago en tiempo real", "Sin necesitar el celular", "Todo directo en tu PC"];
+const CHECKS_QR      = ["Sin escribir montos", "Sin errores de tipeo", "Más rápido que cualquier posnet"];
+const CHECKS_TRANS   = [
+  "Ves las transferencias que entran en tiempo real",
+  "Todo directo en la PC — sin usar el celular",
+  "El cajero solo ve los pagos que entran, sin acceso a tu cuenta de Mercado Pago",
+];
+const CHECKS_PROD    = ["Menos tiempo cargando el catálogo", "Menos errores en precios", "Listo para vender desde el día 1"];
+const CHECKS_IA      = ["Sabe qué productos te dejan más plata", "Te dice qué conviene reponer", "Compara períodos y muestra tendencias"];
 
 const STEPS_QR = [
   { n: "1", text: "Imprimís tu QR de Mercado Pago una sola vez" },
@@ -20,12 +25,12 @@ const UPDATES = [
   "Transferencias de Mercado Pago sin usar el celular",
 ];
 
-function CheckList({ items }: { items: string[] }) {
+function CheckList({ items, light }: { items: string[]; light?: boolean }) {
   return (
     <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 9 }}>
       {items.map(item => (
-        <li key={item} style={{ display: "flex", alignItems: "center", gap: 9, fontSize: 13, color: C.muted }}>
-          <Check size={13} strokeWidth={3} style={{ color: C.green, flexShrink: 0 }} />
+        <li key={item} style={{ display: "flex", alignItems: "flex-start", gap: 9, fontSize: 13, color: light ? "rgba(255,255,255,.65)" : C.muted, lineHeight: 1.5 }}>
+          <Check size={13} strokeWidth={3} style={{ color: light ? C.orange : C.green, flexShrink: 0, marginTop: 1 }} />
           {item}
         </li>
       ))}
@@ -50,55 +55,80 @@ export default function LandingFeatures() {
           </p>
         </div>
 
-        {/* Block 1: QR */}
-        <div className="l-feat-qr" style={{
+        {/* Block 1: Mercado Pago integration */}
+        <div style={{
           background: C.bg, border: `1px solid ${C.border}`,
-          borderRadius: 20, padding: "40px",
+          borderRadius: 20, padding: "36px 40px",
           marginBottom: 14,
         }}>
-          {/* Left: copy */}
-          <div>
-            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18 }}>
-              <Image src="/icons/qr.png" alt="QR" width={32} height={32} style={{ objectFit: "contain" }} />
-              <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: "0.09em", textTransform: "uppercase" as const, color: C.orange }}>
-                Cobro instantáneo
-              </span>
-            </div>
-            <h3 style={{ fontSize: 22, fontWeight: 900, letterSpacing: "-0.03em", color: C.text, margin: "0 0 14px" }}>
-              Cobrás con QR sin tocar el posnet
-            </h3>
-            <p style={{ ...T.body, fontSize: 14, margin: "0 0 24px", lineHeight: 1.7 }}>
-              Imprimís tu QR una vez y te olvidás. El sistema calcula el total y lo envía al QR automáticamente. El cliente paga. Listo.
-            </p>
-            <CheckList items={CHECKS_QR} />
+          {/* Block header */}
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
+            <Image src="/icons/mercadopago.png" alt="Mercado Pago" width={28} height={28} style={{ objectFit: "contain" }} />
+            <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: "0.09em", textTransform: "uppercase" as const, color: C.orange }}>
+              Integración con Mercado Pago
+            </span>
           </div>
+          <p style={{ fontSize: 15, fontWeight: 700, color: C.muted, margin: "0 0 24px" }}>
+            Para que puedas:
+          </p>
 
-          {/* Right: steps */}
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            {STEPS_QR.map((s, i) => (
-              <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 16 }}>
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                  <div style={{
-                    width: 36, height: 36, borderRadius: 99,
-                    background: C.orange, color: "#fff",
-                    display: "grid", placeItems: "center",
-                    fontSize: 15, fontWeight: 900, flexShrink: 0,
-                  }}>
-                    {s.n}
-                  </div>
-                  {i < STEPS_QR.length - 1 && (
-                    <div style={{ width: 2, height: 28, background: C.border, margin: "6px 0" }} />
-                  )}
-                </div>
-                <p style={{
-                  fontSize: 14, fontWeight: 600, color: C.text,
-                  margin: 0, paddingTop: 8, lineHeight: 1.5,
-                  ...(i < STEPS_QR.length - 1 ? { marginBottom: 6 } : {}),
-                }}>
-                  {s.text}
-                </p>
+          <div style={{ height: 1, background: C.border, marginBottom: 28 }} />
+
+          {/* 2 sub-columns */}
+          <div className="l-feat-mp-sub">
+
+            {/* Sub 1: QR */}
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+                <Image src="/icons/qr.png" alt="QR" width={22} height={22} style={{ objectFit: "contain" }} />
+                <span style={{ fontSize: 13, fontWeight: 800, color: C.text }}>Cobrás con QR sin tocar el posnet</span>
               </div>
-            ))}
+              <p style={{ ...T.body, fontSize: 13, margin: "0 0 20px", lineHeight: 1.65 }}>
+                Imprimís tu QR una vez y te olvidás. El sistema calcula el total y lo envía al QR solo. El cliente paga. Listo.
+              </p>
+
+              <div style={{ display: "flex", flexDirection: "column" as const, marginBottom: 20 }}>
+                {STEPS_QR.map((s, i) => (
+                  <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
+                    <div style={{ display: "flex", flexDirection: "column" as const, alignItems: "center" }}>
+                      <div style={{
+                        width: 28, height: 28, borderRadius: 99,
+                        background: C.orange, color: "#fff",
+                        display: "grid", placeItems: "center",
+                        fontSize: 12, fontWeight: 900, flexShrink: 0,
+                      }}>
+                        {s.n}
+                      </div>
+                      {i < STEPS_QR.length - 1 && (
+                        <div style={{ width: 2, height: 22, background: C.border, margin: "4px 0" }} />
+                      )}
+                    </div>
+                    <p style={{ fontSize: 13, fontWeight: 600, color: C.text, margin: 0, paddingTop: 5, lineHeight: 1.45 }}>
+                      {s.text}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              <CheckList items={CHECKS_QR} />
+            </div>
+
+            {/* Divider vertical */}
+            <div className="l-feat-mp-divider" style={{ width: 1, background: C.border, alignSelf: "stretch" }} />
+
+            {/* Sub 2: Transfers */}
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={C.green} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 2v20M2 12l10-10 10 10" />
+                </svg>
+                <span style={{ fontSize: 13, fontWeight: 800, color: C.text }}>Ves las transferencias en tiempo real</span>
+              </div>
+              <p style={{ ...T.body, fontSize: 13, margin: "0 0 20px", lineHeight: 1.65 }}>
+                Sin abrir el celular. Sin darle acceso a tu cuenta al cajero. Solo ves los pagos que entran — directo en la PC de caja.
+              </p>
+              <CheckList items={CHECKS_TRANS} />
+            </div>
           </div>
         </div>
 
@@ -140,7 +170,7 @@ export default function LandingFeatures() {
               Tu negocio empieza a pensar solo
             </h3>
             <p style={{ ...T.body, fontSize: 14, margin: "0 0 22px", lineHeight: 1.7 }}>
-              <strong>Kairos</strong>, nuestra IA, te dice qué productos te dejan más plata, qué conviene reponer y cómo estás vendiendo hoy.
+              <strong>Kairos</strong>, nuestra IA, analiza tus ventas y te dice qué hacer para ganar más — sin que vos tengas que buscar nada.
             </p>
             <CheckList items={CHECKS_IA} />
           </div>

@@ -450,10 +450,13 @@
 .l-feat-qr { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
 .l-feat-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .l-feat-updates { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+.l-feat-mp-sub { display: grid; grid-template-columns: 1fr auto 1fr; gap: 36px; align-items: flex-start; }
 @media (max-width: 820px) {
   .l-feat-qr { grid-template-columns: 1fr; gap: 32px; }
   .l-feat-cards { grid-template-columns: 1fr; }
   .l-feat-updates { grid-template-columns: 1fr; gap: 28px; }
+  .l-feat-mp-sub { grid-template-columns: 1fr; gap: 28px; }
+  .l-feat-mp-divider { display: none; }
 }
 
 /* STEPS */
