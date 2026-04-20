@@ -446,6 +446,16 @@
   .l-features-sticky { position: static !important; top: auto !important; }
 }
 
+/* DIFERENCIALES */
+.l-feat-qr { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+.l-feat-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.l-feat-updates { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+@media (max-width: 820px) {
+  .l-feat-qr { grid-template-columns: 1fr; gap: 32px; }
+  .l-feat-cards { grid-template-columns: 1fr; }
+  .l-feat-updates { grid-template-columns: 1fr; gap: 28px; }
+}
+
 /* STEPS */
 .l-steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
 @media (max-width: 768px) { .l-steps-grid { grid-template-columns: 1fr; } }
