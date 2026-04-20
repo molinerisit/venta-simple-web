@@ -451,6 +451,21 @@
 .l-feat-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .l-feat-updates { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
 .l-feat-mp-sub { display: grid; grid-template-columns: 1fr auto 1fr; gap: 36px; align-items: flex-start; }
+
+.l-feat-diff-card:hover {
+  box-shadow: 0 12px 32px rgba(26,24,22,.09);
+  transform: translateY(-3px);
+}
+.l-feat-mp-block:hover {
+  box-shadow: 0 0 0 2px rgba(249,115,22,.2), 0 8px 28px rgba(249,115,22,.07);
+}
+
+@keyframes feat-badge-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: .55; }
+}
+.l-feat-badge-pulse { animation: feat-badge-pulse 2.2s ease-in-out infinite; }
+
 @media (max-width: 820px) {
   .l-feat-qr { grid-template-columns: 1fr; gap: 32px; }
   .l-feat-cards { grid-template-columns: 1fr; }
