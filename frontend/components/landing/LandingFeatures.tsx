@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { ArrowRight, Check, TrendingUp, QrCode, Brain, Package, Wallet } from "lucide-react";
 import { C, T } from "./tokens";
 
@@ -79,6 +79,73 @@ function RevealDiv({ children, delay = 0, style }: { children: React.ReactNode; 
   );
 }
 
+const TRANSFERS = [
+  { amount: "$ 1.850", label: "Mercado Pago" },
+  { amount: "$ 3.200", label: "Transferencia bancaria" },
+  { amount: "$ 750",   label: "Mercado Pago" },
+  { amount: "$ 4.100", label: "Transferencia bancaria" },
+  { amount: "$ 1.200", label: "Mercado Pago" },
+  { amount: "$ 2.600", label: "Transferencia bancaria" },
+];
+
+function TransferFeed() {
+  const [items, setItems] = useState([0, 1, 2]);
+  const [entering, setEntering] = useState(true);
+  const counterRef = useRef(3);
+
+  const tick = useCallback(() => {
+    const next = counterRef.current % TRANSFERS.length;
+    counterRef.current += 1;
+    setEntering(true);
+    setItems(prev => [next, ...prev].slice(0, 3));
+  }, []);
+
+  useEffect(() => {
+    const id = setInterval(tick, 2400);
+    return () => clearInterval(id);
+  }, [tick]);
+
+  const times = ["ahora", "hace 1 min", "hace 3 min"];
+
+  return (
+    <div style={{
+      background: C.heroBg, borderRadius: 14,
+      padding: "16px 18px",
+      display: "flex", flexDirection: "column", gap: 0,
+    }}>
+      <p style={{ fontSize: 10, fontWeight: 800, color: "rgba(255,255,255,.3)", letterSpacing: "0.1em", textTransform: "uppercase" as const, margin: "0 0 12px" }}>
+        Transferencias recibidas
+      </p>
+      {items.map((idx, i) => (
+        <div key={`${idx}-${i}`} style={{
+          display: "flex", alignItems: "center", gap: 10,
+          background: "rgba(255,255,255,.06)", borderRadius: 9,
+          padding: "10px 12px", marginBottom: i < 2 ? 8 : 0,
+          animation: i === 0 ? "tf-slide-in .35s ease" : "none",
+        }}>
+          <div style={{
+            width: 28, height: 28, borderRadius: 99, flexShrink: 0,
+            background: C.green, display: "grid", placeItems: "center",
+          }}>
+            <Check size={13} strokeWidth={3} style={{ color: "#fff" }} />
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 15, fontWeight: 800, color: "#fff", letterSpacing: "-0.01em" }}>
+              {TRANSFERS[idx].amount}
+            </div>
+            <div style={{ fontSize: 11, color: "rgba(255,255,255,.38)" }}>
+              {TRANSFERS[idx].label}
+            </div>
+          </div>
+          <div style={{ fontSize: 11, color: "rgba(255,255,255,.28)", flexShrink: 0 }}>
+            {times[i]}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function LandingFeatures() {
   return (
     <section style={{ background: C.surface, padding: "112px 0", borderTop: `1px solid ${C.border}` }}>
@@ -137,7 +204,7 @@ export default function LandingFeatures() {
                   Sin escribir. Sin errores. Sin vueltas.
                 </p>
 
-                <div style={{ display: "flex", flexDirection: "column" as const }}>
+                <div style={{ display: "flex", flexDirection: "column" as const, marginBottom: 20 }}>
                   {STEPS_QR.map((s, i) => (
                     <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
                       <div style={{ display: "flex", flexDirection: "column" as const, alignItems: "center" }}>
@@ -159,6 +226,14 @@ export default function LandingFeatures() {
                     </div>
                   ))}
                 </div>
+
+                {/* QR integration image */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/icons/qrintegracion.png"
+                  alt="Integración QR Mercado Pago"
+                  style={{ width: "100%", borderRadius: 10, display: "block", border: `1px solid ${C.border}` }}
+                />
               </div>
 
               <div className="l-feat-mp-divider" style={{ width: 1, background: C.border, alignSelf: "stretch" }} />
@@ -171,10 +246,10 @@ export default function LandingFeatures() {
                   </div>
                   <span style={{ fontSize: 14, fontWeight: 900, color: C.text, letterSpacing: "-0.01em" }}>Ves las transferencias en tiempo real</span>
                 </div>
-                <p style={{ fontSize: 13, color: C.muted, margin: "0 0 20px", lineHeight: 1.65 }}>
-                  Sin abrir el celular. Sin darle acceso a tu cuenta al cajero. Solo ves los pagos que entran — directo en la PC de caja.
+                <p style={{ fontSize: 13, color: C.muted, margin: "0 0 16px", lineHeight: 1.65 }}>
+                  Sin abrir el celular. Sin darle acceso al cajero. Solo los pagos que entran — directo en la PC.
                 </p>
-                <CheckList items={CHECKS_TRANS} />
+                <TransferFeed />
               </div>
             </div>
           </div>
