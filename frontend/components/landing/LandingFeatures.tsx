@@ -232,7 +232,7 @@ export default function LandingFeatures() {
                 <img
                   src="/icons/qrintegracion.png"
                   alt="Integración QR Mercado Pago"
-                  style={{ width: "100%", borderRadius: 10, display: "block", border: `1px solid ${C.border}` }}
+                  style={{ width: 130, height: 130, objectFit: "contain", borderRadius: 10, display: "block", border: `1px solid ${C.border}`, background: C.surface }}
                 />
               </div>
 
