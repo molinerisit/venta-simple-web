@@ -417,7 +417,13 @@
 }
 @media (max-width: 960px) { .l-solucion-grid { grid-template-columns: 1fr; gap: 48px; } }
 
-/* CAMBIO 2-column comparison */
+/* CAMBIO compare + bars */
+.l-cambio-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 700px) { .l-cambio-compare { grid-template-columns: 1fr; } }
+.l-cmp-item { transition: box-shadow .2s, transform .18s; }
+.l-cmp-item-left:hover  { box-shadow: 0 0 0 1px #FECACA, 0 4px 14px rgba(239,68,68,.10); transform: translateX(3px); }
+.l-cmp-item-right:hover { box-shadow: 0 0 0 1px #A7F3D0, 0 4px 14px rgba(34,197,94,.10);  transform: translateX(-3px); }
+
 .l-cambio-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
