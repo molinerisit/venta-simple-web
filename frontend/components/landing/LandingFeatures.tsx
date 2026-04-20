@@ -1,8 +1,7 @@
 "use client";
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowRight, Check, TrendingUp } from "lucide-react";
 import { C, T } from "./tokens";
 
 const CHECKS_TRANS = [
@@ -103,8 +102,9 @@ export default function LandingFeatures() {
             borderRadius: 20, padding: "36px 40px",
             transition: "box-shadow .25s",
           }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 6 }}>
-              <Image src="/icons/mercadopago.png" alt="Mercado Pago" width={28} height={28} style={{ objectFit: "contain" }} />
+            <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 6 }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/icons/mercadopago.png" alt="Mercado Pago" width={52} height={52} style={{ objectFit: "contain", flexShrink: 0 }} />
               <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: "0.09em", textTransform: "uppercase" as const, color: C.orange }}>
                 Integración con Mercado Pago
               </span>
@@ -119,8 +119,9 @@ export default function LandingFeatures() {
 
               {/* Sub 1: QR */}
               <div>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-                  <Image src="/icons/qr.png" alt="QR" width={20} height={20} style={{ objectFit: "contain" }} />
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/icons/qr.png" alt="QR" width={40} height={40} style={{ objectFit: "contain", flexShrink: 0 }} />
                   <span style={{ fontSize: 14, fontWeight: 900, color: C.text, letterSpacing: "-0.01em" }}>Cobrás con QR en segundos.</span>
                 </div>
                 <p style={{ fontSize: 13, color: C.light, fontWeight: 600, margin: "0 0 20px" }}>
@@ -155,8 +156,10 @@ export default function LandingFeatures() {
 
               {/* Sub 2: Transfers */}
               <div>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-                  <Image src="/icons/transferencia.png" alt="Transferencias" width={20} height={20} style={{ objectFit: "contain" }} />
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+                  <div style={{ width: 40, height: 40, borderRadius: 10, background: C.greenBg, border: `1px solid ${C.greenBdr}`, display: "grid", placeItems: "center", flexShrink: 0 }}>
+                    <TrendingUp size={20} strokeWidth={2.5} style={{ color: C.green }} />
+                  </div>
                   <span style={{ fontSize: 14, fontWeight: 900, color: C.text, letterSpacing: "-0.01em" }}>Ves las transferencias en tiempo real</span>
                 </div>
                 <p style={{ fontSize: 13, color: C.muted, margin: "0 0 20px", lineHeight: 1.65 }}>
@@ -180,7 +183,8 @@ export default function LandingFeatures() {
               transition: "box-shadow .2s, transform .2s",
             }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
-                <Image src="/icons/producto.png" alt="Productos" width={30} height={30} style={{ objectFit: "contain" }} />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/icons/producto.png" alt="Productos" width={32} height={32} style={{ objectFit: "contain" }} />
                 <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: "0.09em", textTransform: "uppercase" as const, color: C.blue }}>
                   Base de datos
                 </span>
@@ -205,7 +209,8 @@ export default function LandingFeatures() {
               transition: "box-shadow .2s, transform .2s",
             }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
-                <Image src="/icons/ia.png" alt="IA Kairos" width={30} height={30} style={{ objectFit: "contain" }} />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/icons/ia.png" alt="IA Kairos" width={32} height={32} style={{ objectFit: "contain" }} />
                 <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: "0.09em", textTransform: "uppercase" as const, color: C.blue }}>
                   Inteligencia artificial
                 </span>
