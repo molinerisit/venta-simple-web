@@ -104,7 +104,7 @@ export default function LandingFeatures() {
             transition: "box-shadow .25s",
           }}>
             <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 6 }}>
-              <Image src="./public/icons/mercadopago.png" alt="Mercado Pago" width={28} height={28} style={{ objectFit: "contain" }} />
+              <Image src="/icons/mercadopago.png" alt="Mercado Pago" width={28} height={28} style={{ objectFit: "contain" }} />
               <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: "0.09em", textTransform: "uppercase" as const, color: C.orange }}>
                 Integración con Mercado Pago
               </span>
@@ -120,7 +120,7 @@ export default function LandingFeatures() {
               {/* Sub 1: QR */}
               <div>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-                  <Image src="./public/icons/qr.png" alt="QR" width={20} height={20} style={{ objectFit: "contain" }} />
+                  <Image src="/icons/qr.png" alt="QR" width={20} height={20} style={{ objectFit: "contain" }} />
                   <span style={{ fontSize: 14, fontWeight: 900, color: C.text, letterSpacing: "-0.01em" }}>Cobrás con QR en segundos.</span>
                 </div>
                 <p style={{ fontSize: 13, color: C.light, fontWeight: 600, margin: "0 0 20px" }}>
@@ -156,9 +156,7 @@ export default function LandingFeatures() {
               {/* Sub 2: Transfers */}
               <div>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.green} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" /><polyline points="17 6 23 6 23 12" />
-                  </svg>
+                  <Image src="/icons/transferencia.png" alt="Transferencias" width={20} height={20} style={{ objectFit: "contain" }} />
                   <span style={{ fontSize: 14, fontWeight: 900, color: C.text, letterSpacing: "-0.01em" }}>Ves las transferencias en tiempo real</span>
                 </div>
                 <p style={{ fontSize: 13, color: C.muted, margin: "0 0 20px", lineHeight: 1.65 }}>
@@ -182,7 +180,7 @@ export default function LandingFeatures() {
               transition: "box-shadow .2s, transform .2s",
             }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
-                <Image src="./public/icons/producto.png" alt="Productos" width={30} height={30} style={{ objectFit: "contain" }} />
+                <Image src="/icons/producto.png" alt="Productos" width={30} height={30} style={{ objectFit: "contain" }} />
                 <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: "0.09em", textTransform: "uppercase" as const, color: C.blue }}>
                   Base de datos
                 </span>
@@ -207,7 +205,7 @@ export default function LandingFeatures() {
               transition: "box-shadow .2s, transform .2s",
             }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
-                <Image src="./public/icons/ia.png" alt="IA Kairos" width={30} height={30} style={{ objectFit: "contain" }} />
+                <Image src="/icons/ia.png" alt="IA Kairos" width={30} height={30} style={{ objectFit: "contain" }} />
                 <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: "0.09em", textTransform: "uppercase" as const, color: C.blue }}>
                   Inteligencia artificial
                 </span>
