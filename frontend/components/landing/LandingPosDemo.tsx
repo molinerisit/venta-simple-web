@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { Usb, Receipt, Smile, Monitor, Globe, Wifi, TrendingUp } from "lucide-react";
+import { Usb, Receipt, Smile } from "lucide-react";
 import { C, T } from "./tokens";
 
 const PRODS = [
@@ -344,81 +344,6 @@ export default function LandingPosDemo() {
           ))}
         </div>
 
-        {/* Feature checks */}
-        <div style={{
-          display: "grid", gridTemplateColumns: "repeat(3, 1fr)",
-          gap: 16, maxWidth: 820, margin: "48px auto 0",
-        }}>
-          {([
-            {
-              Icon: Wifi,
-              title: "Siempre sincronizado",
-              desc: "Cada venta se sincroniza automáticamente en cuanto tenés conexión.",
-            },
-            {
-              Icon: Globe,
-              title: "Gestioná desde cualquier lugar",
-              desc: "Accedé al panel web desde el celular, tablet o cualquier navegador.",
-            },
-            {
-              Icon: TrendingUp,
-              title: "Métricas inteligentes",
-              desc: "Visualizá ventas, productos más vendidos y tendencias en tiempo real.",
-            },
-          ] as const).map(({ Icon, title, desc }) => (
-            <div key={title} style={{
-              display: "flex", gap: 14,
-              padding: "20px 20px", borderRadius: 12,
-              background: C.surface, border: `1px solid ${C.border}`,
-              boxShadow: "0 2px 8px rgba(0,0,0,.04)",
-            }}>
-              <div style={{
-                width: 38, height: 38, borderRadius: 10,
-                background: "#EFF6FF", border: "1px solid #DBEAFE",
-                display: "grid", placeItems: "center", flexShrink: 0,
-              }}>
-                <Icon size={17} strokeWidth={1.8} style={{ color: C.blue }} />
-              </div>
-              <div>
-                <div style={{ fontSize: 13.5, fontWeight: 700, color: C.text, marginBottom: 4, lineHeight: 1.2 }}>{title}</div>
-                <div style={{ fontSize: 12, color: C.muted, lineHeight: 1.55, fontWeight: 400 }}>{desc}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Product cards */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16, flexWrap: "wrap", marginTop: 28 }}>
-          <div style={{
-            display: "flex", alignItems: "center", gap: 12,
-            padding: "14px 20px", borderRadius: 12,
-            background: C.surface, border: `1px solid ${C.border}`,
-            boxShadow: "0 2px 8px rgba(0,0,0,.04)",
-          }}>
-            <div style={{ width: 36, height: 36, borderRadius: 9, background: "#EFF6FF", display: "grid", placeItems: "center", flexShrink: 0 }}>
-              <Monitor size={18} strokeWidth={1.8} style={{ color: C.blue }} />
-            </div>
-            <div>
-              <div style={{ fontSize: 14, fontWeight: 700, color: C.text, lineHeight: 1.2 }}>Punto de venta</div>
-              <div style={{ fontSize: 12, color: C.muted, marginTop: 3 }}>App para Windows</div>
-            </div>
-          </div>
-          <div style={{ fontSize: 22, fontWeight: 300, color: C.light, flexShrink: 0, userSelect: "none" }}>+</div>
-          <div style={{
-            display: "flex", alignItems: "center", gap: 12,
-            padding: "14px 20px", borderRadius: 12,
-            background: C.surface, border: `1px solid ${C.border}`,
-            boxShadow: "0 2px 8px rgba(0,0,0,.04)",
-          }}>
-            <div style={{ width: 36, height: 36, borderRadius: 9, background: "#EFF6FF", display: "grid", placeItems: "center", flexShrink: 0 }}>
-              <Globe size={18} strokeWidth={1.8} style={{ color: C.blue }} />
-            </div>
-            <div>
-              <div style={{ fontSize: 14, fontWeight: 700, color: C.text, lineHeight: 1.2 }}>Dashboard de gestión</div>
-              <div style={{ fontSize: 12, color: C.muted, marginTop: 3 }}>Panel web desde cualquier lugar</div>
-            </div>
-          </div>
-        </div>
 
       </div>
     </section>

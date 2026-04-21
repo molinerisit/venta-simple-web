@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import {
   LayoutDashboard, CreditCard, Package, ShoppingCart, BarChart2,
+  Wifi, Globe, TrendingUp, Monitor,
 } from "lucide-react";
 import { C } from "./tokens";
 
@@ -26,7 +27,7 @@ const NAV = [
   { label: "Métricas",  icon: BarChart2       },
 ];
 
-const SCREENS = ["Ventas", "Dashboard", "Métricas"] as const;
+const SCREENS = ["Dashboard", "Métricas"] as const;
 type Screen = typeof SCREENS[number];
 
 /* ─── Live badge ─────────────────────────────────────────────── */
@@ -175,7 +176,7 @@ function MetricasScreen() {
 
 /* ─── Main component ─────────────────────────────────────────── */
 export default function LandingDashboardPreview() {
-  const [active, setActive]   = useState<Screen>("Ventas");
+  const [active, setActive]   = useState<Screen>("Dashboard");
   const [total, setTotal]     = useState(124500);
   const [tickets, setTickets] = useState(47);
   const [sales, setSales]     = useState<Sale[]>([
@@ -333,9 +334,84 @@ export default function LandingDashboardPreview() {
 
             {/* Active screen */}
             <div key={active} className="mockup-screen" style={{ overflow: "hidden", height: "100%", minHeight: 0 }}>
-              {active === "Ventas"    && <VentasScreen rows={rows} total={total} />}
               {active === "Dashboard" && <DashboardScreen total={total} tickets={tickets} sales={sales} />}
               {active === "Métricas"  && <MetricasScreen />}
+            </div>
+          </div>
+        </div>
+
+        {/* Feature cards */}
+        <div style={{
+          display: "grid", gridTemplateColumns: "repeat(3, 1fr)",
+          gap: 16, marginTop: 48,
+        }}>
+          {([
+            {
+              Icon: Wifi,
+              title: "Siempre sincronizado",
+              desc: "Cada venta se sincroniza automáticamente en cuanto tenés conexión.",
+            },
+            {
+              Icon: Globe,
+              title: "Gestioná desde cualquier lugar",
+              desc: "Accedé al panel web desde el celular, tablet o cualquier navegador.",
+            },
+            {
+              Icon: TrendingUp,
+              title: "Métricas inteligentes",
+              desc: "Visualizá ventas, productos más vendidos y tendencias en tiempo real.",
+            },
+          ] as const).map(({ Icon, title, desc }) => (
+            <div key={title} style={{
+              display: "flex", gap: 14, padding: "20px",
+              borderRadius: 12, background: C.surface,
+              border: `1px solid ${C.border}`,
+              boxShadow: "0 2px 8px rgba(0,0,0,.04)",
+            }}>
+              <div style={{
+                width: 38, height: 38, borderRadius: 10, flexShrink: 0,
+                background: "#EFF6FF", border: "1px solid #DBEAFE",
+                display: "grid", placeItems: "center",
+              }}>
+                <Icon size={17} strokeWidth={1.8} style={{ color: C.blue }} />
+              </div>
+              <div>
+                <div style={{ fontSize: 13.5, fontWeight: 700, color: C.text, marginBottom: 4, lineHeight: 1.2 }}>{title}</div>
+                <div style={{ fontSize: 12, color: C.muted, lineHeight: 1.55, fontWeight: 400 }}>{desc}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Product cards */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16, flexWrap: "wrap", marginTop: 28 }}>
+          <div style={{
+            display: "flex", alignItems: "center", gap: 12,
+            padding: "14px 20px", borderRadius: 12,
+            background: C.surface, border: `1px solid ${C.border}`,
+            boxShadow: "0 2px 8px rgba(0,0,0,.04)",
+          }}>
+            <div style={{ width: 36, height: 36, borderRadius: 9, background: "#EFF6FF", display: "grid", placeItems: "center", flexShrink: 0 }}>
+              <Monitor size={18} strokeWidth={1.8} style={{ color: C.blue }} />
+            </div>
+            <div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: C.text, lineHeight: 1.2 }}>Punto de venta</div>
+              <div style={{ fontSize: 12, color: C.muted, marginTop: 3 }}>App para Windows</div>
+            </div>
+          </div>
+          <div style={{ fontSize: 22, fontWeight: 300, color: C.muted, flexShrink: 0, userSelect: "none" }}>+</div>
+          <div style={{
+            display: "flex", alignItems: "center", gap: 12,
+            padding: "14px 20px", borderRadius: 12,
+            background: C.surface, border: `1px solid ${C.border}`,
+            boxShadow: "0 2px 8px rgba(0,0,0,.04)",
+          }}>
+            <div style={{ width: 36, height: 36, borderRadius: 9, background: "#EFF6FF", display: "grid", placeItems: "center", flexShrink: 0 }}>
+              <Globe size={18} strokeWidth={1.8} style={{ color: C.blue }} />
+            </div>
+            <div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: C.text, lineHeight: 1.2 }}>Dashboard de gestión</div>
+              <div style={{ fontSize: 12, color: C.muted, marginTop: 3 }}>Panel web desde cualquier lugar</div>
             </div>
           </div>
         </div>
