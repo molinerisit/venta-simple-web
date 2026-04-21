@@ -974,9 +974,9 @@ input, select, textarea {
   from { opacity: 0; }
   to   { opacity: 1; }
 }
-@keyframes problem-dot-pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%       { opacity: .55; transform: scale(1.5); }
+@keyframes problem-dot-in {
+  from { opacity: 0; transform: scale(0.4); }
+  to   { opacity: 1; transform: scale(1); }
 }
 .problem-line {
   stroke-dasharray: 1;
@@ -991,7 +991,7 @@ input, select, textarea {
 }
 .problem-dot {
   transform-origin: center;
-  animation: problem-dot-pulse 2s ease-in-out infinite;
+  animation: problem-dot-in .35s ease 2.2s both;
 }
 
 /* ══════════════════════════════════════════════════════════════
