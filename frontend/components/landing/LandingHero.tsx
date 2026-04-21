@@ -3,16 +3,11 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import {
-  ArrowRight, Check, Wifi, Smartphone, RefreshCw,
+  Check, Monitor, Globe, Clock, Zap, Smile,
   LayoutDashboard, Package, ShoppingCart, BarChart2, CreditCard,
 } from "lucide-react";
 import { C } from "./tokens";
 
-const MICRO = [
-  { icon: RefreshCw,   label: "Cobro en segundos — sin buscar precios a mano" },
-  { icon: Wifi,        label: "Se sincroniza cuando tenés internet"            },
-  { icon: Smartphone,  label: "Gestioná desde el panel web — sin moverte"     },
-];
 
 const NAV_ITEMS = [
   { label: "Dashboard", icon: LayoutDashboard },
@@ -294,64 +289,108 @@ export default function LandingHero() {
   }, [total]);
 
   return (
-    <section style={{ background: C.heroBg, padding: "104px 0 132px" }}>
+    <section style={{ background: C.heroBg, padding: "108px 0 140px", position: "relative", overflow: "hidden" }}>
+      {/* Glow ambiental detrás del mockup — profundidad */}
+      <div aria-hidden style={{ position: "absolute", top: "0%", right: "-5%", width: 700, height: 700, borderRadius: "50%", background: "radial-gradient(circle, rgba(37,99,235,.13) 0%, transparent 68%)", pointerEvents: "none" }} />
+      <div aria-hidden style={{ position: "absolute", bottom: "-10%", right: "10%", width: 400, height: 400, borderRadius: "50%", background: "radial-gradient(circle, rgba(99,102,241,.07) 0%, transparent 70%)", pointerEvents: "none" }} />
       <div className="l-container" style={{ position: "relative", zIndex: 1 }}>
         <div className="l-hero-grid">
 
           {/* Columna texto */}
           <div>
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 36, padding: "5px 14px 5px 10px", borderRadius: 99, border: "1px solid rgba(255,255,255,.14)" }}>
-              <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#22C55E", flexShrink: 0 }} />
-              <span style={{ fontSize: 12.5, color: "rgba(255,255,255,.58)", fontWeight: 500 }}>
+            {/* Badge — glass premium */}
+            <div className="hero-badge-in" style={{
+              display: "inline-flex", alignItems: "center", gap: 9, marginBottom: 36,
+              padding: "6px 16px 6px 11px", borderRadius: 99,
+              border: "1px solid rgba(255,255,255,.18)",
+              background: "rgba(255,255,255,.07)",
+              backdropFilter: "blur(16px)",
+              WebkitBackdropFilter: "blur(16px)",
+            }}>
+              <span className="sync-dot" style={{ width: 7, height: 7, flexShrink: 0 }} />
+              <span style={{ fontSize: 12.5, color: "rgba(255,255,255,.68)", fontWeight: 500, letterSpacing: "-0.005em" }}>
                 +500 negocios en Argentina ya venden con VentaSimple
               </span>
             </div>
 
-            <h1 style={{ fontSize: "clamp(40px, 5.2vw, 64px)", fontWeight: 900, lineHeight: 1.06, letterSpacing: "-0.04em", color: "#FFFFFF", margin: "0 0 24px" }}>
+            {/* H1 */}
+            <h1 className="hero-h1-in" style={{ fontSize: "clamp(38px, 4.8vw, 60px)", fontWeight: 900, lineHeight: 1.05, letterSpacing: "-0.042em", color: "#FFFFFF", margin: "0 0 24px" }}>
               Tu negocio funcionando<br />
               rápido, ordenado y<br />
               <span style={{ color: C.orange }}>bajo control.</span>
             </h1>
 
-            <p style={{ fontSize: 16, lineHeight: 1.75, color: "rgba(255,255,255,.70)", maxWidth: 440, margin: "0 0 8px" }}>
-              Vendé en tu PC. Controlá todo desde el celular, en tiempo real.
-            </p>
-            <p style={{ fontSize: 14, lineHeight: 1.6, color: "rgba(255,255,255,.42)", maxWidth: 400, margin: "0 0 8px", fontStyle: "italic" }}>
-              Usado por kioscos, almacenes y ferreterías que dejaron de improvisar.
-            </p>
-            <p style={{ fontSize: 13, lineHeight: 1.6, color: "rgba(255,255,255,.50)", maxWidth: 400, margin: "0 0 36px" }}>
-              Cobrás en segundos. Sabés lo que pasa en tu negocio.
-            </p>
+            {/* Subtítulos */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 4, marginBottom: 18, maxWidth: 460 }}>
+              <p className="hero-sub1-in" style={{ fontSize: 16, lineHeight: 1.55, color: "rgba(255,255,255,.88)", fontWeight: 500, margin: 0, letterSpacing: "-0.01em" }}>
+                Vendé en segundos desde tu PC.
+              </p>
+              <p className="hero-sub2-in" style={{ fontSize: 15, lineHeight: 1.55, color: "rgba(255,255,255,.46)", fontWeight: 400, margin: 0 }}>
+                Controlá todo desde el panel online.
+              </p>
+            </div>
 
-            <div className="l-hero-btns">
-              <Link href="/registro" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "15px 30px", borderRadius: 8, fontWeight: 800, fontSize: 15, textDecoration: "none", background: C.orange, color: "#fff", letterSpacing: "-0.01em" }}>
+            {/* Beneficios — 2 bullets */}
+            <div className="hero-bullets-in" style={{ display: "flex", flexDirection: "column", gap: 9, marginBottom: 32 }}>
+              {[
+                "Cobrás en segundos",
+                "Sabés cuánto ganás en el día",
+              ].map(text => (
+                <div key={text} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <div style={{ width: 20, height: 20, borderRadius: "50%", background: "rgba(34,197,94,.15)", border: "1px solid rgba(74,222,128,.38)", display: "grid", placeItems: "center", flexShrink: 0 }}>
+                    <Check size={10} strokeWidth={3} style={{ color: "#4ADE80" }} />
+                  </div>
+                  <span style={{ fontSize: 13.5, fontWeight: 500, color: "rgba(255,255,255,.78)" }}>{text}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* CTAs */}
+            <div className="hero-cta-in l-hero-btns">
+              <Link href="/registro" style={{
+                display: "inline-flex", alignItems: "center", gap: 8,
+                padding: "14px 28px", borderRadius: 9,
+                fontWeight: 800, fontSize: 14.5, textDecoration: "none",
+                background: "#D4600A", color: "#fff",
+                letterSpacing: "-0.01em",
+                boxShadow: "0 2px 8px rgba(180,80,0,.28)",
+              }}>
                 Empezar gratis — probalo en tu negocio
               </Link>
-              <a href="#como-funciona" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "15px 22px", borderRadius: 8, fontWeight: 600, fontSize: 14, textDecoration: "none", color: "rgba(255,255,255,.80)", border: "1px solid rgba(255,255,255,.28)" }}>
+              <a href="#como-funciona" style={{
+                display: "inline-flex", alignItems: "center", gap: 8,
+                padding: "14px 22px", borderRadius: 9,
+                fontWeight: 600, fontSize: 13.5, textDecoration: "none",
+                color: "#fff",
+                background: "#1D4ED8",
+                border: "1px solid rgba(59,130,246,.35)",
+              }}>
                 Ver cómo funciona
               </a>
             </div>
 
-            <div style={{ display: "flex", gap: 28, flexWrap: "wrap" }}>
-              {["Dejás de perder ventas por errores", "Sabés exactamente cuánto ganás"].map(t => (
-                <span key={t} style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 13, fontWeight: 500, color: "rgba(255,255,255,.62)" }}>
-                  <Check size={12} strokeWidth={3} style={{ color: "#22C55E", flexShrink: 0 }} />
-                  {t}
-                </span>
-              ))}
-            </div>
+            {/* Subtexto bajo CTAs */}
+            <p style={{ fontSize: 12, color: "rgba(255,255,255,.38)", margin: "10px 0 0", fontWeight: 500 }}>
+              Probala 15 días gratis. Sin tarjeta.
+            </p>
+
           </div>
 
           {/* Mockup PC + Phone */}
-          <div className="l-hero-mockup" style={{ overflow: "visible" }}>
-            <div style={{ marginBottom: 10, textAlign: "center" }}>
-              <span style={{ fontSize: 12, color: "rgba(255,255,255,.38)", fontWeight: 500 }}>Mirá tus ventas en tiempo real →</span>
+          <div className="l-hero-mockup hero-mockup-col-in" style={{ overflow: "visible", position: "relative" }}>
+            {/* Glow ambiental detrás del mockup */}
+            <div aria-hidden style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: "110%", height: "110%", background: "radial-gradient(ellipse at center, rgba(37,99,235,.20) 0%, transparent 65%)", pointerEvents: "none", zIndex: 0 }} />
+
+            <div style={{ marginBottom: 12, textAlign: "center", position: "relative", zIndex: 1 }}>
+              <span style={{ fontSize: 11.5, color: "rgba(255,255,255,.40)", fontWeight: 500 }}>
+                Mirá tus ventas en tiempo real →
+              </span>
             </div>
 
-            <div className="l-mockup-pc-wrap" style={{ position: "relative", paddingBottom: 84 }}>
+            <div className="l-mockup-pc-wrap hero-float" style={{ position: "relative", paddingBottom: 90, zIndex: 1 }}>
 
               {/* PC Frame */}
-              <div className="l-mockup-pc" style={{ borderRadius: 10, overflow: "hidden", border: "1px solid rgba(255,255,255,.12)", boxShadow: "0 16px 48px rgba(0,0,0,.28)", background: "#F3F4F6" }}>
+              <div className="l-mockup-pc mockup-pc-glow" style={{ borderRadius: 12, overflow: "hidden", border: "1px solid rgba(255,255,255,.16)", background: "#F3F4F6", boxShadow: "0 32px 80px rgba(0,0,0,.45), 0 8px 20px rgba(0,0,0,.25)" }}>
 
                 {/* Title bar */}
                 <div style={{ padding: "8px 14px", background: "#F9FAFB", borderBottom: "1px solid #E5E7EB", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -368,7 +407,7 @@ export default function LandingHero() {
                 </div>
 
                 {/* App layout */}
-                <div style={{ display: "grid", gridTemplateColumns: "90px 1fr", height: 258, overflow: "hidden" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "90px 1fr", height: 290, overflow: "hidden" }}>
 
                   {/* Sidebar */}
                   <div style={{ background: "#F3F4F6", borderRight: "1px solid #E5E7EB", padding: "10px 7px", display: "flex", flexDirection: "column", gap: 1, overflow: "hidden" }}>
@@ -405,7 +444,7 @@ export default function LandingHero() {
               </div>
 
               {/* Phone */}
-              <div className="l-mockup-phone" style={{ position: "absolute", bottom: -24, right: -18, width: 168, background: "#111827", borderRadius: 24, padding: "13px 8px 10px", boxShadow: "0 20px 56px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.09)" }}>
+              <div className="l-mockup-phone" style={{ position: "absolute", bottom: -30, right: -24, width: 178, background: "#0D1117", borderRadius: 26, padding: "14px 9px 11px", boxShadow: "0 36px 80px rgba(0,0,0,.75), 0 12px 32px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.12), 0 0 0 4px rgba(255,255,255,.05)" }}>
                 <div style={{ width: 38, height: 4, borderRadius: 2, background: "#374151", margin: "0 auto 10px" }} />
                 <div style={{ background: "#F9FAFB", borderRadius: 14, overflow: "hidden" }}>
                   <PhoneDashboard total={phoneTotal} tickets={tickets} />
@@ -413,16 +452,22 @@ export default function LandingHero() {
               </div>
 
             </div>
+
+
           </div>
 
         </div>
 
-        {/* Micro bloque */}
-        <div style={{ display: "flex", gap: 32, flexWrap: "wrap", justifyContent: "center", marginTop: 56, paddingTop: 40, borderTop: "1px solid rgba(255,255,255,.08)" }}>
-          {MICRO.map(({ icon: Icon, label }) => (
-            <div key={label} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <Icon size={16} style={{ color: "#60A5FA", flexShrink: 0 }} />
-              <span style={{ fontSize: 13, fontWeight: 500, color: "rgba(255,255,255,.62)" }}>{label}</span>
+        {/* Trust strip */}
+        <div style={{ display: "flex", gap: 44, flexWrap: "wrap", justifyContent: "center", marginTop: 64, paddingTop: 40, borderTop: "1px solid rgba(255,255,255,.10)" }}>
+          {[
+            { icon: Zap,  label: "Instalación en 5 minutos" },
+            { icon: Clock, label: "Soporte 24/7" },
+            { icon: Smile, label: "Fácil de usar" },
+          ].map(({ icon: Icon, label }) => (
+            <div key={label} style={{ display: "flex", alignItems: "center", gap: 9 }}>
+              <Icon size={16} style={{ color: "#60A5FA", flexShrink: 0 }} strokeWidth={1.7} />
+              <span style={{ fontSize: 13, fontWeight: 500, color: "rgba(255,255,255,.50)" }}>{label}</span>
             </div>
           ))}
         </div>
