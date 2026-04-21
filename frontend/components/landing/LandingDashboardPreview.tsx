@@ -8,7 +8,6 @@ import { C } from "./tokens";
 
 /* ─── shared types ───────────────────────────────────────────── */
 type Sale = { prod: string; price: string; key: number; isNew: boolean };
-type Row  = Sale & { time: string };
 
 const POOL = [
   { prod: "Gaseosa 1.5L",    price: "$950",   amount: 950  },
@@ -36,42 +35,6 @@ function LiveBadge() {
     <div style={{ display: "inline-flex", alignItems: "center", gap: 4, background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: 99, padding: "2px 8px 2px 6px" }}>
       <span className="sync-dot" style={{ width: 5, height: 5 }} />
       <span style={{ fontSize: 8, color: "#16A34A", fontWeight: 700 }}>en vivo</span>
-    </div>
-  );
-}
-
-/* ─── Ventas screen ──────────────────────────────────────────── */
-function VentasScreen({ rows, total }: { rows: Row[]; total: number }) {
-  return (
-    <div style={{ padding: 16, display: "flex", flexDirection: "column", gap: 10, height: "100%", minHeight: 0, overflow: "hidden" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <div style={{ fontSize: 14, fontWeight: 800, color: "#111827" }}>Ventas de hoy</div>
-        <LiveBadge />
-      </div>
-      <div style={{ background: "#fff", border: "1px solid #E9EAEC", borderRadius: 9, overflow: "hidden", flex: 1, minHeight: 0 }}>
-        <div style={{ display: "grid", gridTemplateColumns: "44px 1fr 66px", padding: "7px 12px", borderBottom: "1px solid #F1F3F5", gap: 6 }}>
-          {["Hora", "Producto", "Monto"].map(h => (
-            <span key={h} style={{ fontSize: 9, fontWeight: 700, color: "#9CA3AF" }}>{h}</span>
-          ))}
-        </div>
-        {rows.map((r, i) => (
-          <div key={r.key} className={r.isNew ? "mockup-row-new" : undefined} style={{
-            display: "grid", gridTemplateColumns: "44px 1fr 66px",
-            padding: "8px 12px", gap: 6, alignItems: "center",
-            borderBottom: i < rows.length - 1 ? "1px solid #F8F9FB" : "none",
-            background: r.isNew ? "#F0FDF4" : "transparent",
-            transition: "background 1.4s ease",
-          }}>
-            <span style={{ fontSize: 10, color: "#9CA3AF" }}>{r.time}</span>
-            <span style={{ fontSize: 11, color: "#374151", fontWeight: r.isNew ? 700 : 500 }}>{r.prod}</span>
-            <span style={{ fontSize: 11, fontWeight: 700, color: "#111827", textAlign: "right" }}>{r.price}</span>
-          </div>
-        ))}
-      </div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "#1E3A8A", borderRadius: 9, padding: "10px 14px", flexShrink: 0 }}>
-        <span style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,.7)" }}>Total del día</span>
-        <span style={{ fontSize: 14, fontWeight: 900, color: "#fff", letterSpacing: "-0.03em" }}>${total.toLocaleString("es-AR")}</span>
-      </div>
     </div>
   );
 }
@@ -186,31 +149,7 @@ export default function LandingDashboardPreview() {
     { prod: "Aceite 900ml",     price: "$2.100", key: 3, isNew: false },
     { prod: "Yerba 500g",       price: "$1.450", key: 4, isNew: false },
   ]);
-  const [rows, setRows] = useState<Row[]>([
-    { time: "14:32", prod: "Coca-Cola 2.25L",  price: "$1.200", key: 10, isNew: false },
-    { time: "14:28", prod: "Yerba mate 500g",   price: "$1.450", key: 11, isNew: false },
-    { time: "14:21", prod: "Aceite 900ml",      price: "$2.100", key: 12, isNew: false },
-    { time: "14:15", prod: "Pan lactal 400g",   price: "$850",   key: 13, isNew: false },
-    { time: "14:08", prod: "Leche entera 1L",   price: "$750",   key: 14, isNew: false },
-  ]);
-
-  const dashKey  = useRef(5);
-  const ventasKey = useRef(15);
-
-  useEffect(() => {
-    if (active !== "Ventas") return;
-    const id = setInterval(() => {
-      const s   = POOL[Math.floor(Math.random() * POOL.length)];
-      const key = ventasKey.current++;
-      const now = new Date();
-      const time = `${now.getHours()}:${String(now.getMinutes()).padStart(2,"0")}`;
-      setRows(prev => [{ prod: s.prod, price: s.price, key, isNew: true, time }, ...prev.slice(0, 4)]);
-      setTotal(prev => prev + s.amount);
-      setTickets(prev => prev + 1);
-      setTimeout(() => setRows(prev => prev.map(r => r.key === key ? { ...r, isNew: false } : r)), 900);
-    }, 2500);
-    return () => clearInterval(id);
-  }, [active]);
+  const dashKey = useRef(5);
 
   useEffect(() => {
     if (active !== "Dashboard") return;
