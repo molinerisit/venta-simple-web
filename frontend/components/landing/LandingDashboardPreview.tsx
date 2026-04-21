@@ -192,24 +192,6 @@ export default function LandingDashboardPreview() {
           </p>
         </div>
 
-        {/* Screen tabs */}
-        <div style={{ display: "flex", justifyContent: "center", gap: 6, marginBottom: 20 }}>
-          {SCREENS.map(s => (
-            <button
-              key={s}
-              onClick={() => setActive(s)}
-              style={{
-                padding: "6px 18px", borderRadius: 99, border: "none", cursor: "pointer",
-                fontSize: 13, fontWeight: active === s ? 700 : 500,
-                background: active === s ? C.blue : "transparent",
-                color: active === s ? "#fff" : C.muted,
-                transition: "all .18s ease",
-              }}
-            >
-              {s}
-            </button>
-          ))}
-        </div>
 
         {/* Large PC mockup */}
         <div style={{
