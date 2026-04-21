@@ -6,11 +6,11 @@ import { C, T } from "./tokens";
 const DAYS = ["L", "M", "X", "J", "V", "S", "D"];
 const RAW  = [92, 84, 73, 59, 42, 25, 9];
 const W = 360, H = 156;
-const PAD_X = 8;
+const PAD_X = 10, PAD_Y = 8;
 
 const pts = RAW.map((v, i) => ({
   x: PAD_X + (i / (RAW.length - 1)) * (W - PAD_X * 2),
-  y: H - (v / 100) * (H - 20) - 10,
+  y: PAD_Y + (1 - v / 100) * (H - PAD_Y * 2),
 }));
 const linePath = pts.map((p, i) => `${i === 0 ? "M" : "L"}${p.x},${p.y}`).join(" ");
 const fillPath = `M0,${H} ${pts.map(p => `L${p.x},${p.y}`).join(" ")} L${W},${H} Z`;
@@ -138,7 +138,7 @@ export default function LandingProblem() {
               width="100%"
               viewBox={`0 0 ${W} ${H}`}
               preserveAspectRatio="none"
-              style={{ display: "block", overflow: "visible", flex: 1 }}
+              style={{ display: "block", overflow: "hidden", flex: 1 }}
             >
               <defs>
                 <linearGradient id="prob-grad" x1="0" y1="0" x2="0" y2="1">
