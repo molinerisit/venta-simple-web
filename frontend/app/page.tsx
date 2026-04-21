@@ -32,9 +32,9 @@ export default function LandingPage() {
     <div className="vs-landing">
       <LandingNavbar />
       <LandingHero />
+      <LandingStats />
       <LandingPosDemo />
       <LandingDashboardPreview />
-      <LandingStats />
       <LandingProblem />
       <LandingSolucion />
       <LandingCambio />
