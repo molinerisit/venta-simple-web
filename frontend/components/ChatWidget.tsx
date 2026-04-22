@@ -32,6 +32,18 @@ const PANEL_PATHS = ["/dashboard","/ventas","/productos","/clientes","/proveedor
                      "/metricas","/cuenta","/descargar","/admin","/instalaciones",
                      "/licencias","/suscripciones"];
 
+/* ── Respuestas predefinidas — panel (sin API) ────────── */
+const PANEL_ANSWERS: Record<string, string> = {
+  "¿Cómo cargo productos en VentaSimple?":
+    "Andá a **Productos** en el menú lateral.\nTocá \"Nuevo producto\", completá nombre, precio y stock, y guardá.\nDesde la app de escritorio también podés cargarlos mientras vendés.",
+
+  "¿Cómo conecto la app desktop con el panel web?":
+    "Andá a **Mi Cuenta** y tocá **Activar ahora**.\nEso genera un link que vincula la app a tu cuenta automáticamente.\nSi todavía no la instalaste, primero descargala desde **Descargas**.",
+
+  "¿Cómo hago el cierre de caja?":
+    "Abrí la app de escritorio.\nEn el menú encontrás la opción **Cierre de caja**.\nConfirmá el cierre y el sistema registra el resumen del turno.",
+};
+
 function MarkdownText({ text }: { text: string }) {
   const parts = text.split(/(\*\*[^*]+\*\*)/g);
   return (
@@ -146,6 +158,13 @@ export default function ChatWidget() {
     setInput("");
     setBubble(null);
     setMessages(prev => [...prev, { role: "user", text: q }]);
+
+    // Respuesta predefinida — sin API
+    if (isPanel && PANEL_ANSWERS[q]) {
+      setMessages(prev => [...prev, { role: "bot", text: PANEL_ANSWERS[q] }]);
+      return;
+    }
+
     setLoading(true);
     try {
       const res  = await fetch("/api/chat", {
