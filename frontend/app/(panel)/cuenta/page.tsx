@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useState, useRef, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import {
   getSuscripcionEstado, crearSuscripcionMP, cancelarSuscripcionMP,
@@ -8,13 +8,10 @@ import {
   type SuscripcionEstado,
 } from "@/lib/api";
 import { getUser } from "@/lib/auth";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
 } from "@/components/ui/dialog";
-import { CreditCard, Pause, Play, X, CheckCircle, AlertTriangle, Monitor, Download, ExternalLink } from "lucide-react";
+import { Pause, Play, X, CheckCircle, AlertTriangle, Monitor, Download, ChevronDown } from "lucide-react";
 import Link from "next/link";
 
 const PLANES = [
@@ -37,33 +34,40 @@ function fmt(n: number) {
   return new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(n);
 }
 
-function mpStatusLabel(status: string | null): { label: string; variant: "default" | "secondary" | "destructive" | "outline" } {
-  switch (status) {
-    case "authorized": return { label: "Activa", variant: "default" };
-    case "paused":     return { label: "Pausada", variant: "secondary" };
-    case "cancelled":  return { label: "Cancelada", variant: "destructive" };
-    case "pending":    return { label: "Pendiente de pago", variant: "outline" };
-    default:           return { label: "Sin suscripción", variant: "secondary" };
-  }
-}
+const PLAN_NAME: Record<string, string> = {
+  FREE: "Gratis", BASIC: "Básico", PRO: "Pro", ENTERPRISE: "Enterprise",
+};
 
-type Licencia = { clave: string; plan: string; estado: string; activada_at: string; expira_at: string | null };
-
+type Licencia      = { clave: string; plan: string; estado: string; activada_at: string; expira_at: string | null };
 type ActivationState = "idle" | "loading" | "waiting" | "error";
+
+function Sk({ h, w = "100%" }: { h: number; w?: string | number }) {
+  return <div style={{ height: h, width: w, borderRadius: 6, background: "#F1F3F5" }} />;
+}
 
 function CuentaPageInner() {
   const searchParams = useSearchParams();
   const user = typeof window !== "undefined" ? getUser() : null;
 
-  const [estado, setEstado] = useState<SuscripcionEstado | null>(null);
-  const [licencia, setLicencia] = useState<Licencia | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [actionLoading, setActionLoading] = useState(false);
-  const [confirmAction, setConfirmAction] = useState<"cancelar" | "pausar" | null>(null);
-  const [toast, setToast] = useState<{ msg: string; ok: boolean } | null>(null);
-  const [activation, setActivation] = useState<ActivationState>("idle");
+  const [estado,        setEstado]       = useState<SuscripcionEstado | null>(null);
+  const [licencia,      setLicencia]     = useState<Licencia | null>(null);
+  const [loading,       setLoading]      = useState(true);
+  const [actionLoading, setActionLoad]   = useState(false);
+  const [confirmAction, setConfirm]      = useState<"cancelar" | "pausar" | null>(null);
+  const [toast,         setToast]        = useState<{ msg: string; ok: boolean } | null>(null);
+  const [activation,    setActivation]   = useState<ActivationState>("idle");
+  const [plansOpen,     setPlansOpen]    = useState(false);
+  const [isMobile,      setIsMobile]     = useState(false);
+  const plansRef = useRef<HTMLDivElement>(null);
 
   const fromReturn = searchParams.get("retorno") === "1";
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   useEffect(() => { load(); }, []);
 
@@ -73,11 +77,8 @@ function CuentaPageInner() {
       const [sRes, lRes] = await Promise.all([getSuscripcionEstado(), getLicencia()]);
       setEstado(sRes.data);
       setLicencia(lRes.data.licencia);
-    } catch {
-      // ignora
-    } finally {
-      setLoading(false);
-    }
+    } catch { }
+    finally { setLoading(false); }
   }
 
   function showToast(msg: string, ok = true) {
@@ -86,7 +87,7 @@ function CuentaPageInner() {
   }
 
   async function handleSuscribir(planId: string) {
-    setActionLoading(true);
+    setActionLoad(true);
     try {
       const back = `${window.location.origin}/cuenta?retorno=1`;
       const { data } = await crearSuscripcionMP(planId, back);
@@ -94,13 +95,13 @@ function CuentaPageInner() {
     } catch {
       showToast("No se pudo iniciar la suscripción. Intentá de nuevo.", false);
     } finally {
-      setActionLoading(false);
+      setActionLoad(false);
     }
   }
 
   async function handleCancelar() {
-    setActionLoading(true);
-    setConfirmAction(null);
+    setActionLoad(true);
+    setConfirm(null);
     try {
       await cancelarSuscripcionMP();
       showToast("Suscripción cancelada. Tu plan vuelve a FREE.");
@@ -108,13 +109,13 @@ function CuentaPageInner() {
     } catch {
       showToast("No se pudo cancelar. Intentá de nuevo.", false);
     } finally {
-      setActionLoading(false);
+      setActionLoad(false);
     }
   }
 
   async function handlePausar() {
-    setActionLoading(true);
-    setConfirmAction(null);
+    setActionLoad(true);
+    setConfirm(null);
     try {
       await pausarSuscripcionMP();
       showToast("Suscripción pausada.");
@@ -122,12 +123,12 @@ function CuentaPageInner() {
     } catch {
       showToast("No se pudo pausar. Intentá de nuevo.", false);
     } finally {
-      setActionLoading(false);
+      setActionLoad(false);
     }
   }
 
   async function handleReanudar() {
-    setActionLoading(true);
+    setActionLoad(true);
     try {
       await reanudarSuscripcionMP();
       showToast("Suscripción reanudada.");
@@ -135,7 +136,7 @@ function CuentaPageInner() {
     } catch {
       showToast("No se pudo reanudar. Intentá de nuevo.", false);
     } finally {
-      setActionLoading(false);
+      setActionLoad(false);
     }
   }
 
@@ -143,258 +144,382 @@ function CuentaPageInner() {
     setActivation("loading");
     try {
       const { data } = await getDesktopActivationToken();
-      // Abrir el deep link — el OS lo pasa al desktop si está instalado
       window.location.href = data.deep_link;
-      // Mostrar mensaje de espera por si el desktop no está instalado
       setTimeout(() => setActivation("waiting"), 1200);
     } catch {
       setActivation("error");
     }
   }
 
-  const mpInfo = estado ? mpStatusLabel(estado.mp_status) : mpStatusLabel(null);
-  const isActive = estado?.mp_status === "authorized";
-  const isPaused = estado?.mp_status === "paused";
+  const isActive    = estado?.mp_status === "authorized";
+  const isPaused    = estado?.mp_status === "paused";
   const currentPlan = estado?.plan ?? "FREE";
   const hasLicencia = !!licencia;
+  const allDone     = hasLicencia && (isActive || isPaused);
+
+  function openPlans() {
+    setPlansOpen(true);
+    setTimeout(() => plansRef.current?.scrollIntoView({ behavior: "smooth" }), 60);
+  }
 
   return (
-    <div className="space-y-6 max-w-3xl">
+    <div style={{ display: "flex", flexDirection: "column", gap: 16, maxWidth: 560 }}>
+
       {/* Toast */}
       {toast && (
-        <div className={`vs-toast ${toast.ok ? "vs-toast-success" : "vs-toast-error"}`}>
-          {toast.ok ? <CheckCircle size={16} /> : <AlertTriangle size={16} />}
+        <div style={{
+          position: "fixed", top: 20, right: 20, zIndex: 9999,
+          display: "flex", alignItems: "center", gap: 10,
+          padding: "12px 16px", borderRadius: 10,
+          background: toast.ok ? "#DCFCE7" : "#FEE2E2",
+          border: `1px solid ${toast.ok ? "#86EFAC" : "#FCA5A5"}`,
+          color: toast.ok ? "#15803D" : "#DC2626",
+          fontSize: 13, fontWeight: 600,
+          boxShadow: "0 4px 16px rgba(0,0,0,.08)",
+          maxWidth: 320,
+        }}>
+          {toast.ok ? <CheckCircle size={15} /> : <AlertTriangle size={15} />}
           {toast.msg}
         </div>
       )}
 
-      {/* Header */}
-      <div>
-        <div className="flex items-center gap-2">
-          <CreditCard size={20} className="text-primary" />
-          <h1 className="text-3xl font-black tracking-tight">Mi cuenta</h1>
-        </div>
-        <p className="text-sm text-muted-foreground mt-0.5">
-          {user?.nombre} · Gestioná tu suscripción y la app de escritorio
-        </p>
+      {/* ── Header ── */}
+      <div style={{ paddingBottom: 4 }}>
+        <h1 style={{ fontSize: 22, fontWeight: 800, color: "#0F172A", margin: 0, letterSpacing: "-0.02em" }}>
+          Mi cuenta
+        </h1>
+        {!loading && (
+          <p style={{
+            fontSize: 13, fontWeight: 600, margin: "5px 0 0",
+            color: allDone ? "#16A34A" : "#F97316",
+          }}>
+            {allDone
+              ? "✓ Todo listo. Tu negocio está activo."
+              : !hasLicencia
+                ? "Activá un plan para empezar a vender"
+                : "Te falta 1 paso para empezar a vender"}
+          </p>
+        )}
       </div>
 
       {/* Retorno de MP */}
       {fromReturn && (
-        <Card style={{ borderColor: "var(--success-bdr)", background: "var(--success-bg)" }}>
-          <CardContent className="pt-4 pb-3">
-            <p className="text-sm font-medium" style={{ color: "var(--success-text)" }}>
-              ✓ Pago recibido — tu suscripción se activará en unos minutos. Si no se refleja, recargá la página.
-            </p>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Estado de suscripción */}
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-muted-foreground">Estado de suscripción</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {loading ? (
-            <p className="text-sm text-muted-foreground">Cargando…</p>
-          ) : (
-            <div className="flex flex-wrap items-center gap-4">
-              <div>
-                <p className="text-xs text-muted-foreground mb-1">Plan actual</p>
-                <p className="text-xl font-bold">{currentPlan}</p>
-              </div>
-              <div>
-                <p className="text-xs text-muted-foreground mb-1">Estado MP</p>
-                <Badge variant={mpInfo.variant}>{mpInfo.label}</Badge>
-              </div>
-              {estado?.next_payment_date && (
-                <div>
-                  <p className="text-xs text-muted-foreground mb-1">Próximo cobro</p>
-                  <p className="text-sm font-medium">
-                    {new Date(estado.next_payment_date).toLocaleDateString("es-AR")}
-                  </p>
-                </div>
-              )}
-              <div className="ml-auto flex gap-2 flex-wrap">
-                {isPaused && (
-                  <Button size="sm" onClick={handleReanudar} disabled={actionLoading}>
-                    <Play size={13} className="mr-1.5" /> Reanudar
-                  </Button>
-                )}
-                {isActive && (
-                  <Button variant="outline" size="sm" onClick={() => setConfirmAction("pausar")} disabled={actionLoading}>
-                    <Pause size={13} className="mr-1.5" /> Pausar
-                  </Button>
-                )}
-                {(isActive || isPaused) && (
-                  <Button variant="destructive" size="sm" onClick={() => setConfirmAction("cancelar")} disabled={actionLoading}>
-                    <X size={13} className="mr-1.5" /> Cancelar
-                  </Button>
-                )}
-              </div>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* App de escritorio */}
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-            <Monitor size={14} /> App de escritorio
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {loading ? (
-            <p className="text-sm text-muted-foreground">Cargando…</p>
-          ) : !hasLicencia ? (
-            <p className="text-sm text-muted-foreground">
-              Aún no tenés una licencia activa. Suscribite a un plan para obtenerla.
-            </p>
-          ) : (
-            <div className="space-y-4">
-              {/* Info de licencia */}
-              <div className="rounded-xl p-4" style={{
-                background: "rgba(30,58,138,.08)",
-                border: "1px solid rgba(30,58,138,.2)",
-              }}>
-                <div className="flex items-start justify-between gap-4 flex-wrap">
-                  <div>
-                    <p className="text-xs text-muted-foreground mb-1">Licencia activa</p>
-                    <p className="font-mono font-bold text-base tracking-widest text-primary">
-                      {licencia.clave}
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Plan {licencia.plan}
-                      {licencia.expira_at && (
-                        <> · Renueva el {new Date(licencia.expira_at).toLocaleDateString("es-AR")}</>
-                      )}
-                    </p>
-                  </div>
-                  <Badge variant="default" className="shrink-0">Activa</Badge>
-                </div>
-              </div>
-
-              {/* Botones de acción */}
-              <div className="flex gap-3 flex-wrap">
-                {/* Activar en desktop — deep link */}
-                {activation === "idle" && (
-                  <Button onClick={handleActivarDesktop} className="gap-2">
-                    <Monitor size={14} />
-                    Activar en desktop
-                  </Button>
-                )}
-                {activation === "loading" && (
-                  <Button disabled className="gap-2">
-                    <Monitor size={14} />
-                    Abriendo app…
-                  </Button>
-                )}
-                {activation === "waiting" && (
-                  <div className="w-full rounded-xl p-4" style={{
-                    background: "var(--info-bg)",
-                    border: "1px solid var(--info-bdr)",
-                  }}>
-                    <p className="text-sm font-medium mb-1 text-primary">
-                      ¿No se abrió la app?
-                    </p>
-                    <p className="text-xs text-muted-foreground mb-3">
-                      Primero descargá e instalá Venta Simple. Después volvé acá y hacé clic en "Activar en desktop".
-                    </p>
-                    <div className="flex gap-2 flex-wrap">
-                      <Link href="/descargar">
-                        <Button size="sm" variant="outline" className="gap-1.5">
-                          <Download size={13} /> Descargar app
-                        </Button>
-                      </Link>
-                      <Button size="sm" variant="ghost" onClick={() => setActivation("idle")} className="gap-1.5">
-                        Reintentar
-                      </Button>
-                    </div>
-                  </div>
-                )}
-                {activation === "error" && (
-                  <p className="text-sm vs-alert vs-alert-error">
-                    No se pudo generar el link de activación. Intentá de nuevo.
-                  </p>
-                )}
-
-                {activation === "idle" && (
-                  <Link href="/descargar">
-                    <Button variant="outline" className="gap-2">
-                      <Download size={14} />
-                      Descargar app
-                    </Button>
-                  </Link>
-                )}
-              </div>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Planes disponibles */}
-      {!isActive && !isPaused && (
-        <div>
-          <h2 className="text-base font-semibold mb-3">Elegí tu plan</h2>
-          <div className="grid sm:grid-cols-2 gap-4">
-            {PLANES.map(plan => (
-              <Card
-                key={plan.id}
-                className={plan.highlight ? "border-primary/40" : ""}
-                style={plan.highlight ? { background: "linear-gradient(180deg, rgba(30,58,138,.1), rgba(30,58,138,.04))" } : {}}
-              >
-                <CardContent className="pt-5 pb-4">
-                  {plan.highlight && (
-                    <span className="vs-chip" style={{ marginBottom: 10, display: "inline-flex" }}>
-                      Recomendado
-                    </span>
-                  )}
-                  <h3 className="font-bold text-lg mb-1">{plan.nombre}</h3>
-                  <div className="flex items-baseline gap-1 mb-3">
-                    <span className="text-2xl font-black">{fmt(plan.precio)}</span>
-                    <span className="text-xs text-muted-foreground">/mes</span>
-                  </div>
-                  <ul className="space-y-1.5 mb-4">
-                    {plan.features.map(f => (
-                      <li key={f} className="text-sm text-muted-foreground flex items-center gap-2">
-                        <span style={{ color: "var(--vs-success)" }}>✓</span> {f}
-                      </li>
-                    ))}
-                  </ul>
-                  <Button
-                    className="w-full"
-                    variant={plan.highlight ? "default" : "outline"}
-                    disabled={actionLoading || currentPlan === plan.id}
-                    onClick={() => handleSuscribir(plan.id)}
-                  >
-                    {currentPlan === plan.id ? "Plan actual" : `Suscribirse · ${fmt(plan.precio)}/mes`}
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+        <div style={{
+          background: "#F0FDF4", border: "1px solid #86EFAC", borderRadius: 12,
+          padding: "12px 16px", display: "flex", alignItems: "center", gap: 10,
+        }}>
+          <CheckCircle size={15} style={{ color: "#16A34A", flexShrink: 0 }} />
+          <p style={{ fontSize: 13, fontWeight: 600, color: "#15803D", margin: 0 }}>
+            Pago recibido — tu suscripción se activará en unos minutos.
+          </p>
         </div>
       )}
 
-      {/* Upgrade a PRO */}
-      {(isActive || isPaused) && currentPlan !== "PRO" && (
-        <Card>
-          <CardContent className="pt-4 pb-4">
-            <p className="text-sm font-medium mb-2">Actualizar al plan Pro</p>
-            <p className="text-xs text-muted-foreground mb-3">
-              Hasta 3 dispositivos, todas las funciones premium. {fmt(4499)}/mes.
+      {/* ── CARD PRINCIPAL: activar desktop ── */}
+      <div style={{
+        background: "#fff",
+        border: "1px solid #E9EAEC",
+        borderRadius: 16,
+        padding: "22px 20px",
+        boxShadow: "0 2px 12px rgba(30,58,138,.07), 0 1px 3px rgba(0,0,0,.04)",
+      }}>
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 14, marginBottom: 18 }}>
+          <div style={{
+            width: 44, height: 44, borderRadius: 12, flexShrink: 0,
+            background: "#EEF2FF", display: "grid", placeItems: "center",
+          }}>
+            <Monitor size={20} style={{ color: "#1E3A8A" }} />
+          </div>
+          <div>
+            <p style={{ fontSize: 16, fontWeight: 800, color: "#0F172A", margin: "0 0 4px", letterSpacing: "-0.01em" }}>
+              Activar app de escritorio
             </p>
-            <Button size="sm" disabled={actionLoading} onClick={() => handleSuscribir("PRO")}>
-              Cambiar a Pro
-            </Button>
-          </CardContent>
-        </Card>
+            <p style={{ fontSize: 13, color: "#64748B", margin: 0, lineHeight: 1.5 }}>
+              Necesario para empezar a cobrar en tu negocio
+            </p>
+          </div>
+        </div>
+
+        {loading ? (
+          <Sk h={48} />
+        ) : !hasLicencia ? (
+          <>
+            <p style={{ fontSize: 13, color: "#94A3B8", margin: "0 0 14px", lineHeight: 1.5 }}>
+              Primero elegí un plan para obtener tu licencia de activación.
+            </p>
+            <button
+              onClick={openPlans}
+              style={{
+                display: "flex", alignItems: "center", justifyContent: "center",
+                width: "100%", height: 48, borderRadius: 10,
+                background: "#F97316", color: "#fff",
+                fontWeight: 700, fontSize: 14, border: "none", cursor: "pointer",
+                boxShadow: "0 4px 14px rgba(249,115,22,.32)",
+              }}
+            >
+              Ver planes disponibles
+            </button>
+          </>
+        ) : activation === "idle" ? (
+          <>
+            <button
+              onClick={handleActivarDesktop}
+              style={{
+                display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                width: "100%", height: 48, borderRadius: 10,
+                background: "#F97316", color: "#fff",
+                fontWeight: 700, fontSize: 14, border: "none", cursor: "pointer",
+                boxShadow: "0 4px 14px rgba(249,115,22,.32)",
+              }}
+            >
+              <Monitor size={15} />
+              Activar ahora
+            </button>
+            <div style={{ marginTop: 12, padding: "10px 14px", borderRadius: 10, background: "#F8FAFF", border: "1px solid #E0E7FF" }}>
+              <p style={{ fontSize: 10, fontWeight: 700, color: "#94A3B8", textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 3px" }}>
+                Tu licencia
+              </p>
+              <p style={{ fontFamily: "monospace", fontSize: 13, fontWeight: 700, color: "#1E3A8A", letterSpacing: "0.08em", margin: 0 }}>
+                {licencia?.clave}
+              </p>
+            </div>
+          </>
+        ) : activation === "loading" ? (
+          <button disabled style={{
+            display: "flex", alignItems: "center", justifyContent: "center",
+            width: "100%", height: 48, borderRadius: 10,
+            background: "#F97316", color: "#fff", opacity: 0.65,
+            fontWeight: 700, fontSize: 14, border: "none", cursor: "default",
+          }}>
+            Abriendo app…
+          </button>
+        ) : activation === "waiting" ? (
+          <div style={{ background: "#EFF6FF", border: "1px solid #BFDBFE", borderRadius: 12, padding: 16 }}>
+            <p style={{ fontSize: 13, fontWeight: 700, color: "#1E3A8A", margin: "0 0 6px" }}>¿No se abrió la app?</p>
+            <p style={{ fontSize: 12, color: "#64748B", margin: "0 0 14px", lineHeight: 1.5 }}>
+              Descargá e instalá Venta Simple primero. Después volvé acá y tocá "Activar ahora".
+            </p>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              <Link href="/descargar" style={{
+                display: "inline-flex", alignItems: "center", gap: 6,
+                padding: "7px 14px", borderRadius: 8, fontSize: 12, fontWeight: 600,
+                background: "#fff", border: "1px solid #BFDBFE", color: "#1E3A8A",
+                textDecoration: "none",
+              }}>
+                <Download size={12} /> Descargar app
+              </Link>
+              <button
+                onClick={() => setActivation("idle")}
+                style={{
+                  padding: "7px 14px", borderRadius: 8, fontSize: 12, fontWeight: 600,
+                  background: "transparent", border: "1px solid #BFDBFE", color: "#64748B", cursor: "pointer",
+                }}
+              >
+                Reintentar
+              </button>
+            </div>
+          </div>
+        ) : (
+          <p style={{ fontSize: 13, color: "#EF4444", margin: 0, fontWeight: 500 }}>
+            No se pudo generar el link. Intentá de nuevo.
+          </p>
+        )}
+      </div>
+
+      {/* ── Plan actual ── */}
+      <div style={{
+        background: "#fff", border: "1px solid #E9EAEC", borderRadius: 12,
+        padding: "16px 18px", boxShadow: "0 1px 3px rgba(0,0,0,.04)",
+      }}>
+        {loading ? (
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            <Sk h={11} w="38%" /><Sk h={22} w="30%" />
+          </div>
+        ) : (
+          <>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: (isActive || isPaused) ? 12 : 0 }}>
+              <div>
+                <p style={{ fontSize: 10, fontWeight: 700, color: "#94A3B8", textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 3px" }}>
+                  Plan actual
+                </p>
+                <p style={{ fontSize: 17, fontWeight: 800, color: "#0F172A", margin: 0, letterSpacing: "-0.01em" }}>
+                  {PLAN_NAME[currentPlan] ?? currentPlan}
+                </p>
+                {currentPlan === "FREE" && (
+                  <p style={{ fontSize: 12, color: "#94A3B8", margin: "3px 0 0", lineHeight: 1.4 }}>
+                    Para empezar a vender necesitás activarlo
+                  </p>
+                )}
+              </div>
+              {(isActive || isPaused) && (
+                <span style={{
+                  padding: "4px 12px", borderRadius: 99, fontSize: 11, fontWeight: 700, flexShrink: 0,
+                  background: isActive ? "#DCFCE7" : "#FEF3C7",
+                  color: isActive ? "#16A34A" : "#D97706",
+                }}>
+                  {isActive ? "Activa" : "Pausada"}
+                </span>
+              )}
+            </div>
+
+            {estado?.next_payment_date && (
+              <p style={{ fontSize: 12, color: "#94A3B8", margin: "0 0 12px" }}>
+                Próximo cobro: {new Date(estado.next_payment_date).toLocaleDateString("es-AR")}
+              </p>
+            )}
+
+            {(isActive || isPaused) && (
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                {isPaused && (
+                  <button onClick={handleReanudar} disabled={actionLoading} style={{
+                    display: "inline-flex", alignItems: "center", gap: 5,
+                    padding: "7px 14px", borderRadius: 8, fontSize: 12, fontWeight: 600,
+                    background: "#1E3A8A", color: "#fff", border: "none", cursor: "pointer",
+                  }}>
+                    <Play size={11} /> Reanudar
+                  </button>
+                )}
+                {isActive && (
+                  <button onClick={() => setConfirm("pausar")} disabled={actionLoading} style={{
+                    display: "inline-flex", alignItems: "center", gap: 5,
+                    padding: "7px 14px", borderRadius: 8, fontSize: 12, fontWeight: 600,
+                    background: "#fff", color: "#374151", border: "1px solid #E5E7EB", cursor: "pointer",
+                  }}>
+                    <Pause size={11} /> Pausar
+                  </button>
+                )}
+                <button onClick={() => setConfirm("cancelar")} disabled={actionLoading} style={{
+                  display: "inline-flex", alignItems: "center", gap: 5,
+                  padding: "7px 14px", borderRadius: 8, fontSize: 12, fontWeight: 600,
+                  background: "#fff", color: "#EF4444", border: "1px solid #FCA5A5", cursor: "pointer",
+                }}>
+                  <X size={11} /> Cancelar
+                </button>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+
+      {/* ── Upgrade a PRO ── */}
+      {!loading && (isActive || isPaused) && currentPlan !== "PRO" && (
+        <div style={{
+          background: "#fff", border: "1px solid #E9EAEC", borderRadius: 12,
+          padding: "16px 18px", boxShadow: "0 1px 3px rgba(0,0,0,.04)",
+          display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap",
+        }}>
+          <div>
+            <p style={{ fontSize: 13, fontWeight: 700, color: "#0F172A", margin: "0 0 2px" }}>Actualizar a Pro</p>
+            <p style={{ fontSize: 12, color: "#94A3B8", margin: 0 }}>Hasta 3 dispositivos · {fmt(4499)}/mes</p>
+          </div>
+          <button
+            onClick={() => handleSuscribir("PRO")}
+            disabled={actionLoading}
+            style={{
+              padding: "8px 16px", borderRadius: 8, fontSize: 12, fontWeight: 700,
+              background: "#1E3A8A", color: "#fff", border: "none", cursor: "pointer", flexShrink: 0,
+            }}
+          >
+            Cambiar a Pro
+          </button>
+        </div>
       )}
 
-      {/* Dialogs */}
-      <Dialog open={confirmAction === "cancelar"} onOpenChange={() => setConfirmAction(null)}>
+      {/* ── Planes — colapsable ── */}
+      {!loading && !isActive && !isPaused && (
+        <div ref={plansRef}>
+          <button
+            onClick={() => setPlansOpen(v => !v)}
+            style={{
+              display: "flex", alignItems: "center", justifyContent: "space-between",
+              width: "100%", padding: "14px 0",
+              background: "none", border: "none", borderTop: "1px solid #F1F3F5",
+              cursor: "pointer", textAlign: "left",
+            }}
+          >
+            <span style={{ fontSize: 13, fontWeight: 700, color: "#0F172A" }}>
+              Ver planes disponibles
+            </span>
+            <ChevronDown
+              size={15}
+              style={{
+                color: "#94A3B8", flexShrink: 0,
+                transform: plansOpen ? "rotate(180deg)" : "rotate(0deg)",
+                transition: "transform .2s",
+              }}
+            />
+          </button>
+
+          {plansOpen && (
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+              gap: 12, paddingBottom: 8,
+            }}>
+              {PLANES.map(plan => (
+                <div
+                  key={plan.id}
+                  style={{
+                    background: plan.highlight
+                      ? "linear-gradient(180deg, rgba(30,58,138,.08), rgba(30,58,138,.03))"
+                      : "#fff",
+                    border: `1px solid ${plan.highlight ? "rgba(30,58,138,.22)" : "#E9EAEC"}`,
+                    borderRadius: 14,
+                    padding: "18px 18px 16px",
+                    boxShadow: plan.highlight
+                      ? "0 2px 12px rgba(30,58,138,.10)"
+                      : "0 1px 3px rgba(0,0,0,.04)",
+                  }}
+                >
+                  {plan.highlight && (
+                    <span style={{
+                      display: "inline-block", marginBottom: 10,
+                      padding: "3px 10px", borderRadius: 99, fontSize: 10, fontWeight: 800,
+                      background: "rgba(30,58,138,.12)", color: "#1E3A8A",
+                      letterSpacing: "0.06em", textTransform: "uppercase",
+                    }}>
+                      Recomendado
+                    </span>
+                  )}
+                  <p style={{ fontSize: 16, fontWeight: 800, color: "#0F172A", margin: "0 0 4px", letterSpacing: "-0.01em" }}>
+                    {plan.nombre}
+                  </p>
+                  <div style={{ display: "flex", alignItems: "baseline", gap: 4, marginBottom: 14 }}>
+                    <span style={{ fontSize: 22, fontWeight: 900, color: "#0F172A", letterSpacing: "-0.02em" }}>
+                      {fmt(plan.precio)}
+                    </span>
+                    <span style={{ fontSize: 11, color: "#94A3B8" }}>/mes</span>
+                  </div>
+                  <ul style={{ listStyle: "none", padding: 0, margin: "0 0 16px", display: "flex", flexDirection: "column", gap: 7 }}>
+                    {plan.features.map(f => (
+                      <li key={f} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: "#64748B" }}>
+                        <span style={{ color: "#16A34A", fontWeight: 700 }}>✓</span> {f}
+                      </li>
+                    ))}
+                  </ul>
+                  <button
+                    onClick={() => handleSuscribir(plan.id)}
+                    disabled={actionLoading || currentPlan === plan.id}
+                    style={{
+                      width: "100%", height: 40, borderRadius: 9,
+                      background: plan.highlight ? "#1E3A8A" : "#fff",
+                      color: plan.highlight ? "#fff" : "#1E3A8A",
+                      border: plan.highlight ? "none" : "1.5px solid #1E3A8A",
+                      fontWeight: 700, fontSize: 13, cursor: "pointer",
+                      opacity: actionLoading || currentPlan === plan.id ? 0.6 : 1,
+                    }}
+                  >
+                    {currentPlan === plan.id ? "Plan actual" : `Suscribirse · ${fmt(plan.precio)}/mes`}
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ── Dialogs ── */}
+      <Dialog open={confirmAction === "cancelar"} onOpenChange={() => setConfirm(null)}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>¿Cancelar suscripción?</DialogTitle>
@@ -403,13 +528,23 @@ function CuentaPageInner() {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setConfirmAction(null)}>Volver</Button>
-            <Button variant="destructive" onClick={handleCancelar}>Sí, cancelar</Button>
+            <button
+              onClick={() => setConfirm(null)}
+              style={{ padding: "8px 16px", borderRadius: 8, background: "#fff", border: "1px solid #E5E7EB", color: "#374151", fontWeight: 600, fontSize: 13, cursor: "pointer" }}
+            >
+              Volver
+            </button>
+            <button
+              onClick={handleCancelar}
+              style={{ padding: "8px 16px", borderRadius: 8, background: "#EF4444", color: "#fff", border: "none", fontWeight: 600, fontSize: 13, cursor: "pointer" }}
+            >
+              Sí, cancelar
+            </button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      <Dialog open={confirmAction === "pausar"} onOpenChange={() => setConfirmAction(null)}>
+      <Dialog open={confirmAction === "pausar"} onOpenChange={() => setConfirm(null)}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>¿Pausar suscripción?</DialogTitle>
@@ -418,11 +553,22 @@ function CuentaPageInner() {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setConfirmAction(null)}>Volver</Button>
-            <Button onClick={handlePausar}>Sí, pausar</Button>
+            <button
+              onClick={() => setConfirm(null)}
+              style={{ padding: "8px 16px", borderRadius: 8, background: "#fff", border: "1px solid #E5E7EB", color: "#374151", fontWeight: 600, fontSize: 13, cursor: "pointer" }}
+            >
+              Volver
+            </button>
+            <button
+              onClick={handlePausar}
+              style={{ padding: "8px 16px", borderRadius: 8, background: "#1E3A8A", color: "#fff", border: "none", fontWeight: 600, fontSize: 13, cursor: "pointer" }}
+            >
+              Sí, pausar
+            </button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
     </div>
   );
 }
