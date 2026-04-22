@@ -336,10 +336,16 @@
 
 /* ─── RESPONSIVE LANDING ─────────────────────────────────────── */
 
+/* Padding global de secciones — desktop */
+.vs-landing section {
+  padding-top: 56px !important;
+  padding-bottom: 56px !important;
+}
+
 /* Container + section padding */
 @media (max-width: 768px) {
   .l-container { padding: 0 16px; }
-  .vs-landing section { padding-top: 56px !important; padding-bottom: 56px !important; }
+  .vs-landing section { padding-top: 40px !important; padding-bottom: 40px !important; }
 }
 
 /* NAV: ocultar links centrales en mobile */
