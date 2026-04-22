@@ -1,35 +1,36 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { X, ChevronDown, ChevronUp, Sparkles } from "lucide-react";
+import { X, ChevronDown, Zap } from "lucide-react";
 
-/* ── Estado persistido en localStorage ───────────────────────── */
-interface OState {
-  step:        number;   // 0=intro 1=descarga 2=activar 3=primera-venta 4=done
-  dismissed:   boolean;
-  reminders:   number;   // cuántos recordatorios enviados
-  lastRem:     number;   // timestamp del último recordatorio
+/* ── Tipos ────────────────────────────────────────────────────── */
+interface KState {
+  step:      number;  // 0=intro 1=download 2=activate 3=sale 4=done
+  mode:      "activation" | "help";
+  dismissed: boolean;
+  reminders: number;
+  lastRem:   number;
 }
 
-const KEY = "vs_onboarding_v1";
-const STEPS = 3;
-const REM_DELAY = 45_000; // 45 segundos
+const KEY       = "vs_kairos_v1";
+const TOTAL     = 3;
+const REM_DELAY = 45_000;
 const MAX_REMS  = 2;
 
-function read(): OState {
+function load(): KState {
   try {
-    const raw = localStorage.getItem(KEY);
-    if (raw) return JSON.parse(raw) as OState;
+    const r = localStorage.getItem(KEY);
+    if (r) return JSON.parse(r) as KState;
   } catch { }
-  return { step: 0, dismissed: false, reminders: 0, lastRem: 0 };
+  return { step: 0, mode: "activation", dismissed: false, reminders: 0, lastRem: 0 };
 }
-
-function write(s: OState) {
+function save(s: KState) {
   try { localStorage.setItem(KEY, JSON.stringify(s)); } catch { }
 }
 
-/* ── Función de highlight exportable ─────────────────────────── */
+/* ── Highlight ────────────────────────────────────────────────── */
 export function highlightElement(id: string) {
   const el = document.getElementById(id);
   if (!el) return;
@@ -37,17 +38,26 @@ export function highlightElement(id: string) {
   setTimeout(() => el.classList.remove("vs-highlight"), 3600);
 }
 
-/* ── Subcomponentes ───────────────────────────────────────────── */
+/* ── Mensajes contextuales (modo ayuda — sin API) ─────────────── */
+const HELP_MSGS: Record<string, string> = {
+  "/cuenta":     "Estás en el lugar correcto.\nAcá activás la app de escritorio.",
+  "/ventas":     "Desde acá ves todas tus ventas registradas.",
+  "/productos":  "Acá manejás tu catálogo de productos y el stock.",
+  "/metricas":   "Acá vas a ver ventas, productos y tendencias del negocio.",
+  "/clientes":   "Acá están tus clientes y su historial de compras.",
+  "/proveedores":"Acá gestionás tus proveedores.",
+  "/descargar":  "Desde acá descargás la app de escritorio para empezar a cobrar.",
+};
+
+/* ── Sub-componentes UI ───────────────────────────────────────── */
 function Bubble({ text }: { text: string }) {
   return (
-    <div style={{
-      background: "#F8FAFC", border: "1px solid #E9EAEC",
-      borderRadius: "4px 12px 12px 12px",
-      padding: "11px 14px", fontSize: 13.5, color: "#0F172A",
-      lineHeight: 1.55, marginBottom: 14,
+    <p style={{
+      fontSize: 13.5, color: "#0F172A", lineHeight: 1.6, margin: "0 0 16px",
+      whiteSpace: "pre-line",
     }}>
       {text}
-    </div>
+    </p>
   );
 }
 
@@ -55,207 +65,291 @@ function PrimaryBtn({ label, onClick, href }: { label: string; onClick?: () => v
   const s: React.CSSProperties = {
     display: "flex", alignItems: "center", justifyContent: "center",
     height: 40, width: "100%", borderRadius: 9,
-    background: "#F97316", color: "#fff",
-    fontWeight: 700, fontSize: 13.5, border: "none", cursor: "pointer",
-    textDecoration: "none", letterSpacing: "-0.01em",
-    boxShadow: "0 3px 12px rgba(249,115,22,.28)",
+    background: "#1E3A8A", color: "#fff",
+    fontWeight: 600, fontSize: 13.5, border: "none", cursor: "pointer",
+    textDecoration: "none",
     marginBottom: 8,
+    transition: "background .15s",
   };
   if (href) return <Link href={href} style={s} onClick={onClick}>{label}</Link>;
   return <button type="button" style={s} onClick={onClick}>{label}</button>;
 }
 
-function GhostBtn({ label, onClick }: { label: string; onClick: () => void }) {
-  return (
-    <button type="button" onClick={onClick} style={{
-      display: "flex", alignItems: "center", justifyContent: "center",
-      height: 36, width: "100%", borderRadius: 9,
-      background: "transparent", color: "#64748B",
-      fontWeight: 500, fontSize: 13,
-      border: "1.5px solid #E2E8F0", cursor: "pointer",
-    }}>
-      {label}
-    </button>
-  );
+function GhostBtn({ label, onClick, href }: { label: string; onClick?: () => void; href?: string }) {
+  const s: React.CSSProperties = {
+    display: "flex", alignItems: "center", justifyContent: "center",
+    height: 36, width: "100%", borderRadius: 9,
+    background: "transparent", color: "#64748B",
+    fontWeight: 500, fontSize: 13,
+    border: "1.5px solid #E2E8F0", cursor: "pointer",
+    textDecoration: "none",
+  };
+  if (href) return <Link href={href} style={s} onClick={onClick}>{label}</Link>;
+  return <button type="button" style={s} onClick={onClick}>{label}</button>;
 }
 
-/* ── Pasos ────────────────────────────────────────────────────── */
-function StepIntro({ onStart, onDismiss }: { onStart: () => void; onDismiss: () => void }) {
+function CelebMsg({ text }: { text: string }) {
   return (
-    <>
-      <Bubble text='Hola 👋 Te ayudo a configurar tu negocio en 2 minutos. ¿Arrancamos?' />
-      <PrimaryBtn label="Sí, guiarme →" onClick={onStart} />
-      <GhostBtn   label="Prefiero explorar solo" onClick={onDismiss} />
-    </>
-  );
-}
-
-function StepDownload({ onNext }: { onNext: () => void }) {
-  return (
-    <>
-      <Bubble text="Primero descargá la app de escritorio para empezar a cobrar desde tu PC." />
-      <PrimaryBtn label="⬇ Descargar app" href="/descargar" onClick={onNext} />
-      <GhostBtn   label="Ya la descargué →" onClick={onNext} />
-    </>
-  );
-}
-
-function StepActivate({ onNext }: { onNext: () => void }) {
-  useEffect(() => {
-    // Highlight al ítem de Mi Cuenta en el sidebar
-    setTimeout(() => highlightElement("sidebar-nav-cuenta"), 400);
-  }, []);
-
-  return (
-    <>
-      <Bubble text="Ahora activá la app desde Mi Cuenta. Vas a necesitar la clave de licencia." />
-      <PrimaryBtn label="Ir a Mi Cuenta →" href="/cuenta" onClick={onNext} />
-      <GhostBtn   label="Ya la activé →" onClick={onNext} />
-    </>
-  );
-}
-
-function StepFirstSale({ onDone }: { onDone: () => void }) {
-  return (
-    <>
-      <Bubble text="¡Casi listo! Abrí la app de escritorio y registrá tu primera venta. Después volvé acá para ver las métricas en tiempo real." />
-      <PrimaryBtn label="¡Entendido, empezar!" onClick={onDone} />
-    </>
+    <p style={{ fontSize: 13.5, color: "#16A34A", fontWeight: 600, lineHeight: 1.55, margin: 0, textAlign: "center" }}>
+      {text}
+    </p>
   );
 }
 
 /* ── Componente principal ─────────────────────────────────────── */
-export default function OnboardingChat() {
-  const [state,   setState]   = useState<OState | null>(null);
-  const [min,     setMin]     = useState(false);
-  const [visible, setVisible] = useState(false);
-  const stepRef = useRef(0);
+interface Props { licenciaActiva?: boolean; hasData?: boolean; }
 
-  /* Inicializar */
+export default function Kairos({ licenciaActiva = false, hasData = false }: Props) {
+  const pathname           = usePathname();
+  const [state, setState]  = useState<KState | null>(null);
+  const [expanded, setExp] = useState(false);
+  const [visible, setVis]  = useState(false);
+  const [celeb, setCeleb]  = useState<string | null>(null);
+  const stepRef            = useRef(0);
+
+  /* Init */
   useEffect(() => {
-    const s = read();
+    const s = load();
     setState(s);
     stepRef.current = s.step;
+    if (s.mode === "help") { setVis(true); return; }
     if (!s.dismissed && s.step < 4) {
-      const t = setTimeout(() => setVisible(true), 1200);
+      const t = setTimeout(() => { setVis(true); setExp(true); }, 1200);
       return () => clearTimeout(t);
     }
   }, []);
 
+  /* Smart detection: avanza si el usuario ya completó pasos fuera del chat */
+  useEffect(() => {
+    if (!state || state.step === 0 || state.dismissed || state.mode === "help") return;
+    let target = state.step;
+    if (hasData && state.step < 4)         target = 4;
+    else if (licenciaActiva && state.step < 3) target = 3;
+    if (target !== state.step) upd({ step: target, reminders: 0, lastRem: 0 });
+  }, [licenciaActiva, hasData]); // eslint-disable-line react-hooks/exhaustive-deps
+
   /* Recordatorios */
   useEffect(() => {
     if (!state || state.dismissed || state.step === 0 || state.step >= 4) return;
-    if (state.reminders >= MAX_REMS) return;
-
-    const since = Date.now() - state.lastRem;
-    const wait  = state.lastRem === 0 ? REM_DELAY : Math.max(0, REM_DELAY - since);
-
+    if (state.mode === "help" || state.reminders >= MAX_REMS) return;
+    const wait = state.lastRem === 0 ? REM_DELAY : Math.max(0, REM_DELAY - (Date.now() - state.lastRem));
     const t = setTimeout(() => {
-      setMin(false);
-      setState(prev => {
-        if (!prev || prev.step !== stepRef.current) return prev;
-        const next = { ...prev, reminders: prev.reminders + 1, lastRem: Date.now() };
-        write(next);
-        return next;
-      });
+      if (stepRef.current !== state.step) return;
+      setExp(true);
+      upd({ reminders: state.reminders + 1, lastRem: Date.now() });
     }, wait);
-
     return () => clearTimeout(t);
   }, [state?.step, state?.reminders]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  function update(partial: Partial<OState>) {
+  function upd(partial: Partial<KState>) {
     setState(prev => {
       if (!prev) return prev;
       const next = { ...prev, ...partial };
       stepRef.current = next.step;
-      write(next);
+      save(next);
       return next;
     });
   }
 
-  function dismiss() { update({ dismissed: true }); setVisible(false); }
-  function advance(step: number) { update({ step, reminders: 0, lastRem: 0 }); }
+  function advance(step: number, celebText?: string) {
+    if (celebText) {
+      setCeleb(celebText);
+      setTimeout(() => { setCeleb(null); upd({ step, reminders: 0, lastRem: 0 }); }, 1800);
+    } else {
+      upd({ step, reminders: 0, lastRem: 0 });
+    }
+  }
 
-  if (!state || !visible || state.dismissed || state.step >= 4) return null;
+  function finishActivation() {
+    upd({ step: 4, mode: "help", reminders: 0, lastRem: 0 });
+    setExp(false);
+  }
 
-  const progress = state.step === 0 ? 0 : Math.round((state.step / STEPS) * 100);
-  const stepsLeft = STEPS - state.step;
+  function dismiss() {
+    upd({ dismissed: true });
+    setVis(false);
+  }
+
+  if (!state || !visible) return null;
+
+  /* ── Modo ayuda (pill persistente) ── */
+  if (state.mode === "help" || state.step >= 4) {
+    const helpMsg = HELP_MSGS[pathname] ?? null;
+
+    if (!expanded) {
+      return (
+        <button
+          onClick={() => setExp(true)}
+          style={{
+            position: "fixed", bottom: 24, left: 24, zIndex: 200,
+            display: "flex", alignItems: "center", gap: 7,
+            padding: "8px 14px", borderRadius: 99,
+            background: "#1E3A8A", color: "#fff",
+            border: "none", cursor: "pointer",
+            fontSize: 12.5, fontWeight: 600, letterSpacing: "-0.01em",
+            boxShadow: "0 4px 16px rgba(30,58,138,.30)",
+          }}
+        >
+          <Zap size={13} fill="#fff" />
+          Kairos
+        </button>
+      );
+    }
+
+    return (
+      <div style={{
+        position: "fixed", bottom: 24, left: 24, zIndex: 200,
+        width: 300, borderRadius: 14,
+        background: "#fff", border: "1px solid #E2E8F0",
+        boxShadow: "0 8px 32px rgba(30,58,138,.14), 0 2px 8px rgba(0,0,0,.06)",
+        overflow: "hidden",
+      }}>
+        <div style={{ background: "#1E3A8A", padding: "10px 14px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+            <Zap size={13} color="#fff" fill="#fff" />
+            <span style={{ fontSize: 12.5, fontWeight: 700, color: "#fff" }}>Kairos</span>
+          </div>
+          <button onClick={() => setExp(false)} style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,.65)", padding: 4, display: "flex" }}>
+            <ChevronDown size={14} />
+          </button>
+        </div>
+        <div style={{ padding: "14px 16px 16px" }}>
+          {helpMsg ? (
+            <>
+              <p style={{ fontSize: 13.5, color: "#0F172A", lineHeight: 1.6, margin: "0 0 14px", whiteSpace: "pre-line" }}>{helpMsg}</p>
+              <GhostBtn label="Cerrar" onClick={() => setExp(false)} />
+            </>
+          ) : (
+            <>
+              <p style={{ fontSize: 13.5, color: "#0F172A", lineHeight: 1.6, margin: "0 0 14px" }}>
+                ¿Necesitás ayuda con algo?
+              </p>
+              <PrimaryBtn label="Ir a soporte →" href="mailto:soporte@ventasimple.com" />
+              <GhostBtn label="Cerrar" onClick={() => setExp(false)} />
+            </>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  /* ── Modo activación (pill minimizado) ── */
+  if (!expanded) {
+    const reminder = state.reminders === 1
+      ? "Cuando quieras, seguimos con la configuración.\nTe falta un paso para empezar a vender."
+      : state.reminders >= 2
+        ? "Si querés, te llevo al siguiente paso.\nLo resolvemos en menos de un minuto."
+        : null;
+
+    return (
+      <button
+        onClick={() => setExp(true)}
+        style={{
+          position: "fixed", bottom: 24, left: 24, zIndex: 200,
+          display: "flex", alignItems: "center", gap: 7,
+          padding: "8px 14px", borderRadius: 99,
+          background: "#1E3A8A", color: "#fff",
+          border: "none", cursor: "pointer",
+          fontSize: 12.5, fontWeight: 600, letterSpacing: "-0.01em",
+          boxShadow: reminder ? "0 0 0 3px rgba(249,115,22,.4), 0 4px 16px rgba(30,58,138,.30)" : "0 4px 16px rgba(30,58,138,.30)",
+          animation: reminder ? "vs-highlight-pulse 1.1s ease-out 2" : "none",
+        }}
+      >
+        <Zap size={13} fill="#fff" />
+        Kairos · {TOTAL - state.step + 1} paso{TOTAL - state.step + 1 !== 1 ? "s" : ""}
+      </button>
+    );
+  }
+
+  /* ── Modo activación (expandido) ── */
+  const progress = state.step === 0 ? 0 : Math.round((state.step / TOTAL) * 100);
 
   return (
     <div style={{
       position: "fixed", bottom: 24, left: 24, zIndex: 200,
-      width: 320,
-      borderRadius: 16,
-      background: "#fff",
-      border: "1px solid #E2E8F0",
+      width: 320, borderRadius: 16,
+      background: "#fff", border: "1px solid #E2E8F0",
       boxShadow: "0 8px 40px rgba(30,58,138,.15), 0 2px 10px rgba(0,0,0,.07)",
       overflow: "hidden",
     }}>
 
       {/* Header */}
-      <div style={{
-        background: "#1E3A8A", padding: "11px 14px",
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-      }}>
+      <div style={{ background: "#1E3A8A", padding: "11px 14px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
-          <div style={{
-            width: 30, height: 30, borderRadius: "50%",
-            background: "rgba(255,255,255,.15)",
-            display: "grid", placeItems: "center",
-          }}>
-            <Sparkles size={14} color="#fff" />
+          <div style={{ width: 28, height: 28, borderRadius: "50%", background: "rgba(255,255,255,.15)", display: "grid", placeItems: "center" }}>
+            <Zap size={13} color="#fff" fill="#fff" />
           </div>
           <div>
-            <p style={{ fontSize: 13, fontWeight: 700, color: "#fff", margin: 0, letterSpacing: "-0.01em" }}>
-              Asistente VentaSimple
-            </p>
-            {state.step > 0 && state.step < 4 && (
-              <p style={{ fontSize: 10.5, color: "rgba(255,255,255,.6)", margin: 0 }}>
-                {stepsLeft === 1
+            <p style={{ fontSize: 13, fontWeight: 700, color: "#fff", margin: 0, letterSpacing: "-0.01em" }}>Kairos</p>
+            {state.step > 0 && (
+              <p style={{ fontSize: 10.5, color: "rgba(255,255,255,.55)", margin: 0 }}>
+                {TOTAL - state.step === 1
                   ? "Te falta 1 paso para empezar a vender"
-                  : `Te faltan ${stepsLeft} pasos · Paso ${state.step}/${STEPS}`}
+                  : `Paso ${state.step} de ${TOTAL}`}
               </p>
             )}
           </div>
         </div>
-
         <div style={{ display: "flex", gap: 2 }}>
-          <button
-            onClick={() => setMin(v => !v)}
-            style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,.65)", padding: 5, display: "flex" }}
-          >
-            {min ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          <button onClick={() => setExp(false)} style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,.6)", padding: 5, display: "flex" }}>
+            <ChevronDown size={14} />
           </button>
-          <button
-            onClick={dismiss}
-            style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,.65)", padding: 5, display: "flex" }}
-          >
+          <button onClick={dismiss} style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,.6)", padding: 5, display: "flex" }}>
             <X size={14} />
           </button>
         </div>
       </div>
 
-      {/* Barra de progreso */}
+      {/* Progress bar */}
       {state.step > 0 && (
         <div style={{ height: 3, background: "#EEF2FF" }}>
-          <div style={{
-            height: "100%", background: "#F97316",
-            width: `${progress}%`,
-            borderRadius: "0 2px 2px 0",
-            transition: "width .45s cubic-bezier(.4,0,.2,1)",
-          }} />
+          <div style={{ height: "100%", background: "#F97316", width: `${progress}%`, borderRadius: "0 2px 2px 0", transition: "width .45s cubic-bezier(.4,0,.2,1)" }} />
         </div>
       )}
 
-      {/* Cuerpo */}
-      {!min && (
-        <div style={{ padding: "16px 18px 18px" }}>
-          {state.step === 0 && <StepIntro    onStart={() => advance(1)} onDismiss={dismiss} />}
-          {state.step === 1 && <StepDownload onNext={() => advance(2)} />}
-          {state.step === 2 && <StepActivate onNext={() => advance(3)} />}
-          {state.step === 3 && <StepFirstSale onDone={() => advance(4)} />}
-        </div>
-      )}
+      {/* Body */}
+      <div style={{ padding: "18px 18px 20px" }}>
+        {celeb ? (
+          <CelebMsg text={celeb} />
+        ) : (
+          <>
+            {state.step === 0 && (
+              <>
+                <Bubble text={"Soy Kairos.\nTe ayudo a configurar tu negocio y empezar a vender sin perder tiempo.\n¿Querés que te guíe?"} />
+                <PrimaryBtn label="Sí, guiarme" onClick={() => advance(1)} />
+                <GhostBtn   label="Prefiero explorar" onClick={dismiss} />
+              </>
+            )}
+
+            {state.step === 1 && (
+              <>
+                <Bubble text={"Perfecto. Vamos paso a paso.\nPrimero descargá la app de escritorio para poder cobrar desde tu local."} />
+                <PrimaryBtn label="Descargar app" href="/descargar" onClick={() => advance(2, "App descargada. Seguimos con la activación.")} />
+                <GhostBtn   label="Ya la descargué →" onClick={() => advance(2, "App descargada. Seguimos con la activación.")} />
+              </>
+            )}
+
+            {state.step === 2 && (
+              <>
+                <Bubble text={"Bien. Ya tenés la app.\nAhora activala desde tu cuenta y queda conectada con el panel."} />
+                <PrimaryBtn label="Ir a Mi Cuenta" href="/cuenta" onClick={() => {
+                  setTimeout(() => highlightElement("sidebar-nav-cuenta"), 300);
+                  advance(3, "Perfecto. Ya quedó conectada.");
+                }} />
+                <GhostBtn label="Ya la activé →" onClick={() => advance(3, "Perfecto. Ya quedó conectada.")} />
+              </>
+            )}
+
+            {state.step === 3 && (
+              <>
+                <Bubble text={"Listo. Ya está conectada.\nProbemos una venta para que veas cómo funciona en la práctica."} />
+                <PrimaryBtn label="Abrir la app desktop" href="/descargar" onClick={finishActivation} />
+                <GhostBtn   label="Ya hice una venta →" onClick={finishActivation} />
+              </>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 }
