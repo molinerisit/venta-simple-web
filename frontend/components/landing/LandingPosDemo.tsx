@@ -12,7 +12,7 @@ const SUMS = [950, 1430, 2880];
 const fmt  = (n: number) => `$${n.toLocaleString("es-AR")}`;
 
 type Step = "idle" | "scan1" | "add1" | "scan2" | "add2" | "scan3" | "add3"
-           | "enter" | "confirm" | "success" | "print";
+           | "enter" | "confirm" | "success";
 
 const NAV      = ["Dashboard", "Caja", "Productos", "Ventas", "Reportes"];
 const PAY_OPTS = ["Efectivo", "Débito", "Crédito", "Mercado Pago QR"];
@@ -40,8 +40,7 @@ export default function LandingPosDemo() {
       at(() => setStep("enter"),                        5700);
       at(() => setStep("confirm"),                      6100);
       at(() => setStep("success"),                      6600);
-      at(() => setStep("print"),                        7400);
-      at(run,                                           9800);
+      at(run,                                           8400);
     };
     run();
     return () => timers.current.forEach(clearTimeout);
@@ -49,7 +48,7 @@ export default function LandingPosDemo() {
   }, []);
 
   const scanning  = step === "scan1" || step === "scan2" || step === "scan3";
-  const showOk    = step === "success" || step === "print";
+  const showOk    = step === "success";
   const pressing  = step === "confirm";
   const total     = cartN > 0 ? fmt(SUMS[cartN - 1]) : "$0";
   const newRowIdx = step === "add1" ? 0 : step === "add2" ? 1 : step === "add3" ? 2 : -1;
@@ -232,16 +231,6 @@ export default function LandingPosDemo() {
                     <div style={{ fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,.8)", marginBottom: 4 }}>¡Venta registrada!</div>
                     <div style={{ fontSize: 26, fontWeight: 900, color: "#fff", letterSpacing: "-0.05em" }}>{fmt(SUMS[2])}</div>
                   </div>
-                  {step === "print" && (
-                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.7)" strokeWidth="2.5">
-                        <polyline points="6 9 6 2 18 2 18 9"/>
-                        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
-                        <rect x="6" y="14" width="12" height="8"/>
-                      </svg>
-                      <span style={{ fontSize: 10.5, color: "rgba(255,255,255,.75)", fontWeight: 600 }}>Imprimiendo ticket...</span>
-                    </div>
-                  )}
                 </div>
               )}
             </div>
@@ -301,30 +290,6 @@ export default function LandingPosDemo() {
                 {showOk ? "✓ Venta confirmada" : "Confirmar venta"}
               </button>
 
-              {/* Thermal ticket preview */}
-              {step === "print" && (
-                <div className="pos-paper" style={{
-                  background: "#FAFAFA", border: "1px solid #E5E7EB",
-                  borderRadius: 6, padding: "8px 10px",
-                  display: "flex", flexDirection: "column", gap: 3,
-                }}>
-                  <div style={{ fontSize: 8, fontWeight: 900, color: "#1E293B", textAlign: "center", marginBottom: 2 }}>
-                    VentaSimple
-                  </div>
-                  <div style={{ height: 1, background: "#E5E7EB" }} />
-                  {PRODS.map(p => (
-                    <div key={p.name} style={{ display: "flex", justifyContent: "space-between" }}>
-                      <span style={{ fontSize: 7, color: "#64748B" }}>{p.name}</span>
-                      <span style={{ fontSize: 7, fontWeight: 700, color: "#1E293B" }}>{p.price}</span>
-                    </div>
-                  ))}
-                  <div style={{ height: 1, background: "#E5E7EB", marginTop: 1 }} />
-                  <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <span style={{ fontSize: 8, fontWeight: 800, color: "#1E293B" }}>TOTAL</span>
-                    <span style={{ fontSize: 8, fontWeight: 900, color: "#1E293B" }}>{fmt(SUMS[2])}</span>
-                  </div>
-                </div>
-              )}
             </div>
 
           </div>
