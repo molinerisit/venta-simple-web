@@ -1,23 +1,36 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
+import { usePathname } from "next/navigation";
 
 interface Message { role: "user" | "bot"; text: string; }
 
-/* ── Proactive bubbles ───────────────────────────────── */
+/* ── Proactive bubbles — landing ─────────────────────── */
 const PROACTIVE: { id: string; section: string | null; delay?: number; text: string }[] = [
   { id: "idle",    section: null,             delay: 30000, text: "¿Querés que te muestre cómo funciona en 1 minuto?" },
   { id: "pricing", section: "#pricing",       delay: 0,     text: "¿Querés que te recomiende el mejor plan para tu negocio?" },
   { id: "demo",    section: "#como-funciona", delay: 0,     text: "¿Tenés dudas sobre si funciona en tu PC?" },
 ];
 
-/* ── Quick actions ───────────────────────────────────── */
-const QUICK = [
-  { label: "Cómo funciona",         q: "¿Cómo funciona el sistema?"        },
-  { label: "Ver precios",           q: "¿Cuánto cuesta?"                   },
-  { label: "¿Funciona sin internet?", q: "¿Funciona sin conexión a internet?" },
-  { label: "¿Sirve para mi negocio?", q: "¿Sirve para mi negocio?"          },
+/* ── Quick actions — landing ─────────────────────────── */
+const QUICK_LANDING = [
+  { label: "Cómo funciona",           q: "¿Cómo funciona el sistema?"          },
+  { label: "Ver precios",             q: "¿Cuánto cuesta?"                     },
+  { label: "¿Funciona sin internet?", q: "¿Funciona sin conexión a internet?"  },
+  { label: "¿Sirve para mi negocio?", q: "¿Sirve para mi negocio?"             },
 ];
+
+/* ── Quick actions — panel (usuario logueado) ─────────── */
+const QUICK_PANEL = [
+  { label: "¿Cómo agrego productos?", q: "¿Cómo cargo productos en VentaSimple?"           },
+  { label: "¿Cómo conecto la app?",   q: "¿Cómo conecto la app desktop con el panel web?"  },
+  { label: "¿Cómo cierro la caja?",   q: "¿Cómo hago el cierre de caja?"                  },
+  { label: "Tengo un problema",        q: "Necesito ayuda con un problema técnico"           },
+];
+
+const PANEL_PATHS = ["/dashboard","/ventas","/productos","/clientes","/proveedores",
+                     "/metricas","/cuenta","/descargar","/admin","/instalaciones",
+                     "/licencias","/suscripciones"];
 
 function MarkdownText({ text }: { text: string }) {
   const parts = text.split(/(\*\*[^*]+\*\*)/g);
@@ -50,6 +63,9 @@ export default function ChatWidget() {
   const openRef    = useRef(open);
   openRef.current  = open;
 
+  const pathname = usePathname();
+  const isPanel  = PANEL_PATHS.some(p => pathname.startsWith(p));
+
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
     check();
@@ -63,6 +79,13 @@ export default function ChatWidget() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  /* Panel: swap initial greeting */
+  useEffect(() => {
+    if (isPanel) {
+      setMessages([{ role: "bot", text: "Hola 👋\nSoy el asistente de VentaSimple.\n¿En qué te puedo ayudar hoy?" }]);
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   /* Show a bubble if chat is closed and this id hasn't been shown yet */
   const tryBubble = useCallback((id: string, text: string) => {
@@ -79,12 +102,14 @@ export default function ChatWidget() {
   useEffect(() => {
     const entry = PROACTIVE.find(p => p.id === "idle");
     if (!entry) return;
-    const t = setTimeout(() => tryBubble("idle", entry.text), entry.delay!);
+    const text = isPanel ? "¿Tenés alguna duda con el panel?" : entry.text;
+    const t = setTimeout(() => tryBubble("idle", text), entry.delay!);
     return () => clearTimeout(t);
-  }, [tryBubble]);
+  }, [tryBubble]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  /* Scroll-based triggers via IntersectionObserver */
+  /* Scroll-based triggers via IntersectionObserver — landing only */
   useEffect(() => {
+    if (isPanel) return;
     const observers: IntersectionObserver[] = [];
     const sectionTriggers = [
       { selector: "#pricing",        id: "pricing" },
@@ -323,7 +348,7 @@ export default function ChatWidget() {
               borderTop: "1px solid #F0EEE9",
               display: "flex", flexWrap: "wrap", gap: 6,
             }}>
-              {QUICK.map(({ label, q }) => (
+              {(isPanel ? QUICK_PANEL : QUICK_LANDING).map(({ label, q }) => (
                 <button
                   key={label}
                   onClick={() => send(q)}

@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { X, ChevronDown, Zap } from "lucide-react";
+import { getLicencia } from "@/lib/api";
 
 /* ── Tipos ────────────────────────────────────────────────────── */
 interface KState {
@@ -100,12 +101,14 @@ function CelebMsg({ text }: { text: string }) {
 interface Props { licenciaActiva?: boolean; hasData?: boolean; }
 
 export default function Kairos({ licenciaActiva = false, hasData = false }: Props) {
-  const pathname           = usePathname();
-  const [state, setState]  = useState<KState | null>(null);
-  const [expanded, setExp] = useState(false);
-  const [visible, setVis]  = useState(false);
-  const [celeb, setCeleb]  = useState<string | null>(null);
-  const stepRef            = useRef(0);
+  const pathname              = usePathname();
+  const [state, setState]     = useState<KState | null>(null);
+  const [expanded, setExp]    = useState(false);
+  const [visible, setVis]     = useState(false);
+  const [celeb, setCeleb]     = useState<string | null>(null);
+  const [verifying, setVerif] = useState(false);
+  const [verifyErr, setVErr]  = useState(false);
+  const stepRef               = useRef(0);
 
   /* Init */
   useEffect(() => {
@@ -140,6 +143,19 @@ export default function Kairos({ licenciaActiva = false, hasData = false }: Prop
     }, wait);
     return () => clearTimeout(t);
   }, [state?.step, state?.reminders]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  /* Poll licencia while user is in verifying state at step 2 */
+  useEffect(() => {
+    if (!verifying || !state || state.step !== 2) return;
+    if (licenciaActiva) { setVerif(false); advance(3, "Perfecto. Ya quedó conectada."); return; }
+    const id = setInterval(async () => {
+      try {
+        const r = await getLicencia();
+        if (r.data.licencia) { setVerif(false); advance(3, "Perfecto. Ya quedó conectada."); }
+      } catch { /* silencioso */ }
+    }, 15_000);
+    return () => clearInterval(id);
+  }, [verifying, state?.step, licenciaActiva]); // eslint-disable-line react-hooks/exhaustive-deps
 
   function upd(partial: Partial<KState>) {
     setState(prev => {
@@ -331,12 +347,38 @@ export default function Kairos({ licenciaActiva = false, hasData = false }: Prop
 
             {state.step === 2 && (
               <>
-                <Bubble text={"Bien. Ya tenés la app.\nAhora activala desde tu cuenta y queda conectada con el panel."} />
-                <PrimaryBtn label="Ir a Mi Cuenta" href="/cuenta" onClick={() => {
-                  setTimeout(() => highlightElement("sidebar-nav-cuenta"), 300);
-                  advance(3, "Perfecto. Ya quedó conectada.");
-                }} />
-                <GhostBtn label="Ya la activé →" onClick={() => advance(3, "Perfecto. Ya quedó conectada.")} />
+                {verifying ? (
+                  <>
+                    <Bubble text={"Todavía no detectamos la conexión.\nVerificá en Mi Cuenta que la activación esté completa."} />
+                    <PrimaryBtn label="Ir a Mi Cuenta" href="/cuenta" onClick={() => {
+                      setTimeout(() => highlightElement("sidebar-nav-cuenta"), 300);
+                    }} />
+                    <GhostBtn label="Ya está activa" onClick={async () => {
+                      try {
+                        const r = await getLicencia();
+                        if (r.data.licencia) { setVerif(false); advance(3, "Perfecto. Ya quedó conectada."); }
+                        else { setVErr(true); setTimeout(() => setVErr(false), 3000); }
+                      } catch { setVErr(true); setTimeout(() => setVErr(false), 3000); }
+                    }} />
+                    {verifyErr && (
+                      <p style={{ fontSize: 12, color: "#EF4444", margin: "6px 0 0", textAlign: "center" }}>
+                        Todavía no detectamos la activación.
+                      </p>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <Bubble text={"Bien. Ya tenés la app.\nAhora activala desde tu cuenta y queda conectada con el panel."} />
+                    <PrimaryBtn label="Ir a Mi Cuenta" href="/cuenta" onClick={() => {
+                      setTimeout(() => highlightElement("sidebar-nav-cuenta"), 300);
+                      setVerif(true);
+                    }} />
+                    <GhostBtn label="Ya la activé →" onClick={() => {
+                      if (licenciaActiva) advance(3, "Perfecto. Ya quedó conectada.");
+                      else setVerif(true);
+                    }} />
+                  </>
+                )}
               </>
             )}
 
