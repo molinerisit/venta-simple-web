@@ -1076,3 +1076,28 @@ input, select, textarea {
   transform: translateY(-3px);
   box-shadow: 0 8px 24px rgba(0,0,0,.08) !important;
 }
+
+/* ══════════════════════════════════════════════════════════════
+   ARQUITECTURA SECTION — hover elevation + sync pulse
+   ══════════════════════════════════════════════════════════════ */
+.arq-card {
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+.arq-card:hover {
+  transform: translateY(-5px);
+}
+.arq-card-blue:hover {
+  box-shadow: 0 16px 48px rgba(30,58,138,.20) !important;
+}
+.arq-card-green:hover {
+  box-shadow: 0 16px 48px rgba(10,110,69,.18) !important;
+}
+
+@keyframes arq-sync-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(37,99,235,.35), 0 4px 20px rgba(0,0,0,.10); }
+  60%  { box-shadow: 0 0 0 10px rgba(37,99,235,0), 0 4px 20px rgba(0,0,0,.10); }
+  100% { box-shadow: 0 0 0 0 rgba(37,99,235,0),   0 4px 20px rgba(0,0,0,.10); }
+}
+.arq-center {
+  animation: arq-sync-pulse 2.4s ease-in-out infinite;
+}
