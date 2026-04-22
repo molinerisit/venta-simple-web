@@ -36,16 +36,41 @@ export default function DashboardPage() {
         .then(r => setAdminStats(r.data))
         .catch(() => setError(true))
         .finally(() => setLoading(false));
-    } else {
-      Promise.all([getMetricas(30), getLicencia()])
-        .then(([mRes, lRes]) => {
-          setMetricas(mRes.data);
-          setLicenciaActiva(!!lRes.data.licencia);
-        })
-        .catch(() => setError(true))
-        .finally(() => setLoading(false));
+      return;
     }
-  }, [isSuperAdmin]);
+
+    const cacheKey = `vs_dash_${user?.tenant_id ?? "default"}`;
+
+    // Stale-while-revalidate: mostrar cache inmediatamente si existe (< 5 min)
+    let hasCached = false;
+    try {
+      const raw = localStorage.getItem(cacheKey);
+      if (raw) {
+        const { m, ts } = JSON.parse(raw) as { m: Metricas; ts: number };
+        if (Date.now() - ts < 300_000) {
+          setMetricas(m);
+          setLoading(false);
+          hasCached = true;
+        }
+      }
+    } catch { /* localStorage no disponible */ }
+
+    // Fetch fresco siempre (en background si ya hay cache)
+    getMetricas(30)
+      .then(r => {
+        setMetricas(r.data);
+        try {
+          localStorage.setItem(cacheKey, JSON.stringify({ m: r.data, ts: Date.now() }));
+        } catch { }
+      })
+      .catch(() => { if (!hasCached) setError(true); })
+      .finally(() => setLoading(false));
+
+    // Licencia en paralelo, sin bloquear el render de métricas
+    getLicencia()
+      .then(r => setLicenciaActiva(!!r.data.licencia))
+      .catch(() => {});
+  }, [isSuperAdmin]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (error) {
     return (
