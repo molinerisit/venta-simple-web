@@ -45,7 +45,7 @@ export default function LandingSolucion() {
   return (
     <section
       ref={ref}
-      style={{ background: C.surface, padding: "120px 0 128px", borderTop: `1px solid ${C.border}` }}
+      style={{ background: C.surface, padding: "104px 0", borderTop: `1px solid ${C.border}` }}
     >
       <div className="l-container">
         <div className="l-solucion-grid">
@@ -56,45 +56,37 @@ export default function LandingSolucion() {
             transform: vis ? "none" : "translateY(18px)",
             transition: "opacity .55s ease, transform .55s ease",
           }}>
-            <div style={{ ...T.label, marginBottom: 18 }}>La solución</div>
+            <div style={{ ...T.label, marginBottom: 16 }}>La solución</div>
 
-            <h2 style={{
-              fontSize: "clamp(28px, 3.2vw, 42px)", fontWeight: 900,
-              letterSpacing: "-0.04em", lineHeight: 1.06,
-              color: C.text, margin: "0 0 24px",
-            }}>
+            <h2 style={{ ...T.h2, margin: "0 0 20px" }}>
               Tomá el control<br />de tu negocio.<br />
               <span style={{ color: C.orange }}>Sin errores, sin vueltas.</span>
             </h2>
 
-            <p style={{ fontSize: 16, color: C.text, fontWeight: 600, margin: "0 0 8px", lineHeight: 1.5 }}>
-              Sabés exactamente cuánto ganás — desde hoy.
-            </p>
-            <p style={{ ...T.body, maxWidth: 420, marginBottom: 44 }}>
+            <p style={{ ...T.body, maxWidth: 420, marginBottom: 40 }}>
               VentaSimple reemplaza el cuaderno, la calculadora y el caos.
               Lo instalás hoy y desde esa tarde cobrás diferente.
             </p>
 
             {/* Benefit bullets */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 18, marginBottom: 52 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 44 }}>
               {BENEFITS.map(({ Icon, label, bold, bg, color }, i) => (
                 <div
                   key={label}
                   style={{
-                    display: "flex", alignItems: "center", gap: 16,
+                    display: "flex", alignItems: "center", gap: 12,
                     opacity: vis ? 1 : 0,
                     transform: vis ? "none" : "translateX(-14px)",
                     transition: `opacity .45s ease ${0.15 + i * 0.1}s, transform .45s ease ${0.15 + i * 0.1}s`,
                   }}
                 >
                   <div style={{
-                    width: 44, height: 44, borderRadius: 12, flexShrink: 0,
+                    width: 36, height: 36, borderRadius: 9, flexShrink: 0,
                     background: bg, display: "grid", placeItems: "center",
-                    boxShadow: "0 2px 8px rgba(0,0,0,.06)",
                   }}>
-                    <Icon size={20} strokeWidth={1.8} style={{ color }} />
+                    <Icon size={16} strokeWidth={1.8} style={{ color }} />
                   </div>
-                  <span style={{ fontSize: 15, fontWeight: 600, color: C.text, lineHeight: 1.4 }}>
+                  <span style={{ fontSize: 14, fontWeight: 600, color: C.text, lineHeight: 1.4 }}>
                     {label} <strong style={{ fontWeight: 800, color: C.text }}>{bold}</strong>
                   </span>
                 </div>
@@ -105,7 +97,7 @@ export default function LandingSolucion() {
             <a href="/registro" className="l-solucion-cta">
               Quiero la prueba gratuita <ArrowRight size={16} />
             </a>
-            <p style={{ fontSize: 12, color: C.light, marginTop: 12, fontWeight: 500 }}>
+            <p style={{ fontSize: 12, color: C.light, marginTop: 10, fontWeight: 500 }}>
               7 días gratis. Sin tarjeta de crédito.
             </p>
           </div>
@@ -115,9 +107,9 @@ export default function LandingSolucion() {
             opacity: vis ? 1 : 0,
             transform: vis ? "none" : "translateX(22px)",
             transition: "opacity .6s ease .1s, transform .6s ease .1s",
-            borderRadius: 20,
-            border: `1.5px solid ${C.border}`,
-            boxShadow: "0 32px 72px rgba(0,0,0,.12), 0 8px 24px rgba(0,0,0,.07)",
+            borderRadius: 16,
+            border: `1px solid ${C.border}`,
+            boxShadow: "0 20px 48px rgba(0,0,0,.09), 0 4px 14px rgba(0,0,0,.05)",
             overflow: "hidden",
           }}>
 
@@ -125,7 +117,7 @@ export default function LandingSolucion() {
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
               <div style={{
                 background: "linear-gradient(135deg, #FEE2E2, #FEF2F2)",
-                padding: "16px 20px",
+                padding: "12px 16px",
                 borderRight: "2px solid #FCA5A5",
                 borderBottom: "2px solid #FCA5A5",
               }}>
@@ -138,7 +130,7 @@ export default function LandingSolucion() {
               </div>
               <div style={{
                 background: "linear-gradient(135deg, #A7F3D0, #D1FAE5)",
-                padding: "16px 20px",
+                padding: "12px 16px",
                 borderBottom: `2px solid #6EE7B7`,
               }}>
                 <span style={{
@@ -159,7 +151,7 @@ export default function LandingSolucion() {
                 {/* Before */}
                 <div style={{
                   background: i % 2 === 0 ? "#FFFBFB" : "#FFF5F5",
-                  padding: "16px 18px", borderRight: "2px solid #FEE2E2",
+                  padding: "12px 14px", borderRight: "2px solid #FEE2E2",
                   display: "flex", gap: 11, alignItems: "flex-start",
                 }}>
                   <div style={{
@@ -183,8 +175,8 @@ export default function LandingSolucion() {
                 {/* After */}
                 <div style={{
                   background: i % 2 === 0 ? "#F0FDF8" : "#ECFDF5",
-                  padding: "16px 18px",
-                  display: "flex", gap: 11, alignItems: "flex-start",
+                  padding: "12px 14px",
+                  display: "flex", gap: 10, alignItems: "flex-start",
                 }}>
                   <div style={{
                     width: 26, height: 26, borderRadius: "50%", flexShrink: 0,
@@ -209,18 +201,17 @@ export default function LandingSolucion() {
             {/* Social proof footer */}
             <div style={{
               borderTop: `1px solid ${C.border}`,
-              background: "linear-gradient(135deg, #F8F7F4, #F1F0EC)",
-              padding: "14px 22px",
+              background: C.bg,
+              padding: "11px 18px",
               display: "flex", alignItems: "center", gap: 10,
             }}>
               <div style={{
-                width: 28, height: 28, borderRadius: "50%",
+                width: 22, height: 22, borderRadius: "50%",
                 background: C.blueBg, display: "grid", placeItems: "center", flexShrink: 0,
-                boxShadow: "0 2px 6px rgba(30,58,138,.12)",
               }}>
-                <Users size={13} strokeWidth={1.8} style={{ color: C.blue }} />
+                <Users size={11} strokeWidth={1.8} style={{ color: C.blue }} />
               </div>
-              <span style={{ fontSize: 12, color: C.muted, fontWeight: 600 }}>
+              <span style={{ fontSize: 11.5, color: C.muted, fontWeight: 500 }}>
                 +500 negocios en Argentina ya venden con VentaSimple
               </span>
             </div>
