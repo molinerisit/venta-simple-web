@@ -8,6 +8,7 @@ import { TrendingUp, Users, Package, ShoppingCart, Shield, Wifi, AlertCircle, Al
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { StatCard, Skeleton, PageHeader } from "@/components/dashboard/DashboardShell";
 import DashboardEmptyState from "@/components/dashboard/DashboardEmptyState";
+import OnboardingChat from "@/components/dashboard/OnboardingChat";
 
 function fmt(n: number) {
   return new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(n);
@@ -251,6 +252,8 @@ export default function DashboardPage() {
           )}
         </>
       )}
+
+      <OnboardingChat />
     </div>
   );
 }

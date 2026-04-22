@@ -267,6 +267,7 @@ export default function Sidebar({ mobileOpen = false, onClose, isMobileLayout = 
             <Link
               key={href}
               href={href}
+              id={href === "/cuenta" ? "sidebar-nav-cuenta" : undefined}
               onClick={isMobileLayout ? onClose : undefined}
               className={active ? "" : "vs-sidebar-item"}
               style={{
