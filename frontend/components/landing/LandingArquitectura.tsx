@@ -58,7 +58,7 @@ export default function LandingArquitectura() {
             Todo lo que necesitás para vender<br />y controlar tu negocio.
           </h2>
           <p style={{ fontSize: 16, color: C.muted, fontWeight: 400, margin: 0, lineHeight: 1.6 }}>
-            Diseñado para trabajar junto y simplificar tu día a día.
+            Vendé en el local, controlá desde donde estés.
           </p>
         </div>
 
