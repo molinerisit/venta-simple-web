@@ -24,20 +24,20 @@ export default function LandingTestimonials() {
     <section style={{ background: C.bg, padding: "112px 0" }}>
       <div className="l-container">
 
-        <div style={{ textAlign: "center", marginBottom: 56 }}>
+        <div style={{ textAlign: "center", marginBottom: 36 }}>
           <div style={{
-            display: "inline-flex", alignItems: "center", gap: 10,
+            display: "inline-flex", alignItems: "center", gap: 8,
             background: C.blueBg, border: "1px solid #BFDBFE",
-            borderRadius: 99, padding: "10px 22px", marginBottom: 32,
+            borderRadius: 99, padding: "7px 16px", marginBottom: 20,
           }}>
-            <span style={{ fontSize: 22 }}>🏪</span>
-            <span style={{ fontSize: 14, fontWeight: 700, color: C.blue }}>
+            <span style={{ fontSize: 16 }}>🏪</span>
+            <span style={{ fontSize: 13, fontWeight: 700, color: C.blue }}>
               +500 negocios ya usan VentaSimple todos los días
             </span>
           </div>
-          <div style={{ ...T.label, marginBottom: 14 }}>Testimonios</div>
-          <h2 style={{ ...T.h2, margin: "0 0 12px" }}>Negocios reales,<br />resultados reales.</h2>
-          <div style={{ display: "flex", gap: 2, alignItems: "center", justifyContent: "center", marginTop: 12 }}>
+          <div style={{ ...T.label, marginBottom: 10 }}>Testimonios</div>
+          <h2 style={{ ...T.h2, margin: "0 0 10px" }}>Negocios reales,<br />resultados reales.</h2>
+          <div style={{ display: "flex", gap: 2, alignItems: "center", justifyContent: "center", marginTop: 10 }}>
             {[...Array(5)].map((_, i) => (
               <Star key={i} size={16} fill="#F59E0B" style={{ color: "#F59E0B" }} />
             ))}
@@ -49,7 +49,7 @@ export default function LandingTestimonials() {
           {TESTIMONIALS.map(t => (
             <div key={t.name} className="l-testimonial-card" style={{
               background: C.surface, border: `1px solid ${C.border}`,
-              borderRadius: 16, padding: "28px 26px 22px",
+              borderRadius: 14, padding: "20px 20px 16px",
               display: "flex", flexDirection: "column",
               boxShadow: "0 1px 3px rgba(26,24,22,.04)",
               transition: "box-shadow .2s, transform .2s",
@@ -61,8 +61,8 @@ export default function LandingTestimonials() {
               </div>
 
               <p style={{
-                fontSize: 17, fontWeight: 800, lineHeight: 1.35,
-                letterSpacing: "-0.02em", color: C.text, margin: "0 0 10px",
+                fontSize: 15, fontWeight: 800, lineHeight: 1.35,
+                letterSpacing: "-0.02em", color: C.text, margin: "0 0 8px",
               }}>
                 &ldquo;{t.title}&rdquo;
               </p>

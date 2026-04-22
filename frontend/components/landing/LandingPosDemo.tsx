@@ -3,6 +3,12 @@ import { useEffect, useRef, useState } from "react";
 import { Usb, Receipt, Smile } from "lucide-react";
 import { C, T } from "./tokens";
 
+const TRUST = [
+  { Icon: Usb,     label: "Compatible con lector USB" },
+  { Icon: Receipt, label: "Impresora térmica" },
+  { Icon: Smile,   label: "Fácil de usar" },
+] as const;
+
 const PRODS = [
   { name: "Coca-Cola 1.5L",  price: "$950",   amount: 950  },
   { name: "Galletitas Oreo", price: "$480",   amount: 480  },
@@ -20,7 +26,15 @@ const PAY_OPTS = ["Efectivo", "Débito", "Crédito", "Mercado Pago QR"];
 export default function LandingPosDemo() {
   const [step, setStep]   = useState<Step>("idle");
   const [cartN, setCartN] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const timers            = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   const at = (fn: () => void, ms: number) =>
     timers.current.push(setTimeout(fn, ms));
@@ -53,17 +67,208 @@ export default function LandingPosDemo() {
   const total     = cartN > 0 ? fmt(SUMS[cartN - 1]) : "$0";
   const newRowIdx = step === "add1" ? 0 : step === "add2" ? 1 : step === "add3" ? 2 : -1;
 
+  /* ─── Mobile layout ─── */
+  if (isMobile) {
+    return (
+      <section style={{ background: C.bgAlt, padding: "60px 0", borderTop: `1px solid ${C.border}` }}>
+        <div className="l-container">
+
+          {/* Header */}
+          <div style={{ textAlign: "center", marginBottom: 24 }}>
+            <div style={{ ...T.label, marginBottom: 10 }}>En acción</div>
+            <h2 style={{ ...T.h2, margin: "0 0 8px" }}>Cobrás en menos de 10 segundos.</h2>
+            <p style={{ fontSize: 14, color: C.muted, fontWeight: 600, margin: "0 0 4px" }}>
+              Menos clics, menos espera, menos errores en caja.
+            </p>
+          </div>
+
+          {/* Caja frame — sin sidebar */}
+          <div style={{
+            borderRadius: 14, overflow: "hidden",
+            border: "1px solid #CBD5E1",
+            boxShadow: "0 12px 40px rgba(0,0,0,.12)",
+          }}>
+            {/* Title bar */}
+            <div style={{
+              background: "#1E293B", padding: "10px 14px",
+              display: "flex", alignItems: "center", justifyContent: "space-between",
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ fontSize: 13, fontWeight: 700, color: "#fff", letterSpacing: "-0.01em" }}>
+                  Punto de Venta
+                </span>
+                <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                  <span className="sync-dot" />
+                  <span style={{ fontSize: 9, color: "#4ADE80", fontWeight: 700 }}>Caja abierta</span>
+                </div>
+              </div>
+              <div style={{ display: "flex", gap: 5 }}>
+                {["#EF4444","#F59E0B","#22C55E"].map((bg, i) => (
+                  <div key={i} style={{ width: 10, height: 10, borderRadius: "50%", background: bg, opacity: .7 }} />
+                ))}
+              </div>
+            </div>
+
+            {/* Body: scanner + cart + payment — altura fija para que no cambie de tamaño */}
+            <div style={{ background: "#F8FAFC", display: "flex", flexDirection: "column", height: 420 }}>
+
+              {/* Scanner */}
+              <div style={{ padding: "14px 14px 0", position: "relative" }}>
+                <div style={{
+                  display: "flex", alignItems: "center", gap: 10, background: "#fff",
+                  border: `2px solid ${scanning ? "#2563EB" : "#E2E8F0"}`,
+                  borderRadius: 10, padding: "11px 14px",
+                  boxShadow: scanning ? "0 0 0 3px rgba(37,99,235,.12)" : "0 1px 3px rgba(0,0,0,.05)",
+                  transition: "border-color .18s, box-shadow .18s",
+                }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke={scanning ? "#2563EB" : "#94A3B8"} strokeWidth="2.5" style={{ flexShrink: 0, transition: "stroke .18s" }}>
+                    <path d="M3 5v14M7 5v14M11 5v14M15 5v14M19 5v14"/>
+                  </svg>
+                  <span style={{
+                    flex: 1, fontSize: 14,
+                    color: scanning ? "#2563EB" : "#94A3B8",
+                    fontWeight: scanning ? 600 : 400,
+                    transition: "color .18s",
+                  }}>
+                    {scanning ? "Escaneando código de barras..." : "Listo para escanear..."}
+                  </span>
+                  {scanning && (
+                    <span style={{ fontSize: 9, fontWeight: 800, color: "#2563EB", letterSpacing: "0.05em", textTransform: "uppercase" }}>
+                      SCAN
+                    </span>
+                  )}
+                </div>
+                {scanning && (
+                  <div key={step} className="pos-laser" style={{
+                    position: "absolute", bottom: -1, left: 26, right: 26, height: 2,
+                    background: "linear-gradient(90deg, transparent, #2563EB 35%, #60A5FA 50%, #2563EB 65%, transparent)",
+                    borderRadius: 1,
+                  }} />
+                )}
+              </div>
+
+              {/* Cart — flex:1 para ocupar el espacio restante sin cambiar el frame */}
+              <div style={{
+                margin: "12px 14px", background: "#fff", borderRadius: 10,
+                border: "1px solid #E2E8F0", overflow: "hidden",
+                boxShadow: "0 2px 8px rgba(0,0,0,.04)",
+                position: "relative", flex: 1, minHeight: 0,
+              }}>
+                <div style={{
+                  display: "grid", gridTemplateColumns: "1fr 72px",
+                  padding: "9px 14px", borderBottom: "1px solid #E2E8F0", background: "#F8FAFC",
+                }}>
+                  {["Producto", "Precio"].map(h => (
+                    <span key={h} style={{ fontSize: 10, fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.06em" }}>{h}</span>
+                  ))}
+                </div>
+                {cartN === 0 ? (
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 100, gap: 8 }}>
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#CBD5E1" strokeWidth="1.5">
+                      <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                    </svg>
+                    <span style={{ fontSize: 13, color: "#94A3B8" }}>Carrito vacío</span>
+                  </div>
+                ) : (
+                  PRODS.slice(0, cartN).map((p, i) => (
+                    <div key={p.name}
+                      className={i === newRowIdx ? "pos-row-new" : undefined}
+                      style={{
+                        display: "grid", gridTemplateColumns: "1fr 72px",
+                        padding: "12px 14px", borderBottom: "1px solid #F1F5F9", alignItems: "center",
+                        background: i === newRowIdx ? "#EFF6FF" : "transparent",
+                        transition: "background .8s ease",
+                      }}>
+                      <span style={{ fontSize: 14, fontWeight: 600, color: "#1E293B" }}>{p.name}</span>
+                      <span style={{ fontSize: 14, fontWeight: 700, color: "#1E293B", textAlign: "right" }}>{p.price}</span>
+                    </div>
+                  ))
+                )}
+
+                {/* Success overlay */}
+                {showOk && (
+                  <div className="pos-success" style={{
+                    position: "absolute", inset: 0,
+                    backdropFilter: "blur(2px)",
+                    background: "rgba(5,150,105,.88)",
+                    display: "flex", flexDirection: "column",
+                    alignItems: "center", justifyContent: "center", gap: 12,
+                  }}>
+                    <div style={{
+                      width: 56, height: 56, borderRadius: "50%", background: "#fff",
+                      display: "grid", placeItems: "center",
+                      boxShadow: "0 0 0 10px rgba(255,255,255,.15)",
+                    }}>
+                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="3">
+                        <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </div>
+                    <div style={{ textAlign: "center" }}>
+                      <div style={{ fontSize: 14, fontWeight: 700, color: "rgba(255,255,255,.8)", marginBottom: 4 }}>¡Venta registrada!</div>
+                      <div style={{ fontSize: 30, fontWeight: 900, color: "#fff", letterSpacing: "-0.05em" }}>{fmt(SUMS[2])}</div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Payment footer */}
+              <div style={{
+                margin: "0 14px 14px", background: "#fff", borderRadius: 10,
+                border: "1px solid #E2E8F0", padding: "14px",
+                display: "flex", flexDirection: "column", gap: 10,
+              }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <span style={{ fontSize: 13, color: "#9CA3AF" }}>Efectivo</span>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 12 }}>
+                    <span style={{ fontSize: 14, fontWeight: 800, color: "#111827" }}>Total</span>
+                    <span style={{ fontSize: 22, fontWeight: 900, color: "#111827", letterSpacing: "-0.04em" }}>{total}</span>
+                  </div>
+                </div>
+                <button style={{
+                  padding: "14px 0", borderRadius: 10, border: "none",
+                  background: showOk ? "#059669" : pressing ? "#1D4ED8" : "#2563EB",
+                  color: "#fff", fontWeight: 800, fontSize: 15,
+                  cursor: "default", letterSpacing: "-0.01em", width: "100%",
+                  transform: pressing ? "scale(0.97)" : "scale(1)",
+                  transition: "all .2s",
+                  boxShadow: showOk ? "0 4px 14px rgba(5,150,105,.4)" : "0 4px 14px rgba(37,99,235,.35)",
+                }}>
+                  {showOk ? "✓ Venta confirmada" : "Confirmar venta"}
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+          {/* Trust strip */}
+          <div style={{ display: "flex", justifyContent: "center", gap: 20, flexWrap: "wrap", marginTop: 16 }}>
+            {TRUST.map(({ Icon, label }) => (
+              <div key={label} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: C.light, fontWeight: 500 }}>
+                <Icon size={13} strokeWidth={1.8} style={{ color: C.blue, flexShrink: 0 }} />
+                {label}
+              </div>
+            ))}
+          </div>
+
+        </div>
+      </section>
+    );
+  }
+
+  /* ─── Desktop layout ─── */
   return (
     <section style={{ background: C.bgAlt, padding: "80px 0", borderTop: `1px solid ${C.border}` }}>
       <div className="l-container" style={{ maxWidth: 960 }}>
 
         {/* Header */}
-        <div style={{ textAlign: "center", marginBottom: 40 }}>
-          <div style={{ ...T.label, marginBottom: 12 }}>En acción</div>
-          <h2 style={{ ...T.h2, margin: "0 0 10px" }}>
+        <div style={{ textAlign: "center", marginBottom: 28 }}>
+          <div style={{ ...T.label, marginBottom: 10 }}>En acción</div>
+          <h2 style={{ ...T.h2, margin: "0 0 8px" }}>
             Cobrás en menos de 10 segundos.
           </h2>
-          <p style={{ fontSize: 16, color: C.muted, fontWeight: 600, margin: "0 0 4px" }}>
+          <p style={{ fontSize: 14, color: C.muted, fontWeight: 600, margin: "0 0 4px" }}>
             Menos clics, menos espera, menos errores en caja.
           </p>
           <p style={{ fontSize: 13, color: C.light, fontWeight: 400, margin: 0 }}>

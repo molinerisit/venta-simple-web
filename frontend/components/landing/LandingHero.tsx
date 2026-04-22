@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import {
-  ArrowRight, Check, Wifi, Smartphone, RefreshCw,
+  ArrowRight, Check, Wifi, Smartphone, RefreshCw, Shield,
   LayoutDashboard, Package, ShoppingCart, BarChart2, CreditCard,
 } from "lucide-react";
 import { C } from "./tokens";
@@ -178,13 +178,147 @@ function PCVentasScreen({ rows, total }: { rows: VentasRow[]; total: number }) {
   );
 }
 
-function PhoneDashboard({ total, tickets }: { total: number; tickets: number }) {
+function MobileVentasScreen({ rows, total }: { rows: VentasRow[]; total: number }) {
+  return (
+    <div style={{ padding: "16px", display: "flex", flexDirection: "column", gap: 12, height: "100%", overflow: "hidden" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div style={{ fontSize: 15, fontWeight: 800, color: "#111827" }}>Ventas de hoy</div>
+        <LiveBadge />
+      </div>
+      <div style={{ background: "#fff", border: "1px solid #E9EAEC", borderRadius: 10, overflow: "hidden", flex: 1, minHeight: 0 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "50px 1fr 72px", padding: "8px 14px", borderBottom: "1px solid #F1F3F5", gap: 8 }}>
+          {["Hora", "Producto", "Monto"].map(h => (
+            <span key={h} style={{ fontSize: 11, fontWeight: 700, color: "#9CA3AF", textTransform: "uppercase", letterSpacing: "0.04em" }}>{h}</span>
+          ))}
+        </div>
+        {rows.map((r, i) => (
+          <div key={r.key} className={r.isNew ? "mockup-row-new" : undefined} style={{
+            display: "grid", gridTemplateColumns: "50px 1fr 72px",
+            padding: "11px 14px", gap: 8, alignItems: "center",
+            borderBottom: i < rows.length - 1 ? "1px solid #F8F9FB" : "none",
+            background: r.isNew ? "#F0FDF4" : "transparent",
+            transition: "background 1.4s ease",
+          }}>
+            <span style={{ fontSize: 12, color: "#9CA3AF" }}>{r.time}</span>
+            <span style={{ fontSize: 13.5, color: "#374151", fontWeight: r.isNew ? 700 : 500 }}>{r.prod}</span>
+            <span style={{ fontSize: 13.5, fontWeight: 700, color: "#111827", textAlign: "right" }}>{r.price}</span>
+          </div>
+        ))}
+      </div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "#1E3A8A", borderRadius: 10, padding: "13px 16px" }}>
+        <span style={{ fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,.7)" }}>Total del día</span>
+        <span style={{ fontSize: 20, fontWeight: 900, color: "#fff", letterSpacing: "-0.04em" }}>${total.toLocaleString("es-AR")}</span>
+      </div>
+    </div>
+  );
+}
+
+function MobileDashboardScreen({ total, tickets, sales }: { total: number; tickets: number; sales: Sale[] }) {
+  return (
+    <div style={{ padding: "16px", display: "flex", flexDirection: "column", gap: 10, height: "100%", overflow: "hidden" }}>
+      <div>
+        <div style={{ fontSize: 11, fontWeight: 600, color: "#9CA3AF" }}>Hoy, jueves 17 de abril</div>
+        <div style={{ fontSize: 16, fontWeight: 800, color: "#111827", letterSpacing: "-0.02em", marginTop: 2 }}>Buenos días, Martín</div>
+      </div>
+      <div style={{ background: "#1E3A8A", borderRadius: 10, padding: "14px 16px" }}>
+        <div style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,.55)", marginBottom: 4 }}>Ventas hoy</div>
+        <div style={{ fontSize: 26, fontWeight: 900, color: "#fff", letterSpacing: "-0.04em", lineHeight: 1 }}>${total.toLocaleString("es-AR")}</div>
+        <div style={{ fontSize: 11, color: "#4ADE80", marginTop: 5, fontWeight: 700 }}>+12% vs ayer</div>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
+        <div style={{ background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: 10, padding: "10px 12px" }}>
+          <div style={{ fontSize: 10, color: "#16A34A", fontWeight: 600 }}>Tickets</div>
+          <div style={{ fontSize: 18, fontWeight: 900, color: "#15803D", letterSpacing: "-0.03em" }}>{tickets}</div>
+        </div>
+        <div style={{ background: "#FFFBEB", border: "1px solid #FDE68A", borderRadius: 10, padding: "10px 12px" }}>
+          <div style={{ fontSize: 10, color: "#D97706", fontWeight: 600 }}>Stock ⚠</div>
+          <div style={{ fontSize: 18, fontWeight: 900, color: "#D97706", letterSpacing: "-0.03em" }}>3</div>
+        </div>
+        <div style={{ background: "#EFF6FF", border: "1px solid #BFDBFE", borderRadius: 10, padding: "10px 12px" }}>
+          <div style={{ fontSize: 10, color: "#1D4ED8", fontWeight: 600 }}>Prom/día</div>
+          <div style={{ fontSize: 18, fontWeight: 900, color: "#1D4ED8", letterSpacing: "-0.03em" }}>$124K</div>
+        </div>
+      </div>
+      <div style={{ flex: 1, background: "#fff", border: "1px solid #E9EAEC", borderRadius: 10, overflow: "hidden", minHeight: 0 }}>
+        <div style={{ padding: "9px 14px", borderBottom: "1px solid #F1F3F5", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <span style={{ fontSize: 12, fontWeight: 700, color: "#111827" }}>Últimas ventas</span>
+          <LiveBadge />
+        </div>
+        {sales.slice(0, 4).map((s, i) => (
+          <div key={s.key} className={s.isNew ? "mockup-row-new" : undefined} style={{
+            display: "flex", justifyContent: "space-between", padding: "10px 14px",
+            borderBottom: i < 3 ? "1px solid #F8F9FB" : "none",
+            background: s.isNew ? "#F0FDF4" : "transparent",
+            transition: "background 1.4s ease",
+          }}>
+            <span style={{ fontSize: 13, color: "#6B7280" }}>{s.prod}</span>
+            <span style={{ fontSize: 13, fontWeight: 700, color: "#111827" }}>{s.price}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function MobileMetricasScreen() {
+  const days     = ["L", "M", "X", "J", "V", "S", "D"];
+  const lineVals = [42, 55, 48, 68, 72, 85, 95];
+  const barVals  = [55, 70, 45, 80, 65, 100, 35];
+  const W = 300, H = 70;
+  const max = Math.max(...lineVals);
+  const pts = lineVals.map((v, i) => ({ x: (i / (lineVals.length - 1)) * W, y: H - (v / max) * (H - 8) - 4 }));
+  const polyline = pts.map(p => `${p.x},${p.y}`).join(" ");
+  return (
+    <div style={{ padding: "16px", display: "flex", flexDirection: "column", gap: 12, height: "100%", overflow: "hidden" }}>
+      <div style={{ fontSize: 15, fontWeight: 800, color: "#111827" }}>Esta semana</div>
+      <div style={{ background: "#fff", border: "1px solid #E9EAEC", borderRadius: 10, padding: "14px" }}>
+        <div style={{ fontSize: 11, fontWeight: 600, color: "#9CA3AF", marginBottom: 8 }}>Tendencia de ventas ↑</div>
+        <svg width="100%" height={H} viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" style={{ overflow: "visible" }}>
+          <defs>
+            <linearGradient id="mg-mob" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#1E3A8A" stopOpacity="0.18" />
+              <stop offset="100%" stopColor="#1E3A8A" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          <polygon points={`0,${H} ${polyline} ${W},${H}`} fill="url(#mg-mob)" />
+          <polyline points={polyline} fill="none" stroke="#1E3A8A" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="line-chart-path" />
+        </svg>
+        <div style={{ display: "flex", justifyContent: "space-between", marginTop: 6 }}>
+          {days.map(d => <span key={d} style={{ fontSize: 11, color: "#C4C9D4", fontWeight: 500 }}>{d}</span>)}
+        </div>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+        <div style={{ background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: 10, padding: "12px 14px" }}>
+          <div style={{ fontSize: 11, color: "#16A34A", fontWeight: 600 }}>Mejor día</div>
+          <div style={{ fontSize: 20, fontWeight: 900, color: "#15803D", letterSpacing: "-0.03em" }}>$189K</div>
+        </div>
+        <div style={{ background: "#EFF6FF", border: "1px solid #BFDBFE", borderRadius: 10, padding: "12px 14px" }}>
+          <div style={{ fontSize: 11, color: "#1D4ED8", fontWeight: 600 }}>Promedio/día</div>
+          <div style={{ fontSize: 20, fontWeight: 900, color: "#1D4ED8", letterSpacing: "-0.03em" }}>$124K</div>
+        </div>
+      </div>
+      <div style={{ flex: 1, background: "#fff", border: "1px solid #E9EAEC", borderRadius: 10, padding: "12px 14px", display: "flex", flexDirection: "column", gap: 8, minHeight: 0 }}>
+        <div style={{ fontSize: 13, fontWeight: 700, color: "#111827" }}>Ventas por día</div>
+        <div style={{ flex: 1, display: "flex", alignItems: "flex-end", gap: 5, minHeight: 0 }}>
+          {barVals.map((v, i) => (
+            <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
+              <div style={{ width: "100%", borderRadius: "3px 3px 0 0", background: days[i] === "S" ? "#1E3A8A" : "#DBEAFE", height: `${v * 0.52}px` }} />
+              <span style={{ fontSize: 10, color: days[i] === "S" ? "#1E3A8A" : "#9CA3AF", fontWeight: days[i] === "S" ? 700 : 500 }}>{days[i]}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PhoneDashboard({ total, tickets, live = true }: { total: number; tickets: number; live?: boolean }) {
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
       <div style={{ padding: "11px 11px 8px", display: "flex", flexDirection: "column", gap: 8 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <div style={{ fontSize: 8.5, fontWeight: 600, color: "#9CA3AF" }}>jue 17 de abril</div>
-          <LiveBadge />
+          {live && <LiveBadge />}
         </div>
 
         <div style={{ background: "#1E3A8A", borderRadius: 9, padding: "11px 12px" }}>
@@ -293,8 +427,118 @@ export default function LandingHero() {
     return () => clearTimeout(t);
   }, [total]);
 
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 900);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  if (isMobile) {
+    return (
+      <section style={{ background: C.heroBg, padding: "28px 0 40px" }}>
+        <div className="l-container">
+
+          {/* Badge */}
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 7, marginBottom: 16, padding: "4px 12px 4px 9px", borderRadius: 99, border: "1px solid rgba(255,255,255,.13)" }}>
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#22C55E", flexShrink: 0 }} />
+            <span style={{ fontSize: 11.5, color: "rgba(255,255,255,.50)", fontWeight: 500 }}>+500 negocios usan VentaSimple</span>
+          </div>
+
+          {/* H1 — 3 líneas */}
+          <h1 style={{ fontSize: "clamp(34px, 9.5vw, 44px)", fontWeight: 900, lineHeight: 1.04, letterSpacing: "-0.03em", color: "#FFFFFF", margin: "0 0 14px" }}>
+            Tu negocio funcionando<br />rápido, ordenado y<br />
+            <span style={{ color: C.orange }}>bajo control.</span>
+          </h1>
+
+          {/* Subtítulo — una línea */}
+          <p style={{ fontSize: 15, lineHeight: 1.5, color: "rgba(255,255,255,.62)", margin: "0 0 22px" }}>
+            Vendé en tu PC. Controlá todo desde el celular.
+          </p>
+
+          {/* CTAs */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            <Link href="/registro" style={{
+              display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+              height: 54, borderRadius: 12, fontWeight: 800, fontSize: 16,
+              textDecoration: "none", background: C.orange, color: "#fff",
+              letterSpacing: "-0.01em",
+              boxShadow: "0 8px 28px rgba(249,115,22,.40)",
+            }}>
+              Probar gratis ahora
+              <ArrowRight size={16} strokeWidth={2.5} />
+            </Link>
+            <a href="#como-funciona" style={{
+              display: "flex", alignItems: "center", justifyContent: "center",
+              height: 48, borderRadius: 12, fontWeight: 600, fontSize: 15,
+              textDecoration: "none", color: "rgba(255,255,255,.80)",
+              border: "1.5px solid rgba(255,255,255,.22)",
+            }}>
+              Ver cómo funciona
+            </a>
+          </div>
+
+          {/* Social proof — debajo de ambos CTAs */}
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 14 }}>
+            <div style={{ display: "flex" }}>
+              {(["#1E40AF", "#065F46", "#7C3AED"] as const).map((bg, i) => (
+                <div key={i} style={{
+                  width: 26, height: 26, borderRadius: "50%", flexShrink: 0,
+                  background: bg, border: "2px solid rgba(255,255,255,.18)",
+                  marginLeft: i > 0 ? -7 : 0,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  fontSize: 9, fontWeight: 800, color: "#fff",
+                }}>
+                  {["M","L","A"][i]}
+                </div>
+              ))}
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <div style={{ display: "flex", gap: 1 }}>
+                {[0,1,2,3,4].map(i => (
+                  <svg key={i} width="11" height="11" viewBox="0 0 24 24" fill="#FBBF24" stroke="none">
+                    <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
+                  </svg>
+                ))}
+              </div>
+              <span style={{ fontSize: 11.5, color: "rgba(255,255,255,.50)", fontWeight: 500 }}>+500 negocios ya lo usan</span>
+            </div>
+          </div>
+
+          {/* Mockup con glow */}
+          <div style={{ position: "relative", display: "flex", justifyContent: "center", marginTop: 20 }}>
+            <div style={{
+              position: "absolute", top: "30%", left: "50%", transform: "translate(-50%, -50%)",
+              width: 340, height: 340,
+              background: "radial-gradient(circle, rgba(249,115,22,.15) 0%, transparent 65%)",
+              pointerEvents: "none",
+            }} />
+            <div style={{
+              position: "relative", zIndex: 1,
+              width: "94%",
+              background: "#111827", borderRadius: 24, padding: "13px 10px 11px",
+              boxShadow: "0 28px 60px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.09)",
+            }}>
+              <div style={{ width: 40, height: 4, borderRadius: 2, background: "#374151", margin: "0 auto 10px" }} />
+              <div style={{ background: "#F9FAFB", borderRadius: 15, overflow: "hidden" }}>
+                <PhoneDashboard total={124500} tickets={47} live={false} />
+              </div>
+            </div>
+          </div>
+
+          {/* Micro beneficio */}
+          <p style={{ fontSize: 12, color: "rgba(255,255,255,.35)", textAlign: "center", margin: "16px 0 0", fontWeight: 500 }}>
+            Cobrás en segundos — sin errores
+          </p>
+
+        </div>
+      </section>
+    );
+  }
+
   return (
-    <section style={{ background: C.heroBg, padding: "52px 0 60px" }}>
+    <section className="l-hero-section" style={{ background: C.heroBg, padding: "80px 0 80px", minHeight: "calc(100vh - 56px)", display: "flex", flexDirection: "column", justifyContent: "center" }}>
       <div className="l-container" style={{ position: "relative", zIndex: 1 }}>
         <div className="l-hero-grid">
 
@@ -302,8 +546,11 @@ export default function LandingHero() {
           <div>
             <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 18, padding: "5px 14px 5px 10px", borderRadius: 99, border: "1px solid rgba(255,255,255,.14)" }}>
               <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#22C55E", flexShrink: 0 }} />
-              <span style={{ fontSize: 12.5, color: "rgba(255,255,255,.58)", fontWeight: 500 }}>
+              <span className="l-hero-badge-full" style={{ fontSize: 12.5, color: "rgba(255,255,255,.58)", fontWeight: 500 }}>
                 +500 negocios en Argentina ya venden con VentaSimple
+              </span>
+              <span className="l-hero-badge-short" style={{ fontSize: 12.5, color: "rgba(255,255,255,.58)", fontWeight: 500 }}>
+                +500 negocios usan VentaSimple
               </span>
             </div>
 
@@ -313,26 +560,27 @@ export default function LandingHero() {
               <span style={{ color: C.orange }}>bajo control.</span>
             </h1>
 
-            <p style={{ fontSize: 16, lineHeight: 1.75, color: "rgba(255,255,255,.70)", maxWidth: 440, margin: "0 0 8px" }}>
-              Vendé en tu PC. Controlá todo desde el celular, en tiempo real.
+            <p className="l-hero-desc" style={{ fontSize: 16, lineHeight: 1.75, color: "rgba(255,255,255,.70)", maxWidth: 440, margin: "0 0 8px" }}>
+              Vendé en tu PC. Controlá todo desde el celular.
             </p>
-            <p style={{ fontSize: 14, lineHeight: 1.6, color: "rgba(255,255,255,.42)", maxWidth: 400, margin: "0 0 8px", fontStyle: "italic" }}>
+            <p className="l-hero-sub2" style={{ fontSize: 14, lineHeight: 1.6, color: "rgba(255,255,255,.42)", maxWidth: 400, margin: "0 0 8px", fontStyle: "italic" }}>
               Usado por kioscos, almacenes y ferreterías que dejaron de improvisar.
             </p>
-            <p style={{ fontSize: 13, lineHeight: 1.6, color: "rgba(255,255,255,.50)", maxWidth: 400, margin: "0 0 22px" }}>
+            <p className="l-hero-sub3" style={{ fontSize: 13, lineHeight: 1.6, color: "rgba(255,255,255,.50)", maxWidth: 400, margin: "0 0 22px" }}>
               Cobrás en segundos. Sabés lo que pasa en tu negocio.
             </p>
 
             <div className="l-hero-btns">
               <Link href="/registro" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 24px", borderRadius: 8, fontWeight: 800, fontSize: 14, textDecoration: "none", background: C.orange, color: "#fff", letterSpacing: "-0.01em" }}>
-                Empezar gratis — probalo en tu negocio
+                <span className="l-hero-cta-full">Empezar gratis — probalo en tu negocio</span>
+                <span className="l-hero-cta-short">Empezar gratis</span>
               </Link>
-              <a href="#como-funciona" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 18px", borderRadius: 8, fontWeight: 600, fontSize: 13, textDecoration: "none", color: "rgba(255,255,255,.80)", border: "1px solid rgba(255,255,255,.28)" }}>
+              <a href="#como-funciona" className="l-hero-btn-sec" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 18px", borderRadius: 8, fontWeight: 600, fontSize: 13, textDecoration: "none", color: "rgba(255,255,255,.80)", border: "1px solid rgba(255,255,255,.28)" }}>
                 Ver cómo funciona
               </a>
             </div>
 
-            <div style={{ display: "flex", gap: 28, flexWrap: "wrap" }}>
+            <div className="l-hero-bullets" style={{ display: "flex", gap: 28, flexWrap: "wrap" }}>
               {["Dejás de perder ventas por errores", "Sabés exactamente cuánto ganás"].map(t => (
                 <span key={t} style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 13, fontWeight: 500, color: "rgba(255,255,255,.62)" }}>
                   <Check size={12} strokeWidth={3} style={{ color: "#22C55E", flexShrink: 0 }} />
@@ -344,7 +592,7 @@ export default function LandingHero() {
 
           {/* Mockup PC + Phone */}
           <div className="l-hero-mockup" style={{ overflow: "visible" }}>
-            <div style={{ marginBottom: 10, textAlign: "center" }}>
+            <div className="l-hero-mockup-label" style={{ marginBottom: 10, textAlign: "center" }}>
               <span style={{ fontSize: 12, color: "rgba(255,255,255,.38)", fontWeight: 500 }}>Mirá tus ventas en tiempo real →</span>
             </div>
 
@@ -413,12 +661,13 @@ export default function LandingHero() {
               </div>
 
             </div>
+
           </div>
 
         </div>
 
         {/* Micro bloque */}
-        <div style={{ display: "flex", gap: 32, flexWrap: "wrap", justifyContent: "center", marginTop: 56, paddingTop: 40, borderTop: "1px solid rgba(255,255,255,.08)" }}>
+        <div className="l-hero-micro" style={{ gap: 32, flexWrap: "wrap", justifyContent: "center", marginTop: 72, paddingTop: 48, borderTop: "1px solid rgba(255,255,255,.08)" }}>
           {MICRO.map(({ icon: Icon, label }) => (
             <div key={label} style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <Icon size={16} style={{ color: "#60A5FA", flexShrink: 0 }} />

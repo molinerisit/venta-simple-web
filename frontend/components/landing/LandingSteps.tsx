@@ -75,16 +75,16 @@ export default function LandingSteps() {
 
         {/* Header */}
         <div style={{
-          textAlign: "center", marginBottom: 72,
+          textAlign: "center", marginBottom: 48,
           opacity: visible ? 1 : 0,
           transform: visible ? "none" : "translateY(14px)",
           transition: "opacity 0.5s ease, transform 0.5s ease",
         }}>
-          <div style={{ ...T.label, marginBottom: 14 }}>Así de simple</div>
-          <h2 style={{ ...T.h2, margin: "0 0 12px" }}>
+          <div style={{ ...T.label, marginBottom: 10 }}>Así de simple</div>
+          <h2 style={{ ...T.h2, margin: "0 0 10px" }}>
             Abrís. Escaneás. Cobrás.
           </h2>
-          <p style={{ fontSize: 16, color: C.muted, fontWeight: 500, margin: 0 }}>
+          <p style={{ fontSize: 15, color: C.muted, fontWeight: 500, margin: 0 }}>
             Sin manual. Sin técnico. En minutos.
           </p>
         </div>

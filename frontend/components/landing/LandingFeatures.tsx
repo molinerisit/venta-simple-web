@@ -169,12 +169,12 @@ export default function LandingFeatures() {
             borderRadius: 20, padding: "24px 28px",
             transition: "box-shadow .25s",
           }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 6 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 6 }}>
               <div style={{
-                width: 52, height: 52, borderRadius: 14, flexShrink: 0,
+                width: 40, height: 40, borderRadius: 11, flexShrink: 0,
                 background: "#009EE3", display: "grid", placeItems: "center",
               }}>
-                <Wallet size={26} strokeWidth={2} style={{ color: "#fff" }} />
+                <Wallet size={20} strokeWidth={2} style={{ color: "#fff" }} />
               </div>
               <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: "0.09em", textTransform: "uppercase" as const, color: C.orange }}>
                 Integración con Mercado Pago
@@ -278,7 +278,7 @@ export default function LandingFeatures() {
                   Base de datos
                 </span>
               </div>
-              <h3 style={{ fontSize: 20, fontWeight: 900, letterSpacing: "-0.03em", color: C.text, margin: "0 0 10px" }}>
+              <h3 style={{ fontSize: 17, fontWeight: 900, letterSpacing: "-0.03em", color: C.text, margin: "0 0 8px" }}>
                 No cargás productos.<br />Ya están.
               </h3>
               <p style={{ ...T.body, fontSize: 14, margin: "0 0 20px", lineHeight: 1.7 }}>
@@ -309,7 +309,7 @@ export default function LandingFeatures() {
                   Inteligencia artificial
                 </span>
               </div>
-              <h3 style={{ fontSize: 20, fontWeight: 900, letterSpacing: "-0.03em", color: C.text, margin: "0 0 10px" }}>
+              <h3 style={{ fontSize: 17, fontWeight: 900, letterSpacing: "-0.03em", color: C.text, margin: "0 0 8px" }}>
                 Sabés qué te hace<br />ganar más plata.
               </h3>
               <p style={{ ...T.body, fontSize: 14, margin: "0 0 20px", lineHeight: 1.7 }}>
@@ -332,7 +332,7 @@ export default function LandingFeatures() {
           }}>
             <div>
               <div style={{ ...T.label, color: "rgba(255,255,255,.3)", marginBottom: 12 }}>Actualizaciones</div>
-              <h3 style={{ fontSize: 22, fontWeight: 900, letterSpacing: "-0.03em", color: "#fff", margin: "0 0 10px" }}>
+              <h3 style={{ fontSize: 18, fontWeight: 900, letterSpacing: "-0.03em", color: "#fff", margin: "0 0 8px" }}>
                 En constante evolución
               </h3>
               <p style={{ fontSize: 14, lineHeight: 1.75, margin: 0 }}>

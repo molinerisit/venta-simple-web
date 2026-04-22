@@ -1,3 +1,5 @@
+"use client";
+import { useEffect, useState } from "react";
 import { C } from "./tokens";
 
 const STATS = [
@@ -22,10 +24,20 @@ const STATS = [
 ];
 
 export default function LandingStats() {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  if (isMobile) return null;
+
   return (
     <section style={{ background: C.heroBg, padding: "64px 0" }}>
       <div className="l-container">
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 0 }}>
+        <div className="l-stats-3col">
           {STATS.map((s, i) => (
             <div key={s.n} style={{
               textAlign: "center",
@@ -33,7 +45,7 @@ export default function LandingStats() {
               borderRight: i < STATS.length - 1 ? "1px solid rgba(255,255,255,.10)" : "none",
             }}>
               <div style={{
-                fontSize: s.accent ? "clamp(44px, 5.5vw, 68px)" : "clamp(36px, 4vw, 52px)",
+                fontSize: s.accent ? "clamp(32px, 3.8vw, 48px)" : "clamp(26px, 2.8vw, 38px)",
                 fontWeight: 900,
                 letterSpacing: "-0.05em",
                 color: s.accent ? C.orange : "#fff",
@@ -41,8 +53,8 @@ export default function LandingStats() {
               }}>
                 {s.n}
               </div>
-              <div style={{ fontSize: 14, color: "rgba(255,255,255,.75)", marginTop: 10, fontWeight: 700 }}>{s.sub}</div>
-              <div style={{ fontSize: 12, color: "rgba(255,255,255,.38)", marginTop: 5, fontWeight: 400, fontStyle: "italic" }}>{s.ctx}</div>
+              <div style={{ fontSize: 13, color: "rgba(255,255,255,.75)", marginTop: 8, fontWeight: 700 }}>{s.sub}</div>
+              <div style={{ fontSize: 11, color: "rgba(255,255,255,.38)", marginTop: 4, fontWeight: 400, fontStyle: "italic" }}>{s.ctx}</div>
             </div>
           ))}
         </div>

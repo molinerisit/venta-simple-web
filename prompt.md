@@ -1,228 +1,76 @@
-Actuá como un Senior Product Designer + Frontend UI Engineer especializado en landings SaaS de alta conversión.
+Actuá como Senior SaaS UI Designer.
 
-Tu tarea es rehacer la sección “Impacto real” de VentaSimple basándote en este concepto:
+Quiero mejorar visualmente las pantallas de Login y Signup para que se vean modernas, confiables y alineadas a un producto SaaS profesional.
 
-👉 Comparación visual fuerte tipo “SIN sistema vs CON VentaSimple”
-👉 Enfocada en impacto económico y operativo real
-👉 Mucho más visual, menos “tabla técnica”
+IMPORTANTE:
+
+* NO cambiar estructura funcional
+* NO agregar pasos extra
+* SOLO mejorar UI/UX visual y jerarquía
 
 ---
 
 OBJETIVO:
-
-Transformar la sección actual en un bloque que:
-
-* se entienda en 2 segundos
-* transmita pérdida vs ganancia claramente
-* tenga impacto visual fuerte
-* se sienta premium (nivel Stripe / Linear / Shopify)
-* deje de parecer un dashboard y pase a ser una comparación emocional
+Pasar de un formulario genérico a una experiencia moderna, clara y confiable.
 
 ---
 
-PROBLEMAS ACTUALES:
+HACÉ ESTO:
 
-* Las barras parecen UI → no generan impacto
-* Se siente técnico, no emocional
-* No transmite claramente la diferencia real
-* Falta jerarquía visual
-* Falta foco en dinero / tiempo perdido
+1. LOGO
 
----
+* reducir tamaño
+* ubicarlo con más aire arriba
+* evitar que domine la pantalla
 
-REDISEÑO OBLIGATORIO:
+2. CARD
 
-1. ELIMINAR BARRAS DE PROGRESO
+* eliminar borde gris
+* usar fondo blanco limpio
+* agregar sombra suave (elevación)
+* aumentar border-radius (12–16px)
+* mejorar padding interno
 
-❌ NO usar barras tipo dashboard
-❌ NO usar gráficos técnicos
+3. INPUTS
 
-👉 Reemplazar por bloques con números grandes
+* aumentar altura (mejor mobile feel)
+* bordes más suaves
+* estado focus con color de marca
+* tipografía más clara y legible
 
----
+4. BOTÓN PRINCIPAL
 
-2. ESTRUCTURA PRINCIPAL
+* cambiar a color naranja de marca
+* hacerlo más grande y dominante
+* agregar leve sombra/glow
+* mejorar estados hover/active
 
-Dos columnas claras:
+5. TEXTO
 
-IZQUIERDA (ROJO)
+* reducir texto innecesario
+* mantener solo lo esencial
+* mejorar jerarquía entre título y subtítulo
 
-* etiqueta: “SIN SISTEMA”
-* fondo rojo muy suave (tint)
-* iconos negativos (❌ o alertas)
+6. CONFIANZA
 
-DERECHA (VERDE)
+* agregar debajo del botón:
+  “Sin tarjeta • Configuración en 2 minutos”
+  o
+  “+500 negocios ya usan VentaSimple”
 
-* etiqueta: “CON VENTASIMPLE”
-* fondo verde suave
-* iconos positivos (✔)
+7. FONDO
 
-Ambas dentro de una card con:
+* reemplazar gris plano por:
 
-* bordes redondeados
-* sombra suave
-* padding generoso
-* sensación de “bloque importante”
-
----
-
-3. CONTENIDO (FORMATO)
-
-Cada fila debe ser un bloque visual con:
-
-* icono grande (izquierda)
-* texto descriptivo corto
-* número grande a la derecha (clave)
+  * blanco con leve gradiente
+    o
+  * azul muy suave tipo SaaS
+* evitar fondo muerto
 
 ---
 
-4. CONTENIDO EXACTO (USAR ESTO)
+RESULTADO:
+Pantallas más modernas, más limpias y más alineadas a un producto SaaS profesional que genera confianza y conversión.
 
-### IZQUIERDA (ROJO)
-
-Fila 1:
-Icono: usuarios / fila
-Texto:
-Fila / velocidad de cobro
-Los clientes esperan. La fila se hace más larga.
-Número:
-2–3 min
-por cliente
-
-Fila 2:
-Icono: calculadora
-Texto:
-Tiempo perdido al cerrar
-Cierre manual con calculadora
-Número:
-40 min
-cada día
-
-Fila 3:
-Icono: dinero
-Texto:
-Plata que se te va en sueldos
-Necesitás más gente en caja
-Número:
-2 personas
-doble sueldo
-
----
-
-### DERECHA (VERDE)
-
-Fila 1:
-Icono: rayo
-Texto:
-Fila / velocidad de cobro
-Cobrás rápido y la fila avanza
-Número:
-<30 seg
-por cliente
-
-Fila 2:
-Icono: check
-Texto:
-Tiempo para cerrar caja
-Todo automático, sin errores
-Número:
-5 min
-y listo
-
-Fila 3:
-Icono: usuario
-Texto:
-Plata que ahorrás en sueldos
-Con una sola persona alcanza
-Número:
-1 persona
-un sueldo ahorrado
-
----
-
-5. ELEMENTO CENTRAL (CLAVE)
-
-Agregar un elemento entre ambas columnas:
-
-* flecha → o círculo con ícono
-* que represente transformación
-
-Debe dejar claro:
-👉 esto → esto otro
-
----
-
-6. BLOQUE INFERIOR (MUY IMPORTANTE)
-
-Reemplazar el texto actual por:
-
-Bloque grande, centrado, con fondo verde suave:
-
-Título:
-Ahorrás el sueldo de una persona.
-
-Subtítulo:
-Todos los meses.
-
-Opcional:
-Agregar icono grande de dinero o crecimiento
-
----
-
-7. ESTILO VISUAL
-
-* números MUCHO más grandes (clave)
-* colores más contrastados (rojo vs verde)
-* tipografía clara y fuerte
-* spacing amplio
-* evitar look de dashboard
-* más look “landing de conversión”
-
----
-
-8. MICRO INTERACCIONES (SI APLICA)
-
-* hover en cada fila
-* leve elevación
-* transición suave
-* nada exagerado
-
----
-
-9. RESPONSIVE
-
-* en mobile: stack vertical
-* mantener comparación clara
-* no perder jerarquía
-
----
-
-10. REGLAS
-
-* NO usar barras de progreso
-* NO hacerlo técnico
-* NO parecer UI interna del sistema
-* SI parecer sección de venta fuerte
-
----
-
-ENTREGABLE:
-
-* código completo (HTML + CSS o React)
-* estructura clara
-* estilos aplicados
-* comentarios breves explicando decisiones clave
-
----
-
-PRIORIDAD:
-
-Impacto visual > exactitud técnica
-Claridad inmediata > detalle
-Conversión > estética genérica
-
----
-
-No describas lo que harías.
-
-IMPLEMENTALO directamente.
+NO explicar.
+Aplicar directamente los cambios.

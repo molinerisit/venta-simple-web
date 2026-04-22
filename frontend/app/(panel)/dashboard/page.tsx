@@ -19,8 +19,16 @@ export default function DashboardPage() {
   const [licenciaActiva, setLicenciaActiva] = useState(false);
   const [loading, setLoading]               = useState(true);
   const [error, setError]                   = useState(false);
+  const [isMobile, setIsMobile]             = useState(false);
   const user = typeof window !== "undefined" ? getUser() : null;
   const isSuperAdmin = user?.rol === "superadmin";
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   useEffect(() => {
     if (isSuperAdmin) {
@@ -56,7 +64,7 @@ export default function DashboardPage() {
         <PageHeader title="Dashboard" subtitle="Vista global del ecosistema VentaSimple" />
 
         {loading ? (
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 12 }}>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "1fr 1fr 1fr 1fr", gap: 12 }}>
             {[...Array(4)].map((_, i) => (
               <div key={i} style={{ background: "#fff", border: "1px solid #E9EAEC", borderRadius: 12, padding: "18px 20px", display: "flex", flexDirection: "column", gap: 14 }}>
                 <Skeleton h={11} w="60%" /><Skeleton h={26} w="70%" /><Skeleton h={12} w="40%" />
@@ -64,7 +72,7 @@ export default function DashboardPage() {
             ))}
           </div>
         ) : (
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 12 }}>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "1fr 1fr 1fr 1fr", gap: 12 }}>
             <StatCard title="Ventas globales 30d" value={adminStats ? fmt(adminStats.ventas_30d) : "—"} icon={TrendingUp} accent sub={`${adminStats?.cantidad_ventas_30d ?? 0} transacciones`} />
             <StatCard title="Clientes SaaS" value={adminStats?.total ?? "—"} icon={Users} sub={`${adminStats?.activos ?? 0} activos`} />
             <StatCard title="Online ahora" value={adminStats?.online ?? "—"} icon={Wifi} />
@@ -72,7 +80,7 @@ export default function DashboardPage() {
           </div>
         )}
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 12 }}>
           {[
             { href: "/admin",         icon: Shield, bg: "#EEF2FF", color: "#1E3A8A", title: "Gestionar clientes SaaS",    sub: "Features, planes, suspensión" },
             { href: "/instalaciones", icon: Wifi,   bg: "#DCFCE7", color: "#16A34A", title: "Instalaciones desktop", sub: "Heartbeats, acceso remoto" },
@@ -107,7 +115,7 @@ export default function DashboardPage() {
 
       {loading && (
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 12 }}>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "1fr 1fr 1fr 1fr", gap: 12 }}>
             {[...Array(4)].map((_, i) => (
               <div key={i} style={{ background: "#fff", border: "1px solid #E9EAEC", borderRadius: 12, padding: "18px 20px", display: "flex", flexDirection: "column", gap: 14 }}>
                 <Skeleton h={11} w="55%" /><Skeleton h={26} w="65%" /><Skeleton h={11} w="40%" />
@@ -126,14 +134,14 @@ export default function DashboardPage() {
 
       {!loading && metricas && !sinDatos && (
         <>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 12 }}>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "1fr 1fr 1fr 1fr", gap: 12 }}>
             <StatCard title="Ventas" value={fmt(metricas.ventas.total)} icon={TrendingUp} accent sub={`${metricas.ventas.cantidad} operaciones`} />
             <StatCard title="Ticket promedio" value={fmt(metricas.ventas.ticket_promedio)} icon={ShoppingCart} sub="por operación" />
             <StatCard title="Productos" value={metricas.totales?.total_productos ?? "—"} icon={Package} sub="en catálogo" />
             <StatCard title="Clientes" value={metricas.totales?.total_clientes ?? "—"} icon={Users} sub="registrados" />
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: 12, alignItems: "flex-start" }}>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 320px", gap: 12, alignItems: "flex-start" }}>
             {/* Chart */}
             <div style={{ background: "#fff", border: "1px solid #E9EAEC", borderRadius: 12, padding: "18px 20px", boxShadow: "0 1px 3px rgba(0,0,0,.04)" }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>

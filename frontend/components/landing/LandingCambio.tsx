@@ -53,13 +53,13 @@ export default function LandingCambio() {
 
           {/* Header */}
           <div style={{
-            maxWidth: 560, marginBottom: 44,
+            maxWidth: 560, marginBottom: 32,
             opacity: impactReveal.visible ? 1 : 0,
             transform: impactReveal.visible ? "none" : "translateY(16px)",
             transition: "opacity .5s ease, transform .5s ease",
           }}>
-            <div style={{ ...T.label, marginBottom: 14 }}>Impacto real</div>
-            <h2 style={{ ...T.h2, margin: "0 0 14px" }}>
+            <div style={{ ...T.label, marginBottom: 10 }}>Impacto real</div>
+            <h2 style={{ ...T.h2, margin: "0 0 10px" }}>
               Así cambia tu negocio<br />en la primera semana.
             </h2>
             <p style={{ ...T.body, margin: 0 }}>
@@ -74,19 +74,16 @@ export default function LandingCambio() {
             transform: impactReveal.visible ? "none" : "translateY(20px)",
             transition: "opacity .6s ease .1s, transform .6s ease .1s",
           }}>
-            <div style={{
-              display: "grid", gridTemplateColumns: "1fr 1fr",
-              borderRadius: 18,
+            <div className="l-cambio-main-grid" style={{
               border: `1px solid ${C.border}`,
               boxShadow: "0 24px 60px rgba(0,0,0,.09), 0 4px 16px rgba(0,0,0,.05)",
-              overflow: "hidden",
             }}>
 
               {/* ── Left: SIN SISTEMA ── */}
               <div style={{ background: "#FFF5F5", borderRight: "1px solid #FEE2E2" }}>
                 {/* Column header */}
                 <div style={{
-                  padding: "18px 24px 16px",
+                  padding: "14px 20px 12px",
                   borderBottom: "1px solid #FEE2E2",
                   background: "#FEF2F2",
                 }}>
@@ -99,27 +96,27 @@ export default function LandingCambio() {
                 {IMPACT.map(({ IconL, before }, i) => (
                   <div key={i} style={{
                     display: "flex", alignItems: "center", justifyContent: "space-between",
-                    padding: "20px 24px",
+                    padding: "14px 20px",
                     borderBottom: i < IMPACT.length - 1 ? "1px solid #FEE2E2" : "none",
-                    gap: 12,
+                    gap: 10,
                   }}>
                     {/* Icon + text */}
-                    <div style={{ display: "flex", gap: 12, alignItems: "center", minWidth: 0 }}>
+                    <div style={{ display: "flex", gap: 10, alignItems: "center", minWidth: 0 }}>
                       <div style={{
-                        width: 36, height: 36, borderRadius: 10, flexShrink: 0,
+                        width: 30, height: 30, borderRadius: 8, flexShrink: 0,
                         background: "#FEE2E2", display: "grid", placeItems: "center",
                       }}>
-                        <IconL size={16} strokeWidth={1.9} style={{ color: "#DC2626" }} />
+                        <IconL size={13} strokeWidth={1.9} style={{ color: "#DC2626" }} />
                       </div>
                       <div style={{ minWidth: 0 }}>
-                        <div style={{ fontSize: 12.5, fontWeight: 700, color: "#7F1D1D", lineHeight: 1.3 }}>{before.title}</div>
-                        <div style={{ fontSize: 11, color: "#B91C1C", marginTop: 3, fontWeight: 500, lineHeight: 1.4 }}>{before.sub}</div>
+                        <div style={{ fontSize: 12, fontWeight: 700, color: "#7F1D1D", lineHeight: 1.3 }}>{before.title}</div>
+                        <div style={{ fontSize: 10.5, color: "#B91C1C", marginTop: 2, fontWeight: 500, lineHeight: 1.4 }}>{before.sub}</div>
                       </div>
                     </div>
                     {/* Big number */}
                     <div style={{ textAlign: "right", flexShrink: 0 }}>
-                      <div style={{ fontSize: 30, fontWeight: 900, color: "#DC2626", letterSpacing: "-0.04em", lineHeight: 1 }}>{before.num}</div>
-                      <div style={{ fontSize: 10.5, color: "#B91C1C", fontWeight: 600, marginTop: 3 }}>{before.numSub}</div>
+                      <div style={{ fontSize: 22, fontWeight: 900, color: "#DC2626", letterSpacing: "-0.04em", lineHeight: 1 }}>{before.num}</div>
+                      <div style={{ fontSize: 10, color: "#B91C1C", fontWeight: 600, marginTop: 2 }}>{before.numSub}</div>
                     </div>
                   </div>
                 ))}
@@ -129,7 +126,7 @@ export default function LandingCambio() {
               <div style={{ background: "#F0FDF8" }}>
                 {/* Column header */}
                 <div style={{
-                  padding: "18px 24px 16px",
+                  padding: "14px 20px 12px",
                   borderBottom: `1px solid ${C.greenBdr}`,
                   background: "#ECFDF5",
                 }}>
@@ -142,27 +139,27 @@ export default function LandingCambio() {
                 {IMPACT.map(({ IconR, after }, i) => (
                   <div key={i} style={{
                     display: "flex", alignItems: "center", justifyContent: "space-between",
-                    padding: "20px 24px",
+                    padding: "14px 20px",
                     borderBottom: i < IMPACT.length - 1 ? `1px solid ${C.greenBdr}` : "none",
-                    gap: 12,
+                    gap: 10,
                   }}>
                     {/* Icon + text */}
-                    <div style={{ display: "flex", gap: 12, alignItems: "center", minWidth: 0 }}>
+                    <div style={{ display: "flex", gap: 10, alignItems: "center", minWidth: 0 }}>
                       <div style={{
-                        width: 36, height: 36, borderRadius: 10, flexShrink: 0,
+                        width: 30, height: 30, borderRadius: 8, flexShrink: 0,
                         background: "#A7F3D0", display: "grid", placeItems: "center",
                       }}>
-                        <IconR size={16} strokeWidth={1.9} style={{ color: C.green }} />
+                        <IconR size={13} strokeWidth={1.9} style={{ color: C.green }} />
                       </div>
                       <div style={{ minWidth: 0 }}>
-                        <div style={{ fontSize: 12.5, fontWeight: 700, color: "#064E3B", lineHeight: 1.3 }}>{after.title}</div>
-                        <div style={{ fontSize: 11, color: C.green, marginTop: 3, fontWeight: 500, lineHeight: 1.4 }}>{after.sub}</div>
+                        <div style={{ fontSize: 12, fontWeight: 700, color: "#064E3B", lineHeight: 1.3 }}>{after.title}</div>
+                        <div style={{ fontSize: 10.5, color: C.green, marginTop: 2, fontWeight: 500, lineHeight: 1.4 }}>{after.sub}</div>
                       </div>
                     </div>
                     {/* Big number */}
                     <div style={{ textAlign: "right", flexShrink: 0 }}>
-                      <div style={{ fontSize: 30, fontWeight: 900, color: C.green, letterSpacing: "-0.04em", lineHeight: 1 }}>{after.num}</div>
-                      <div style={{ fontSize: 10.5, color: C.green, fontWeight: 600, marginTop: 3 }}>{after.numSub}</div>
+                      <div style={{ fontSize: 22, fontWeight: 900, color: C.green, letterSpacing: "-0.04em", lineHeight: 1 }}>{after.num}</div>
+                      <div style={{ fontSize: 10, color: C.green, fontWeight: 600, marginTop: 2 }}>{after.numSub}</div>
                     </div>
                   </div>
                 ))}
@@ -187,33 +184,33 @@ export default function LandingCambio() {
 
           {/* Footer strip */}
           <div style={{
-            marginTop: 20,
-            borderRadius: 14,
+            marginTop: 16,
+            borderRadius: 12,
             border: `1px solid ${C.greenBdr}`,
             background: "#ECFDF5",
-            padding: "22px 28px",
-            display: "flex", alignItems: "center", justifyContent: "space-between", gap: 20, flexWrap: "wrap",
+            padding: "16px 22px",
+            display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap",
             opacity: impactReveal.visible ? 1 : 0,
             transition: "opacity .5s ease .4s",
           }}>
             <div>
-              <div style={{ fontSize: 18, fontWeight: 900, color: "#064E3B", letterSpacing: "-0.03em", lineHeight: 1.2 }}>
+              <div style={{ fontSize: 15, fontWeight: 900, color: "#064E3B", letterSpacing: "-0.02em", lineHeight: 1.2 }}>
                 Ahorrás el sueldo de una persona.
               </div>
-              <div style={{ fontSize: 14, color: C.green, fontWeight: 500, marginTop: 4 }}>
+              <div style={{ fontSize: 12, color: C.green, fontWeight: 500, marginTop: 3 }}>
                 Todos los meses.
               </div>
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
               <div style={{
-                width: 40, height: 40, borderRadius: 10,
+                width: 32, height: 32, borderRadius: 8,
                 background: "#A7F3D0", display: "grid", placeItems: "center",
               }}>
-                <TrendingUp size={20} strokeWidth={2} style={{ color: C.green }} />
+                <TrendingUp size={15} strokeWidth={2} style={{ color: C.green }} />
               </div>
               <div>
-                <div style={{ fontSize: 15, fontWeight: 800, color: "#064E3B" }}>Más ganancia.</div>
-                <div style={{ fontSize: 13, color: C.green, fontWeight: 500 }}>Menos estrés.</div>
+                <div style={{ fontSize: 13, fontWeight: 800, color: "#064E3B" }}>Más ganancia.</div>
+                <div style={{ fontSize: 12, color: C.green, fontWeight: 500 }}>Menos estrés.</div>
               </div>
             </div>
           </div>

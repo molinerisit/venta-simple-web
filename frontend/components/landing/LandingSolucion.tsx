@@ -29,8 +29,16 @@ const BENEFITS: { Icon: typeof Clock; label: string; bold: string; bg: string; c
 ];
 
 export default function LandingSolucion() {
-  const ref           = useRef<HTMLDivElement>(null);
-  const [vis, setVis] = useState(false);
+  const ref              = useRef<HTMLDivElement>(null);
+  const [vis, setVis]    = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   useEffect(() => {
     const el = ref.current; if (!el) return;
@@ -56,12 +64,12 @@ export default function LandingSolucion() {
             transform: vis ? "none" : "translateY(18px)",
             transition: "opacity .55s ease, transform .55s ease",
           }}>
-            <div style={{ ...T.label, marginBottom: 18 }}>La solución</div>
+            <div style={{ ...T.label, marginBottom: 12 }}>La solución</div>
 
             <h2 style={{
-              fontSize: "clamp(28px, 3.2vw, 42px)", fontWeight: 900,
+              fontSize: "clamp(26px, 2.8vw, 36px)", fontWeight: 900,
               letterSpacing: "-0.04em", lineHeight: 1.06,
-              color: C.text, margin: "0 0 24px",
+              color: C.text, margin: "0 0 16px",
             }}>
               Tomá el control<br />de tu negocio.<br />
               <span style={{ color: C.orange }}>Sin errores, sin vueltas.</span>
@@ -76,7 +84,7 @@ export default function LandingSolucion() {
             </p>
 
             {/* Benefit bullets */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 18, marginBottom: 52 }}>
+            <div className="l-solucion-benefits" style={{ display: "flex", flexDirection: "column", gap: 18, marginBottom: 52 }}>
               {BENEFITS.map(({ Icon, label, bold, bg, color }, i) => (
                 <div
                   key={label}
@@ -121,92 +129,150 @@ export default function LandingSolucion() {
             overflow: "hidden",
           }}>
 
-            {/* Column headers */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
-              <div style={{
-                background: "linear-gradient(135deg, #FEE2E2, #FEF2F2)",
-                padding: "16px 20px",
-                borderRight: "2px solid #FCA5A5",
-                borderBottom: "2px solid #FCA5A5",
-              }}>
-                <span style={{
-                  fontSize: 10.5, fontWeight: 800, color: "#B91C1C",
-                  letterSpacing: "0.08em", textTransform: "uppercase" as const,
-                }}>
-                  Sin VentaSimple
-                </span>
-              </div>
-              <div style={{
-                background: "linear-gradient(135deg, #A7F3D0, #D1FAE5)",
-                padding: "16px 20px",
-                borderBottom: `2px solid #6EE7B7`,
-              }}>
-                <span style={{
-                  fontSize: 10.5, fontWeight: 800, color: "#065F46",
-                  letterSpacing: "0.08em", textTransform: "uppercase" as const,
-                }}>
-                  Con VentaSimple
-                </span>
-              </div>
-            </div>
-
-            {/* Comparison rows */}
-            {ROWS.map((row, i) => (
-              <div
-                key={i}
-                style={{ display: "grid", gridTemplateColumns: "1fr 1fr", borderTop: `1px solid ${C.border}` }}
-              >
-                {/* Before */}
-                <div style={{
-                  background: i % 2 === 0 ? "#FFFBFB" : "#FFF5F5",
-                  padding: "16px 18px", borderRight: "2px solid #FEE2E2",
-                  display: "flex", gap: 11, alignItems: "flex-start",
-                }}>
+            {isMobile ? (
+              /* ── Mobile: all Sin first, then all Con ── */
+              <>
+                {/* Sin VentaSimple block */}
+                <div>
                   <div style={{
-                    width: 30, height: 30, borderRadius: "50%", flexShrink: 0,
-                    background: "#FEE2E2", display: "grid", placeItems: "center", marginTop: 1,
-                    boxShadow: "0 2px 6px rgba(220,38,38,.18)",
+                    background: "linear-gradient(135deg, #FEE2E2, #FEF2F2)",
+                    padding: "14px 18px",
+                    borderBottom: "2px solid #FCA5A5",
                   }}>
-                    <XCircle size={17} strokeWidth={2} style={{ color: "#DC2626" }} />
+                    <span style={{ fontSize: 10.5, fontWeight: 800, color: "#B91C1C", letterSpacing: "0.08em", textTransform: "uppercase" as const }}>
+                      Sin VentaSimple
+                    </span>
                   </div>
-                  <div>
-                    <div style={{ fontSize: 13.5, fontWeight: 700, color: "#7F1D1D", lineHeight: 1.3 }}>
-                      {row.before.title}
-                    </div>
-                    {row.before.sub && (
-                      <div style={{ fontSize: 11, color: "#B91C1C", marginTop: 5, fontWeight: 400, opacity: 0.65 }}>
-                        {row.before.sub}
+                  {ROWS.map((row, i) => (
+                    <div key={i} style={{
+                      background: i % 2 === 0 ? "#FFFBFB" : "#FFF5F5",
+                      padding: "14px 18px", borderBottom: "1px solid #FEE2E2",
+                      display: "flex", gap: 11, alignItems: "flex-start",
+                    }}>
+                      <div style={{
+                        width: 28, height: 28, borderRadius: "50%", flexShrink: 0,
+                        background: "#FEE2E2", display: "grid", placeItems: "center", marginTop: 1,
+                        boxShadow: "0 2px 6px rgba(220,38,38,.18)",
+                      }}>
+                        <XCircle size={15} strokeWidth={2} style={{ color: "#DC2626" }} />
                       </div>
-                    )}
+                      <div>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: "#7F1D1D", lineHeight: 1.3 }}>{row.before.title}</div>
+                        {row.before.sub && (
+                          <div style={{ fontSize: 11, color: "#B91C1C", marginTop: 4, fontWeight: 400, opacity: 0.65 }}>{row.before.sub}</div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Con VentaSimple block */}
+                <div>
+                  <div style={{
+                    background: "linear-gradient(135deg, #A7F3D0, #D1FAE5)",
+                    padding: "14px 18px",
+                    borderTop: "2px solid #6EE7B7",
+                    borderBottom: "2px solid #6EE7B7",
+                  }}>
+                    <span style={{ fontSize: 10.5, fontWeight: 800, color: "#065F46", letterSpacing: "0.08em", textTransform: "uppercase" as const }}>
+                      Con VentaSimple
+                    </span>
+                  </div>
+                  {ROWS.map((row, i) => (
+                    <div key={i} style={{
+                      background: i % 2 === 0 ? "#F0FDF8" : "#ECFDF5",
+                      padding: "14px 18px", borderBottom: i < ROWS.length - 1 ? "1px solid #D1FAE5" : "none",
+                      display: "flex", gap: 11, alignItems: "flex-start",
+                    }}>
+                      <div style={{
+                        width: 28, height: 28, borderRadius: "50%", flexShrink: 0,
+                        background: "#6EE7B7", display: "grid", placeItems: "center", marginTop: 1,
+                        boxShadow: "0 2px 6px rgba(6,78,59,.20)",
+                      }}>
+                        <CheckCircle2 size={15} strokeWidth={2.2} style={{ color: "#065F46" }} />
+                      </div>
+                      <div>
+                        <div style={{ fontSize: 13, fontWeight: 800, color: "#064E3B", lineHeight: 1.3 }}>{row.after.title}</div>
+                        {row.after.sub && (
+                          <div style={{ fontSize: 11, color: C.green, marginTop: 4, fontWeight: 500, opacity: 0.85 }}>{row.after.sub}</div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            ) : (
+              /* ── Desktop: side-by-side rows ── */
+              <>
+                {/* Column headers */}
+                <div className="l-cmp-header">
+                  <div style={{
+                    background: "linear-gradient(135deg, #FEE2E2, #FEF2F2)",
+                    padding: "16px 20px",
+                    borderRight: "2px solid #FCA5A5",
+                    borderBottom: "2px solid #FCA5A5",
+                  }}>
+                    <span style={{ fontSize: 10.5, fontWeight: 800, color: "#B91C1C", letterSpacing: "0.08em", textTransform: "uppercase" as const }}>
+                      Sin VentaSimple
+                    </span>
+                  </div>
+                  <div style={{
+                    background: "linear-gradient(135deg, #A7F3D0, #D1FAE5)",
+                    padding: "16px 20px",
+                    borderBottom: `2px solid #6EE7B7`,
+                  }}>
+                    <span style={{ fontSize: 10.5, fontWeight: 800, color: "#065F46", letterSpacing: "0.08em", textTransform: "uppercase" as const }}>
+                      Con VentaSimple
+                    </span>
                   </div>
                 </div>
 
-                {/* After */}
-                <div style={{
-                  background: i % 2 === 0 ? "#F0FDF8" : "#ECFDF5",
-                  padding: "16px 18px",
-                  display: "flex", gap: 11, alignItems: "flex-start",
-                }}>
-                  <div style={{
-                    width: 30, height: 30, borderRadius: "50%", flexShrink: 0,
-                    background: "#6EE7B7", display: "grid", placeItems: "center", marginTop: 1,
-                    boxShadow: "0 2px 6px rgba(6,78,59,.20)",
-                  }}>
-                    <CheckCircle2 size={17} strokeWidth={2.2} style={{ color: "#065F46" }} />
-                  </div>
-                  <div>
-                    <div style={{ fontSize: 13.5, fontWeight: 800, color: "#064E3B", lineHeight: 1.3 }}>
-                      {row.after.title}
-                    </div>
-                    {row.after.sub && (
-                      <div style={{ fontSize: 11, color: C.green, marginTop: 5, fontWeight: 500, opacity: 0.85 }}>
-                        {row.after.sub}
+                {ROWS.map((row, i) => (
+                  <div key={i} className="l-cmp-row">
+                    {/* Before */}
+                    <div style={{
+                      background: i % 2 === 0 ? "#FFFBFB" : "#FFF5F5",
+                      padding: "16px 18px", borderRight: "2px solid #FEE2E2",
+                      display: "flex", gap: 11, alignItems: "flex-start",
+                    }}>
+                      <div style={{
+                        width: 30, height: 30, borderRadius: "50%", flexShrink: 0,
+                        background: "#FEE2E2", display: "grid", placeItems: "center", marginTop: 1,
+                        boxShadow: "0 2px 6px rgba(220,38,38,.18)",
+                      }}>
+                        <XCircle size={17} strokeWidth={2} style={{ color: "#DC2626" }} />
                       </div>
-                    )}
+                      <div>
+                        <div style={{ fontSize: 13.5, fontWeight: 700, color: "#7F1D1D", lineHeight: 1.3 }}>{row.before.title}</div>
+                        {row.before.sub && (
+                          <div style={{ fontSize: 11, color: "#B91C1C", marginTop: 5, fontWeight: 400, opacity: 0.65 }}>{row.before.sub}</div>
+                        )}
+                      </div>
+                    </div>
+                    {/* After */}
+                    <div style={{
+                      background: i % 2 === 0 ? "#F0FDF8" : "#ECFDF5",
+                      padding: "16px 18px",
+                      display: "flex", gap: 11, alignItems: "flex-start",
+                    }}>
+                      <div style={{
+                        width: 30, height: 30, borderRadius: "50%", flexShrink: 0,
+                        background: "#6EE7B7", display: "grid", placeItems: "center", marginTop: 1,
+                        boxShadow: "0 2px 6px rgba(6,78,59,.20)",
+                      }}>
+                        <CheckCircle2 size={17} strokeWidth={2.2} style={{ color: "#065F46" }} />
+                      </div>
+                      <div>
+                        <div style={{ fontSize: 13.5, fontWeight: 800, color: "#064E3B", lineHeight: 1.3 }}>{row.after.title}</div>
+                        {row.after.sub && (
+                          <div style={{ fontSize: 11, color: C.green, marginTop: 5, fontWeight: 500, opacity: 0.85 }}>{row.after.sub}</div>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            ))}
+                ))}
+              </>
+            )}
 
             {/* Social proof footer */}
             <div style={{

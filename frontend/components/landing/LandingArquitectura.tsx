@@ -49,9 +49,9 @@ export default function LandingArquitectura() {
       <div className="l-container">
 
         {/* Header */}
-        <div style={{ textAlign: "center", marginBottom: 36 }}>
-          <div style={{ ...T.label, marginBottom: 12 }}>Un sistema, dos partes</div>
-          <h2 style={{ ...T.h2, margin: "0 0 10px" }}>
+        <div style={{ textAlign: "center", marginBottom: 28 }}>
+          <div style={{ ...T.label, marginBottom: 10 }}>Un sistema, dos partes</div>
+          <h2 style={{ ...T.h2, margin: "0 0 8px" }}>
             Todo lo que necesitás para vender<br />y controlar tu negocio.
           </h2>
           <p style={{ fontSize: 16, color: C.muted, fontWeight: 400, margin: 0, lineHeight: 1.6 }}>
@@ -60,7 +60,7 @@ export default function LandingArquitectura() {
         </div>
 
         {/* Cards */}
-        <div style={{ display: "flex", alignItems: "stretch", gap: 20, maxWidth: 860, margin: "0 auto" }}>
+        <div className="l-arq-cards">
 
           {/* ── Punto de venta ── */}
           <div className="arq-card arq-card-blue" style={{
@@ -99,7 +99,7 @@ export default function LandingArquitectura() {
           </div>
 
           {/* ── Elemento central ── */}
-          <div style={{ display: "flex", alignItems: "center", flexShrink: 0 }}>
+          <div className="l-arq-center" style={{ display: "flex", alignItems: "center", flexShrink: 0 }}>
             <div className="arq-center" style={{
               width: 40, height: 40, borderRadius: "50%",
               background: "#fff",
@@ -150,7 +150,7 @@ export default function LandingArquitectura() {
         </div>
 
         {/* Sync strip */}
-        <div style={{
+        <div className="l-arq-sync" style={{
           maxWidth: 760, margin: "28px auto 0",
           background: C.surface,
           border: `1px solid ${C.border}`,

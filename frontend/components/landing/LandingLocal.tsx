@@ -194,7 +194,7 @@ export default function LandingLocal() {
             </div>
 
             {/* Hardware chips */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }}>
+            <div className="l-local-hw-grid">
               {HW_CARDS.map(({ icon, label, sub }) => (
                 <div key={label} className="l-local-hw-card" style={{
                   background: C.surface, border: `1px solid ${C.border}`,

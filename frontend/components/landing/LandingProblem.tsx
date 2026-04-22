@@ -38,13 +38,13 @@ export default function LandingProblem() {
   }, []);
 
   return (
-    <section ref={ref} style={{ background: C.bg, padding: "112px 0", borderTop: `1px solid ${C.border}` }}>
+    <section ref={ref} style={{ background: C.bg, borderTop: `1px solid ${C.border}` }}>
       <div className="l-container">
 
         {/* Header */}
-        <div style={{ marginBottom: 44 }}>
-          <div style={{ ...T.label, marginBottom: 16 }}>El problema</div>
-          <h2 style={{ ...T.h2, margin: "0 0 16px", maxWidth: 600 }}>
+        <div style={{ marginBottom: 32 }}>
+          <div style={{ ...T.label, marginBottom: 12 }}>El problema</div>
+          <h2 style={{ ...T.h2, margin: "0 0 12px", maxWidth: 600 }}>
             Estás perdiendo ventas<br />todos los días.<br />
             Y probablemente no te das cuenta.
           </h2>
@@ -125,7 +125,7 @@ export default function LandingProblem() {
 
             {/* Número impacto */}
             <div style={{ marginBottom: 14 }}>
-              <div style={{ fontSize: 36, fontWeight: 900, color: "#DC2626", letterSpacing: "-0.05em", lineHeight: 1 }}>
+              <div style={{ fontSize: 28, fontWeight: 900, color: "#DC2626", letterSpacing: "-0.05em", lineHeight: 1 }}>
                 -$120.000
               </div>
               <div style={{ fontSize: 11.5, color: C.muted, fontWeight: 500, marginTop: 5 }}>

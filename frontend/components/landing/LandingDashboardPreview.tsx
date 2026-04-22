@@ -216,10 +216,10 @@ export default function LandingDashboardPreview() {
           </div>
 
           {/* App layout */}
-          <div style={{ display: "grid", gridTemplateColumns: "130px 1fr", height: 420, background: "#F9FAFB" }}>
+          <div className="l-dp-app-layout">
 
             {/* Sidebar */}
-            <div style={{ background: "#F3F4F6", borderRight: "1px solid #E5E7EB", padding: "14px 10px", display: "flex", flexDirection: "column", gap: 2 }}>
+            <div className="l-dp-sidebar" style={{ background: "#F3F4F6", borderRight: "1px solid #E5E7EB", padding: "14px 10px", flexDirection: "column", gap: 2 }}>
               <div style={{ padding: "2px 8px 12px" }}>
                 <span style={{ fontSize: 12, fontWeight: 900, color: "#1E3A8A", letterSpacing: "-0.03em" }}>VentaSimple</span>
                 <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 8 }}>
@@ -262,10 +262,7 @@ export default function LandingDashboardPreview() {
         </div>
 
         {/* Feature cards */}
-        <div style={{
-          display: "grid", gridTemplateColumns: "repeat(3, 1fr)",
-          gap: 16, marginTop: 48,
-        }}>
+        <div className="l-dp-feat-grid">
           {([
             {
               Icon: Wifi,

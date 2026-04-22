@@ -43,10 +43,26 @@ export default function ChatWidget() {
   ]);
   const [input, setInput]   = useState("");
   const [loading, setLoading] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const bottomRef  = useRef<HTMLDivElement>(null);
   const inputRef   = useRef<HTMLInputElement>(null);
   const openRef    = useRef(open);
   openRef.current  = open;
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 220);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   /* Show a bubble if chat is closed and this id hasn't been shown yet */
   const tryBubble = useCallback((id: string, text: string) => {
@@ -93,11 +109,11 @@ export default function ChatWidget() {
   useEffect(() => {
     if (open) {
       bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-      if (messages[messages.length - 1]?.role === "bot") {
+      if (messages[messages.length - 1]?.role === "bot" && !isMobile) {
         setTimeout(() => inputRef.current?.focus(), 80);
       }
     }
-  }, [open, messages]);
+  }, [open, messages, isMobile]);
 
   async function send(text: string) {
     const q = text.trim();
@@ -133,8 +149,8 @@ export default function ChatWidget() {
 
   return (
     <>
-      {/* ── Proactive bubble ── */}
-      {bubble && !open && (
+      {/* ── Proactive bubble — solo desktop ── */}
+      {bubble && !open && !isMobile && (
         <button
           onClick={openFromBubble}
           style={{
@@ -158,44 +174,53 @@ export default function ChatWidget() {
         </button>
       )}
 
-      {/* ── FAB ── */}
-      <button
-        onClick={() => { setOpen(v => !v); setBubble(null); }}
-        aria-label="Abrir chat"
-        style={{
-          position: "fixed", bottom: 28, right: 28, zIndex: 9999,
-          width: 52, height: 52, borderRadius: "50%",
-          background: "#1E3A8A",
-          border: "none", cursor: "pointer",
-          boxShadow: "0 4px 20px rgba(30,58,138,.45)",
-          display: "flex", alignItems: "center", justifyContent: "center",
-          transition: "transform .18s, box-shadow .18s",
-        }}
-        onMouseEnter={e => { e.currentTarget.style.transform = "scale(1.07)"; e.currentTarget.style.boxShadow = "0 6px 28px rgba(30,58,138,.55)"; }}
-        onMouseLeave={e => { e.currentTarget.style.transform = "scale(1)";    e.currentTarget.style.boxShadow = "0 4px 20px rgba(30,58,138,.45)"; }}
-      >
-        {open ? (
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round">
-            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-          </svg>
-        ) : (
-          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-          </svg>
-        )}
-        {/* Online dot */}
-        {!open && (
-          <span style={{
-            position: "absolute", top: 3, right: 3,
-            width: 10, height: 10, borderRadius: "50%",
-            background: "#22C55E", border: "2px solid #fff",
-          }}/>
-        )}
-      </button>
+      {/* ── FAB — oculto en mobile dentro del hero (sin scroll) y cuando el chat está abierto ── */}
+      {!(isMobile && open) && (!isMobile || scrolled) && (
+        <button
+          onClick={() => { setOpen(v => !v); setBubble(null); }}
+          aria-label="Abrir chat"
+          style={{
+            position: "fixed", bottom: 28, right: 28, zIndex: 9999,
+            width: 52, height: 52, borderRadius: "50%",
+            background: "#1E3A8A",
+            border: "none", cursor: "pointer",
+            boxShadow: "0 4px 20px rgba(30,58,138,.45)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            transition: "transform .18s, box-shadow .18s",
+          }}
+          onMouseEnter={e => { e.currentTarget.style.transform = "scale(1.07)"; e.currentTarget.style.boxShadow = "0 6px 28px rgba(30,58,138,.55)"; }}
+          onMouseLeave={e => { e.currentTarget.style.transform = "scale(1)";    e.currentTarget.style.boxShadow = "0 4px 20px rgba(30,58,138,.45)"; }}
+        >
+          {open ? (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          ) : (
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+          )}
+          {/* Online dot */}
+          {!open && (
+            <span style={{
+              position: "absolute", top: 3, right: 3,
+              width: 10, height: 10, borderRadius: "50%",
+              background: "#22C55E", border: "2px solid #fff",
+            }}/>
+          )}
+        </button>
+      )}
 
       {/* ── Chat panel ── */}
       {open && (
-        <div style={{
+        <div style={isMobile ? {
+          position: "fixed", inset: 0, zIndex: 9998,
+          width: "100%", height: "100dvh",
+          maxWidth: "100%", borderRadius: 0, overflow: "hidden",
+          background: "#fff", border: "none",
+          display: "flex", flexDirection: "column",
+          animation: "chat-panel-in 0.22s cubic-bezier(.34,1.56,.64,1) both",
+        } : {
           position: "fixed", bottom: 92, right: 28, zIndex: 9998,
           width: 348, maxWidth: "calc(100vw - 40px)",
           borderRadius: 18, overflow: "hidden",
@@ -244,8 +269,10 @@ export default function ChatWidget() {
           {/* Messages */}
           <div style={{
             flex: 1, overflowY: "auto", padding: "16px 14px 10px",
-            maxHeight: 300, display: "flex", flexDirection: "column", gap: 8,
+            maxHeight: isMobile ? undefined : 300,
+            display: "flex", flexDirection: "column", gap: 8,
             background: "#FAFAF9",
+            overscrollBehavior: "contain",
           }}>
             {messages.map((m, i) => (
               <div key={i} style={{
@@ -320,10 +347,11 @@ export default function ChatWidget() {
 
           {/* Input */}
           <div style={{
-            padding: "10px 12px",
+            padding: isMobile ? "10px 12px max(12px, env(safe-area-inset-bottom))" : "10px 12px",
             borderTop: "1px solid #E2E0DA",
             display: "flex", gap: 8, alignItems: "center",
             background: "#fff",
+            flexShrink: 0,
           }}>
             <input
               ref={inputRef}

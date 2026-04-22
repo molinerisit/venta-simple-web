@@ -48,7 +48,7 @@ export function PageHeader({ title, subtitle }: { title: string; subtitle: strin
   const dateLabel = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
 
   return (
-    <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16 }}>
+    <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
       <div>
         <h1 style={{ fontSize: 22, fontWeight: 800, color: "#0F172A", margin: "0 0 4px", letterSpacing: "-0.02em" }}>
           {title}

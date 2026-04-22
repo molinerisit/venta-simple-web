@@ -10,8 +10,8 @@ function PricingCard({ name, badge, price, sub, features, cta, href, highlight }
     <div style={{
       background: highlight ? C.heroBg : C.surface,
       border: highlight ? `2px solid ${C.orange}` : `1px solid ${C.border}`,
-      borderRadius: 18,
-      padding: highlight ? "36px 30px" : "30px 26px",
+      borderRadius: 16,
+      padding: highlight ? "28px 24px" : "24px 20px",
       position: "relative",
       display: "flex", flexDirection: "column",
       boxShadow: highlight ? "0 8px 24px rgba(11,29,63,.18)" : "0 1px 4px rgba(26,24,22,.05)",
@@ -36,7 +36,7 @@ function PricingCard({ name, badge, price, sub, features, cta, href, highlight }
 
       <div style={{ display: "flex", alignItems: "baseline", gap: 4, marginBottom: 6 }}>
         <span style={{
-          fontSize: price === 0 ? 42 : 44, fontWeight: 900,
+          fontSize: price === 0 ? 32 : 34, fontWeight: 900,
           letterSpacing: "-0.04em", lineHeight: 1,
           color: highlight ? "#fff" : C.text,
         }}>
@@ -82,9 +82,9 @@ export default function LandingPricing() {
     <section id="pricing" style={{ background: C.bg, padding: "112px 0", borderTop: `1px solid ${C.border}` }}>
       <div className="l-container">
 
-        <div style={{ textAlign: "center", marginBottom: 72 }}>
-          <div style={{ ...T.label, marginBottom: 16 }}>Precios</div>
-          <h2 style={{ ...T.h2, margin: "0 0 14px" }}>Elegí el control<br />que necesita tu negocio.</h2>
+        <div style={{ textAlign: "center", marginBottom: 44 }}>
+          <div style={{ ...T.label, marginBottom: 10 }}>Precios</div>
+          <h2 style={{ ...T.h2, margin: "0 0 10px" }}>Elegí el control<br />que necesita tu negocio.</h2>
           <p style={{ ...T.body, maxWidth: 440, margin: "0 auto" }}>
             Sin contratos. Sin sorpresas. Probalo 15 días gratis — si no te sirve, no pagás nada.
           </p>
@@ -139,7 +139,7 @@ export default function LandingPricing() {
         </div>
 
         {/* Guarantee */}
-        <div style={{ textAlign: "center", marginTop: 32, marginBottom: 56 }}>
+        <div style={{ textAlign: "center", marginTop: 24, marginBottom: 32 }}>
           <p style={{ fontSize: 14, fontWeight: 700, color: C.muted, margin: "0 0 6px" }}>
             Probalo 15 días gratis. Si no te sirve, no pagás nada.
           </p>

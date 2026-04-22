@@ -76,7 +76,13 @@ const S_DARK = {
   accent:     "#60A5FA",
 };
 
-export default function Sidebar() {
+interface SidebarProps {
+  mobileOpen?:    boolean;
+  onClose?:       () => void;
+  isMobileLayout?: boolean;
+}
+
+export default function Sidebar({ mobileOpen = false, onClose, isMobileLayout = false }: SidebarProps) {
   const pathname = usePathname();
   const router   = useRouter();
   const { theme, toggle } = useTheme();
@@ -110,16 +116,31 @@ export default function Sidebar() {
     router.push("/login");
   }
 
+  const mobileStyle: React.CSSProperties = {
+    position: "fixed",
+    top: 56, left: 0, bottom: 0,
+    width: 260, zIndex: 50,
+    display: "flex", flexDirection: "column",
+    background: S.bg,
+    borderRight: `1px solid ${S.borderR}`,
+    boxShadow: mobileOpen ? "4px 0 28px rgba(0,0,0,.18)" : "none",
+    overflowY: "auto",
+    transform: mobileOpen ? "translateX(0)" : "translateX(-100%)",
+    transition: "transform .25s cubic-bezier(.4,0,.2,1)",
+  };
+
+  const desktopStyle: React.CSSProperties = {
+    width: 240,
+    flexShrink: 0,
+    display: "flex",
+    flexDirection: "column",
+    height: "100%",
+    background: S.bg,
+    borderRight: `1px solid ${S.borderR}`,
+  };
+
   return (
-    <aside style={{
-      width: 240,
-      flexShrink: 0,
-      display: "flex",
-      flexDirection: "column",
-      height: "100%",
-      background: S.bg,
-      borderRight: `1px solid ${S.borderR}`,
-    }}>
+    <aside style={isMobileLayout ? mobileStyle : desktopStyle}>
 
       {/* ── Logo + usuario ── */}
       <div style={{ padding: "22px 20px 16px" }}>
@@ -246,6 +267,7 @@ export default function Sidebar() {
             <Link
               key={href}
               href={href}
+              onClick={isMobileLayout ? onClose : undefined}
               className={active ? "" : "vs-sidebar-item"}
               style={{
                 display: "flex", alignItems: "center", gap: 10,
@@ -294,6 +316,7 @@ export default function Sidebar() {
               <Link
                 key={`owner-${href}`}
                 href={`${href}?superadmin=1`}
+                onClick={isMobileLayout ? onClose : undefined}
                 className="vs-sidebar-item"
                 style={{
                   display: "flex", alignItems: "center", gap: 10,
