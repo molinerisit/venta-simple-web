@@ -56,7 +56,7 @@ export default function LandingPosDemo() {
 
   return (
     <section style={{ background: C.bgAlt, padding: "80px 0", borderTop: `1px solid ${C.border}` }}>
-      <div className="l-container">
+      <div className="l-container" style={{ maxWidth: 960 }}>
 
         {/* Header */}
         <div style={{ textAlign: "center", marginBottom: 40 }}>
@@ -74,7 +74,7 @@ export default function LandingPosDemo() {
 
         {/* PC frame */}
         <div style={{
-          maxWidth: 820, margin: "0 auto",
+          maxWidth: 960, margin: "0 auto",
           borderRadius: 12, overflow: "hidden",
           border: "1px solid #CBD5E1",
           boxShadow: "0 24px 64px rgba(0,0,0,.13), 0 4px 16px rgba(0,0,0,.07)",
