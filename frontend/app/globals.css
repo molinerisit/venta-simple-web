@@ -414,26 +414,6 @@
 }
 .l-cta-btn:hover { background: #EA6C00; }
 
-.l-solucion-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  padding: 16px 34px;
-  border-radius: 12px;
-  text-decoration: none;
-  background: #F97316;
-  color: #fff;
-  font-weight: 800;
-  font-size: 15px;
-  letter-spacing: -0.01em;
-  box-shadow: 0 6px 24px rgba(249,115,22,.45), 0 2px 6px rgba(0,0,0,.08);
-  transition: box-shadow .2s ease, transform .18s ease;
-}
-.l-solucion-cta:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 36px rgba(249,115,22,.55), 0 4px 10px rgba(0,0,0,.10);
-}
-
 /* SOLUCION */
 .l-solucion-grid {
   display: grid;
