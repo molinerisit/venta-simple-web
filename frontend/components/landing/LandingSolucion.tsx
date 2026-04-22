@@ -45,7 +45,7 @@ export default function LandingSolucion() {
   return (
     <section
       ref={ref}
-      style={{ background: C.surface, padding: "120px 0 128px", borderTop: `1px solid ${C.border}` }}
+      style={{ background: C.surface, padding: "80px 0 88px", borderTop: `1px solid ${C.border}` }}
     >
       <div className="l-container">
         <div className="l-solucion-grid">
@@ -163,17 +163,18 @@ export default function LandingSolucion() {
                   display: "flex", gap: 11, alignItems: "flex-start",
                 }}>
                   <div style={{
-                    width: 26, height: 26, borderRadius: "50%", flexShrink: 0,
+                    width: 30, height: 30, borderRadius: "50%", flexShrink: 0,
                     background: "#FEE2E2", display: "grid", placeItems: "center", marginTop: 1,
+                    boxShadow: "0 2px 6px rgba(220,38,38,.18)",
                   }}>
-                    <XCircle size={15} strokeWidth={2} style={{ color: "#DC2626" }} />
+                    <XCircle size={17} strokeWidth={2} style={{ color: "#DC2626" }} />
                   </div>
                   <div>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: "#7F1D1D", lineHeight: 1.35 }}>
+                    <div style={{ fontSize: 13.5, fontWeight: 700, color: "#7F1D1D", lineHeight: 1.3 }}>
                       {row.before.title}
                     </div>
                     {row.before.sub && (
-                      <div style={{ fontSize: 11, color: "#B91C1C", marginTop: 4, fontWeight: 400, opacity: 0.75 }}>
+                      <div style={{ fontSize: 11, color: "#B91C1C", marginTop: 5, fontWeight: 400, opacity: 0.65 }}>
                         {row.before.sub}
                       </div>
                     )}
@@ -187,17 +188,18 @@ export default function LandingSolucion() {
                   display: "flex", gap: 11, alignItems: "flex-start",
                 }}>
                   <div style={{
-                    width: 26, height: 26, borderRadius: "50%", flexShrink: 0,
+                    width: 30, height: 30, borderRadius: "50%", flexShrink: 0,
                     background: "#6EE7B7", display: "grid", placeItems: "center", marginTop: 1,
+                    boxShadow: "0 2px 6px rgba(6,78,59,.20)",
                   }}>
-                    <CheckCircle2 size={15} strokeWidth={2.2} style={{ color: "#065F46" }} />
+                    <CheckCircle2 size={17} strokeWidth={2.2} style={{ color: "#065F46" }} />
                   </div>
                   <div>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: "#064E3B", lineHeight: 1.35 }}>
+                    <div style={{ fontSize: 13.5, fontWeight: 800, color: "#064E3B", lineHeight: 1.3 }}>
                       {row.after.title}
                     </div>
                     {row.after.sub && (
-                      <div style={{ fontSize: 11, color: C.green, marginTop: 4, fontWeight: 400, opacity: 0.8 }}>
+                      <div style={{ fontSize: 11, color: C.green, marginTop: 5, fontWeight: 500, opacity: 0.85 }}>
                         {row.after.sub}
                       </div>
                     )}
