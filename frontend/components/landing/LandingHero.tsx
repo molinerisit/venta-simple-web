@@ -294,45 +294,48 @@ export default function LandingHero() {
   }, [total]);
 
   return (
-    <section style={{ background: C.heroBg, padding: "64px 0 80px" }}>
+    <section style={{ background: C.heroBg, padding: "104px 0 132px" }}>
       <div className="l-container" style={{ position: "relative", zIndex: 1 }}>
         <div className="l-hero-grid">
 
           {/* Columna texto */}
           <div>
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 22, padding: "4px 12px 4px 9px", borderRadius: 99, border: "1px solid rgba(255,255,255,.14)" }}>
-              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#22C55E", flexShrink: 0 }} />
-              <span style={{ fontSize: 12, color: "rgba(255,255,255,.58)", fontWeight: 500 }}>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 36, padding: "5px 14px 5px 10px", borderRadius: 99, border: "1px solid rgba(255,255,255,.14)" }}>
+              <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#22C55E", flexShrink: 0 }} />
+              <span style={{ fontSize: 12.5, color: "rgba(255,255,255,.58)", fontWeight: 500 }}>
                 +500 negocios en Argentina ya venden con VentaSimple
               </span>
             </div>
 
-            <h1 style={{ fontSize: "clamp(28px, 3.2vw, 46px)", fontWeight: 900, lineHeight: 1.08, letterSpacing: "-0.04em", color: "#FFFFFF", margin: "0 0 16px" }}>
+            <h1 style={{ fontSize: "clamp(40px, 5.2vw, 64px)", fontWeight: 900, lineHeight: 1.06, letterSpacing: "-0.04em", color: "#FFFFFF", margin: "0 0 24px" }}>
               Tu negocio funcionando<br />
               rápido, ordenado y<br />
               <span style={{ color: C.orange }}>bajo control.</span>
             </h1>
 
-            <p style={{ fontSize: 15, lineHeight: 1.65, color: "rgba(255,255,255,.70)", maxWidth: 420, margin: "0 0 6px" }}>
+            <p style={{ fontSize: 16, lineHeight: 1.75, color: "rgba(255,255,255,.70)", maxWidth: 440, margin: "0 0 8px" }}>
               Vendé en tu PC. Controlá todo desde el celular, en tiempo real.
             </p>
-            <p style={{ fontSize: 13, lineHeight: 1.6, color: "rgba(255,255,255,.42)", maxWidth: 400, margin: "0 0 22px", fontStyle: "italic" }}>
+            <p style={{ fontSize: 14, lineHeight: 1.6, color: "rgba(255,255,255,.42)", maxWidth: 400, margin: "0 0 8px", fontStyle: "italic" }}>
               Usado por kioscos, almacenes y ferreterías que dejaron de improvisar.
+            </p>
+            <p style={{ fontSize: 13, lineHeight: 1.6, color: "rgba(255,255,255,.50)", maxWidth: 400, margin: "0 0 36px" }}>
+              Cobrás en segundos. Sabés lo que pasa en tu negocio.
             </p>
 
             <div className="l-hero-btns">
-              <Link href="/registro" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 24px", borderRadius: 8, fontWeight: 800, fontSize: 14, textDecoration: "none", background: C.orange, color: "#fff", letterSpacing: "-0.01em" }}>
+              <Link href="/registro" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "15px 30px", borderRadius: 8, fontWeight: 800, fontSize: 15, textDecoration: "none", background: C.orange, color: "#fff", letterSpacing: "-0.01em" }}>
                 Empezar gratis — probalo en tu negocio
               </Link>
-              <a href="#como-funciona" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 20px", borderRadius: 8, fontWeight: 600, fontSize: 13.5, textDecoration: "none", color: "rgba(255,255,255,.80)", border: "1px solid rgba(255,255,255,.28)" }}>
+              <a href="#como-funciona" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "15px 22px", borderRadius: 8, fontWeight: 600, fontSize: 14, textDecoration: "none", color: "rgba(255,255,255,.80)", border: "1px solid rgba(255,255,255,.28)" }}>
                 Ver cómo funciona
               </a>
             </div>
 
-            <div style={{ display: "flex", gap: 24, flexWrap: "wrap", marginTop: 16 }}>
+            <div style={{ display: "flex", gap: 28, flexWrap: "wrap" }}>
               {["Dejás de perder ventas por errores", "Sabés exactamente cuánto ganás"].map(t => (
-                <span key={t} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12.5, fontWeight: 500, color: "rgba(255,255,255,.55)" }}>
-                  <Check size={11} strokeWidth={3} style={{ color: "#22C55E", flexShrink: 0 }} />
+                <span key={t} style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 13, fontWeight: 500, color: "rgba(255,255,255,.62)" }}>
+                  <Check size={12} strokeWidth={3} style={{ color: "#22C55E", flexShrink: 0 }} />
                   {t}
                 </span>
               ))}
@@ -415,7 +418,7 @@ export default function LandingHero() {
         </div>
 
         {/* Micro bloque */}
-        <div style={{ display: "flex", gap: 28, flexWrap: "wrap", justifyContent: "center", marginTop: 40, paddingTop: 28, borderTop: "1px solid rgba(255,255,255,.08)" }}>
+        <div style={{ display: "flex", gap: 32, flexWrap: "wrap", justifyContent: "center", marginTop: 56, paddingTop: 40, borderTop: "1px solid rgba(255,255,255,.08)" }}>
           {MICRO.map(({ icon: Icon, label }) => (
             <div key={label} style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <Icon size={16} style={{ color: "#60A5FA", flexShrink: 0 }} />

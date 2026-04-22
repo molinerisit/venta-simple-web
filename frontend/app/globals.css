@@ -336,16 +336,10 @@
 
 /* ─── RESPONSIVE LANDING ─────────────────────────────────────── */
 
-/* Padding global de secciones — desktop */
-.vs-landing section {
-  padding-top: 56px !important;
-  padding-bottom: 56px !important;
-}
-
 /* Container + section padding */
 @media (max-width: 768px) {
   .l-container { padding: 0 16px; }
-  .vs-landing section { padding-top: 40px !important; padding-bottom: 40px !important; }
+  .vs-landing section { padding-top: 56px !important; padding-bottom: 56px !important; }
 }
 
 /* NAV: ocultar links centrales en mobile */
@@ -355,15 +349,15 @@
 /* HERO grid */
 .l-hero-grid {
   display: grid;
-  grid-template-columns: 1fr 380px;
-  gap: 52px;
+  grid-template-columns: 1fr 420px;
+  gap: 64px;
   align-items: center;
 }
 .l-hero-grid > * { min-width: 0; }
-.l-hero-mockup   { width: 380px !important; min-width: 380px !important; max-width: 380px !important; }
+.l-hero-mockup   { width: 420px !important; min-width: 420px !important; max-width: 420px !important; }
 @media (max-width: 1000px) {
-  .l-hero-grid { grid-template-columns: 1fr 340px; gap: 40px; }
-  .l-hero-mockup { width: 340px !important; min-width: 340px !important; max-width: 340px !important; }
+  .l-hero-grid { grid-template-columns: 1fr 380px; gap: 48px; }
+  .l-hero-mockup { width: 380px !important; min-width: 380px !important; max-width: 380px !important; }
 }
 @media (max-width: 900px) {
   .l-hero-grid { grid-template-columns: 1fr; gap: 40px; }

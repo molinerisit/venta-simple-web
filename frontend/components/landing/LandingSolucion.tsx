@@ -22,10 +22,10 @@ const ROWS = [
   },
 ];
 
-const BENEFITS = [
-  { Icon: Clock,     label: "Cobrás en segundos",        bg: "#EEF2FE", color: C.blue   },
-  { Icon: Wifi,      label: "Seguís vendiendo siempre",  bg: "#ECFDF5", color: C.green  },
-  { Icon: BarChart2, label: "Ganancia exacta del día",   bg: "#FFF7ED", color: "#C2410C" },
+const BENEFITS: { Icon: typeof Clock; label: string; bold: string; bg: string; color: string }[] = [
+  { Icon: Clock,     label: "Cobrás en",        bold: "segundos",       bg: "#EEF2FE", color: C.blue    },
+  { Icon: Wifi,      label: "Seguís vendiendo", bold: "siempre",        bg: "#ECFDF5", color: C.green   },
+  { Icon: BarChart2, label: "Ganancia",         bold: "exacta del día", bg: "#FFF7ED", color: "#C2410C" },
 ];
 
 export default function LandingSolucion() {
@@ -36,7 +36,7 @@ export default function LandingSolucion() {
     const el = ref.current; if (!el) return;
     const obs = new IntersectionObserver(
       ([e]) => { if (e.isIntersecting) { setVis(true); obs.disconnect(); } },
-      { threshold: 0.12 }
+      { threshold: 0.10 }
     );
     obs.observe(el);
     return () => obs.disconnect();
@@ -45,7 +45,7 @@ export default function LandingSolucion() {
   return (
     <section
       ref={ref}
-      style={{ background: C.surface, padding: "112px 0", borderTop: `1px solid ${C.border}` }}
+      style={{ background: C.surface, padding: "120px 0 128px", borderTop: `1px solid ${C.border}` }}
     >
       <div className="l-container">
         <div className="l-solucion-grid">
@@ -56,59 +56,56 @@ export default function LandingSolucion() {
             transform: vis ? "none" : "translateY(18px)",
             transition: "opacity .55s ease, transform .55s ease",
           }}>
-            <div style={{ ...T.label, marginBottom: 16 }}>La solución</div>
+            <div style={{ ...T.label, marginBottom: 18 }}>La solución</div>
 
-            <h2 style={{ ...T.h2, margin: "0 0 20px", lineHeight: 1.08 }}>
-              Tomá el control total<br />de tu negocio.<br />
+            <h2 style={{
+              fontSize: "clamp(28px, 3.2vw, 42px)", fontWeight: 900,
+              letterSpacing: "-0.04em", lineHeight: 1.06,
+              color: C.text, margin: "0 0 24px",
+            }}>
+              Tomá el control<br />de tu negocio.<br />
               <span style={{ color: C.orange }}>Sin errores, sin vueltas.</span>
             </h2>
 
             <p style={{ fontSize: 16, color: C.text, fontWeight: 600, margin: "0 0 8px", lineHeight: 1.5 }}>
               Sabés exactamente cuánto ganás — desde hoy.
             </p>
-            <p style={{ ...T.body, maxWidth: 420, marginBottom: 36 }}>
+            <p style={{ ...T.body, maxWidth: 420, marginBottom: 44 }}>
               VentaSimple reemplaza el cuaderno, la calculadora y el caos.
               Lo instalás hoy y desde esa tarde cobrás diferente.
             </p>
 
             {/* Benefit bullets */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 44 }}>
-              {BENEFITS.map(({ Icon, label, bg, color }, i) => (
+            <div style={{ display: "flex", flexDirection: "column", gap: 18, marginBottom: 52 }}>
+              {BENEFITS.map(({ Icon, label, bold, bg, color }, i) => (
                 <div
                   key={label}
                   style={{
-                    display: "flex", alignItems: "center", gap: 14,
+                    display: "flex", alignItems: "center", gap: 16,
                     opacity: vis ? 1 : 0,
                     transform: vis ? "none" : "translateX(-14px)",
                     transition: `opacity .45s ease ${0.15 + i * 0.1}s, transform .45s ease ${0.15 + i * 0.1}s`,
                   }}
                 >
                   <div style={{
-                    width: 38, height: 38, borderRadius: 10, flexShrink: 0,
+                    width: 44, height: 44, borderRadius: 12, flexShrink: 0,
                     background: bg, display: "grid", placeItems: "center",
+                    boxShadow: "0 2px 8px rgba(0,0,0,.06)",
                   }}>
-                    <Icon size={17} strokeWidth={1.9} style={{ color }} />
+                    <Icon size={20} strokeWidth={1.8} style={{ color }} />
                   </div>
-                  <span style={{ fontSize: 14.5, fontWeight: 600, color: C.text, lineHeight: 1.4 }}>{label}</span>
+                  <span style={{ fontSize: 15, fontWeight: 600, color: C.text, lineHeight: 1.4 }}>
+                    {label} <strong style={{ fontWeight: 800, color: C.text }}>{bold}</strong>
+                  </span>
                 </div>
               ))}
             </div>
 
             {/* CTA */}
-            <a
-              href="/registro"
-              style={{
-                display: "inline-flex", alignItems: "center", gap: 9,
-                padding: "14px 28px", borderRadius: 10, textDecoration: "none",
-                background: C.orange, color: "#fff", fontWeight: 800, fontSize: 15,
-                letterSpacing: "-0.01em",
-                boxShadow: "0 4px 18px rgba(249,115,22,.38), 0 1px 4px rgba(0,0,0,.12)",
-                transition: "box-shadow .2s, transform .15s",
-              }}
-            >
+            <a href="/registro" className="l-solucion-cta">
               Quiero la prueba gratuita <ArrowRight size={16} />
             </a>
-            <p style={{ fontSize: 12, color: C.light, marginTop: 10, fontWeight: 500 }}>
+            <p style={{ fontSize: 12, color: C.light, marginTop: 12, fontWeight: 500 }}>
               7 días gratis. Sin tarjeta de crédito.
             </p>
           </div>
@@ -118,31 +115,34 @@ export default function LandingSolucion() {
             opacity: vis ? 1 : 0,
             transform: vis ? "none" : "translateX(22px)",
             transition: "opacity .6s ease .1s, transform .6s ease .1s",
-            borderRadius: 18,
-            border: `1px solid ${C.border}`,
-            boxShadow: "0 28px 64px rgba(0,0,0,.10), 0 6px 20px rgba(0,0,0,.06)",
+            borderRadius: 20,
+            border: `1.5px solid ${C.border}`,
+            boxShadow: "0 32px 72px rgba(0,0,0,.12), 0 8px 24px rgba(0,0,0,.07)",
             overflow: "hidden",
           }}>
 
             {/* Column headers */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
               <div style={{
-                background: "#FEF2F2", padding: "14px 18px",
-                borderRight: "1px solid #FECACA", borderBottom: "1px solid #FECACA",
+                background: "linear-gradient(135deg, #FEE2E2, #FEF2F2)",
+                padding: "16px 20px",
+                borderRight: "2px solid #FCA5A5",
+                borderBottom: "2px solid #FCA5A5",
               }}>
                 <span style={{
-                  fontSize: 10, fontWeight: 800, color: "#DC2626",
+                  fontSize: 10.5, fontWeight: 800, color: "#B91C1C",
                   letterSpacing: "0.08em", textTransform: "uppercase" as const,
                 }}>
-                  Hoy, sin VentaSimple
+                  Sin VentaSimple
                 </span>
               </div>
               <div style={{
-                background: "#ECFDF5", padding: "14px 18px",
-                borderBottom: `1px solid ${C.greenBdr}`,
+                background: "linear-gradient(135deg, #A7F3D0, #D1FAE5)",
+                padding: "16px 20px",
+                borderBottom: `2px solid #6EE7B7`,
               }}>
                 <span style={{
-                  fontSize: 10, fontWeight: 800, color: C.green,
+                  fontSize: 10.5, fontWeight: 800, color: "#065F46",
                   letterSpacing: "0.08em", textTransform: "uppercase" as const,
                 }}>
                   Con VentaSimple
@@ -158,22 +158,22 @@ export default function LandingSolucion() {
               >
                 {/* Before */}
                 <div style={{
-                  background: i % 2 === 0 ? "#FFFBFB" : "#FFF8F8",
-                  padding: "14px 16px", borderRight: "1px solid #FEE2E2",
-                  display: "flex", gap: 10, alignItems: "flex-start",
+                  background: i % 2 === 0 ? "#FFFBFB" : "#FFF5F5",
+                  padding: "16px 18px", borderRight: "2px solid #FEE2E2",
+                  display: "flex", gap: 11, alignItems: "flex-start",
                 }}>
                   <div style={{
-                    width: 22, height: 22, borderRadius: "50%", flexShrink: 0,
+                    width: 26, height: 26, borderRadius: "50%", flexShrink: 0,
                     background: "#FEE2E2", display: "grid", placeItems: "center", marginTop: 1,
                   }}>
-                    <XCircle size={13} strokeWidth={2} style={{ color: "#EF4444" }} />
+                    <XCircle size={15} strokeWidth={2} style={{ color: "#DC2626" }} />
                   </div>
                   <div>
-                    <div style={{ fontSize: 12.5, fontWeight: 600, color: "#7F1D1D", lineHeight: 1.35 }}>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: "#7F1D1D", lineHeight: 1.35 }}>
                       {row.before.title}
                     </div>
                     {row.before.sub && (
-                      <div style={{ fontSize: 11, color: "#B91C1C", marginTop: 3, fontWeight: 500 }}>
+                      <div style={{ fontSize: 11, color: "#B91C1C", marginTop: 4, fontWeight: 400, opacity: 0.75 }}>
                         {row.before.sub}
                       </div>
                     )}
@@ -183,21 +183,21 @@ export default function LandingSolucion() {
                 {/* After */}
                 <div style={{
                   background: i % 2 === 0 ? "#F0FDF8" : "#ECFDF5",
-                  padding: "14px 16px",
-                  display: "flex", gap: 10, alignItems: "flex-start",
+                  padding: "16px 18px",
+                  display: "flex", gap: 11, alignItems: "flex-start",
                 }}>
                   <div style={{
-                    width: 22, height: 22, borderRadius: "50%", flexShrink: 0,
-                    background: "#A7F3D0", display: "grid", placeItems: "center", marginTop: 1,
+                    width: 26, height: 26, borderRadius: "50%", flexShrink: 0,
+                    background: "#6EE7B7", display: "grid", placeItems: "center", marginTop: 1,
                   }}>
-                    <CheckCircle2 size={13} strokeWidth={2} style={{ color: C.green }} />
+                    <CheckCircle2 size={15} strokeWidth={2.2} style={{ color: "#065F46" }} />
                   </div>
                   <div>
-                    <div style={{ fontSize: 12.5, fontWeight: 700, color: "#064E3B", lineHeight: 1.35 }}>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: "#064E3B", lineHeight: 1.35 }}>
                       {row.after.title}
                     </div>
                     {row.after.sub && (
-                      <div style={{ fontSize: 11, color: C.green, marginTop: 3, fontWeight: 500 }}>
+                      <div style={{ fontSize: 11, color: C.green, marginTop: 4, fontWeight: 400, opacity: 0.8 }}>
                         {row.after.sub}
                       </div>
                     )}
@@ -209,17 +209,18 @@ export default function LandingSolucion() {
             {/* Social proof footer */}
             <div style={{
               borderTop: `1px solid ${C.border}`,
-              background: C.bg,
-              padding: "12px 20px",
-              display: "flex", alignItems: "center", gap: 8,
+              background: "linear-gradient(135deg, #F8F7F4, #F1F0EC)",
+              padding: "14px 22px",
+              display: "flex", alignItems: "center", gap: 10,
             }}>
               <div style={{
-                width: 24, height: 24, borderRadius: "50%",
+                width: 28, height: 28, borderRadius: "50%",
                 background: C.blueBg, display: "grid", placeItems: "center", flexShrink: 0,
+                boxShadow: "0 2px 6px rgba(30,58,138,.12)",
               }}>
-                <Users size={12} strokeWidth={1.8} style={{ color: C.blue }} />
+                <Users size={13} strokeWidth={1.8} style={{ color: C.blue }} />
               </div>
-              <span style={{ fontSize: 11.5, color: C.muted, fontWeight: 500 }}>
+              <span style={{ fontSize: 12, color: C.muted, fontWeight: 600 }}>
                 +500 negocios en Argentina ya venden con VentaSimple
               </span>
             </div>
