@@ -294,20 +294,20 @@ export default function LandingHero() {
   }, [total]);
 
   return (
-    <section style={{ background: C.heroBg, padding: "104px 0 132px" }}>
+    <section style={{ background: C.heroBg, padding: "52px 0 60px" }}>
       <div className="l-container" style={{ position: "relative", zIndex: 1 }}>
         <div className="l-hero-grid">
 
           {/* Columna texto */}
           <div>
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 36, padding: "5px 14px 5px 10px", borderRadius: 99, border: "1px solid rgba(255,255,255,.14)" }}>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 18, padding: "5px 14px 5px 10px", borderRadius: 99, border: "1px solid rgba(255,255,255,.14)" }}>
               <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#22C55E", flexShrink: 0 }} />
               <span style={{ fontSize: 12.5, color: "rgba(255,255,255,.58)", fontWeight: 500 }}>
                 +500 negocios en Argentina ya venden con VentaSimple
               </span>
             </div>
 
-            <h1 style={{ fontSize: "clamp(40px, 5.2vw, 64px)", fontWeight: 900, lineHeight: 1.06, letterSpacing: "-0.04em", color: "#FFFFFF", margin: "0 0 24px" }}>
+            <h1 style={{ fontSize: "clamp(32px, 3.8vw, 52px)", fontWeight: 900, lineHeight: 1.06, letterSpacing: "-0.04em", color: "#FFFFFF", margin: "0 0 14px" }}>
               Tu negocio funcionando<br />
               rápido, ordenado y<br />
               <span style={{ color: C.orange }}>bajo control.</span>
@@ -319,15 +319,15 @@ export default function LandingHero() {
             <p style={{ fontSize: 14, lineHeight: 1.6, color: "rgba(255,255,255,.42)", maxWidth: 400, margin: "0 0 8px", fontStyle: "italic" }}>
               Usado por kioscos, almacenes y ferreterías que dejaron de improvisar.
             </p>
-            <p style={{ fontSize: 13, lineHeight: 1.6, color: "rgba(255,255,255,.50)", maxWidth: 400, margin: "0 0 36px" }}>
+            <p style={{ fontSize: 13, lineHeight: 1.6, color: "rgba(255,255,255,.50)", maxWidth: 400, margin: "0 0 22px" }}>
               Cobrás en segundos. Sabés lo que pasa en tu negocio.
             </p>
 
             <div className="l-hero-btns">
-              <Link href="/registro" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "15px 30px", borderRadius: 8, fontWeight: 800, fontSize: 15, textDecoration: "none", background: C.orange, color: "#fff", letterSpacing: "-0.01em" }}>
+              <Link href="/registro" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 24px", borderRadius: 8, fontWeight: 800, fontSize: 14, textDecoration: "none", background: C.orange, color: "#fff", letterSpacing: "-0.01em" }}>
                 Empezar gratis — probalo en tu negocio
               </Link>
-              <a href="#como-funciona" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "15px 22px", borderRadius: 8, fontWeight: 600, fontSize: 14, textDecoration: "none", color: "rgba(255,255,255,.80)", border: "1px solid rgba(255,255,255,.28)" }}>
+              <a href="#como-funciona" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 18px", borderRadius: 8, fontWeight: 600, fontSize: 13, textDecoration: "none", color: "rgba(255,255,255,.80)", border: "1px solid rgba(255,255,255,.28)" }}>
                 Ver cómo funciona
               </a>
             </div>
@@ -348,7 +348,7 @@ export default function LandingHero() {
               <span style={{ fontSize: 12, color: "rgba(255,255,255,.38)", fontWeight: 500 }}>Mirá tus ventas en tiempo real →</span>
             </div>
 
-            <div className="l-mockup-pc-wrap" style={{ position: "relative", paddingBottom: 84 }}>
+            <div className="l-mockup-pc-wrap" style={{ position: "relative", paddingBottom: 52 }}>
 
               {/* PC Frame */}
               <div className="l-mockup-pc" style={{ borderRadius: 10, overflow: "hidden", border: "1px solid rgba(255,255,255,.12)", boxShadow: "0 16px 48px rgba(0,0,0,.28)", background: "#F3F4F6" }}>
@@ -368,7 +368,7 @@ export default function LandingHero() {
                 </div>
 
                 {/* App layout */}
-                <div style={{ display: "grid", gridTemplateColumns: "90px 1fr", height: 258, overflow: "hidden" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "90px 1fr", height: 210, overflow: "hidden" }}>
 
                   {/* Sidebar */}
                   <div style={{ background: "#F3F4F6", borderRight: "1px solid #E5E7EB", padding: "10px 7px", display: "flex", flexDirection: "column", gap: 1, overflow: "hidden" }}>

@@ -28,8 +28,8 @@ export const C = {
 };
 
 export const T = {
-  display: { fontSize: "clamp(42px, 5.2vw, 68px)", fontWeight: 900, lineHeight: 1.04, letterSpacing: "-0.04em", color: C.text } as React.CSSProperties,
-  h2:      { fontSize: "clamp(28px, 3.2vw, 42px)", fontWeight: 900, lineHeight: 1.12, letterSpacing: "-0.03em", color: C.text } as React.CSSProperties,
+  display: { fontSize: "clamp(34px, 4vw, 52px)", fontWeight: 900, lineHeight: 1.04, letterSpacing: "-0.04em", color: C.text } as React.CSSProperties,
+  h2:      { fontSize: "clamp(22px, 2.6vw, 34px)", fontWeight: 900, lineHeight: 1.12, letterSpacing: "-0.03em", color: C.text } as React.CSSProperties,
   h3:      { fontSize: 17, fontWeight: 700, lineHeight: 1.3, color: C.text } as React.CSSProperties,
   label:   { fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: C.light } as React.CSSProperties,
   body:    { fontSize: 15, lineHeight: 1.75, color: C.muted } as React.CSSProperties,

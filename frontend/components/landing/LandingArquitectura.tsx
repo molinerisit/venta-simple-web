@@ -49,13 +49,9 @@ export default function LandingArquitectura() {
       <div className="l-container">
 
         {/* Header */}
-        <div style={{ textAlign: "center", marginBottom: 64 }}>
-          <div style={{ ...T.label, marginBottom: 16 }}>Un sistema, dos partes</div>
-          <h2 style={{
-            fontSize: "clamp(30px, 3.6vw, 46px)", fontWeight: 900,
-            letterSpacing: "-0.035em", lineHeight: 1.08,
-            color: C.text, margin: "0 0 16px",
-          }}>
+        <div style={{ textAlign: "center", marginBottom: 36 }}>
+          <div style={{ ...T.label, marginBottom: 12 }}>Un sistema, dos partes</div>
+          <h2 style={{ ...T.h2, margin: "0 0 10px" }}>
             Todo lo que necesitás para vender<br />y controlar tu negocio.
           </h2>
           <p style={{ fontSize: 16, color: C.muted, fontWeight: 400, margin: 0, lineHeight: 1.6 }}>
@@ -64,38 +60,38 @@ export default function LandingArquitectura() {
         </div>
 
         {/* Cards */}
-        <div style={{ display: "flex", alignItems: "stretch", gap: 24, maxWidth: 940, margin: "0 auto" }}>
+        <div style={{ display: "flex", alignItems: "stretch", gap: 20, maxWidth: 860, margin: "0 auto" }}>
 
           {/* ── Punto de venta ── */}
           <div className="arq-card arq-card-blue" style={{
             flex: 1,
             background: "linear-gradient(148deg, #EFF6FF 0%, #DBEAFE 100%)",
             border: "1.5px solid #93C5FD",
-            borderRadius: 22,
-            padding: "40px 36px",
+            borderRadius: 18,
+            padding: "28px 24px",
             boxShadow: "0 6px 32px rgba(30,58,138,.10)",
           }}>
             <div style={{
-              width: 64, height: 64, borderRadius: 18,
+              width: 48, height: 48, borderRadius: 13,
               background: C.blue,
-              display: "grid", placeItems: "center", marginBottom: 24,
-              boxShadow: "0 8px 24px rgba(30,58,138,.35)",
+              display: "grid", placeItems: "center", marginBottom: 16,
+              boxShadow: "0 6px 18px rgba(30,58,138,.35)",
             }}>
-              <Monitor size={30} strokeWidth={1.6} style={{ color: "#fff" }} />
+              <Monitor size={22} strokeWidth={1.6} style={{ color: "#fff" }} />
             </div>
 
-            <div style={{ fontSize: 24, fontWeight: 800, color: C.text, letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: 6 }}>
+            <div style={{ fontSize: 18, fontWeight: 800, color: C.text, letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: 4 }}>
               Punto de venta
             </div>
             <div style={{
               display: "inline-block", fontSize: 12, fontWeight: 700,
               color: C.blue, background: "#DBEAFE", borderRadius: 99,
-              padding: "3px 12px", marginBottom: 28, letterSpacing: "0.02em",
+              padding: "2px 10px", marginBottom: 16, letterSpacing: "0.02em",
             }}>
               App para Windows
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 11 }}>
               {POS.map(f => (
                 <Bullet key={f.main} main={f.main} bold={f.bold} color={C.blue} bg="#BFDBFE" />
               ))}
@@ -105,13 +101,13 @@ export default function LandingArquitectura() {
           {/* ── Elemento central ── */}
           <div style={{ display: "flex", alignItems: "center", flexShrink: 0 }}>
             <div className="arq-center" style={{
-              width: 56, height: 56, borderRadius: "50%",
+              width: 40, height: 40, borderRadius: "50%",
               background: "#fff",
               border: `1.5px solid ${C.border}`,
-              boxShadow: "0 4px 20px rgba(0,0,0,.10)",
+              boxShadow: "0 4px 16px rgba(0,0,0,.10)",
               display: "grid", placeItems: "center",
             }}>
-              <RefreshCw size={22} strokeWidth={1.8} style={{ color: C.blue }} />
+              <RefreshCw size={17} strokeWidth={1.8} style={{ color: C.blue }} />
             </div>
           </div>
 
@@ -120,31 +116,31 @@ export default function LandingArquitectura() {
             flex: 1,
             background: "linear-gradient(148deg, #ECFDF5 0%, #D1FAE5 100%)",
             border: "1.5px solid #6EE7B7",
-            borderRadius: 22,
-            padding: "40px 36px",
+            borderRadius: 18,
+            padding: "28px 24px",
             boxShadow: "0 6px 32px rgba(10,110,69,.10)",
           }}>
             <div style={{
-              width: 64, height: 64, borderRadius: 18,
+              width: 48, height: 48, borderRadius: 13,
               background: C.green,
-              display: "grid", placeItems: "center", marginBottom: 24,
-              boxShadow: "0 8px 24px rgba(10,110,69,.32)",
+              display: "grid", placeItems: "center", marginBottom: 16,
+              boxShadow: "0 6px 18px rgba(10,110,69,.32)",
             }}>
-              <Globe size={30} strokeWidth={1.6} style={{ color: "#fff" }} />
+              <Globe size={22} strokeWidth={1.6} style={{ color: "#fff" }} />
             </div>
 
-            <div style={{ fontSize: 24, fontWeight: 800, color: C.text, letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: 6 }}>
+            <div style={{ fontSize: 18, fontWeight: 800, color: C.text, letterSpacing: "-0.03em", lineHeight: 1.15, marginBottom: 4 }}>
               Dashboard de gestión
             </div>
             <div style={{
               display: "inline-block", fontSize: 12, fontWeight: 700,
               color: C.green, background: "#A7F3D0", borderRadius: 99,
-              padding: "3px 12px", marginBottom: 28, letterSpacing: "0.02em",
+              padding: "2px 10px", marginBottom: 16, letterSpacing: "0.02em",
             }}>
               Panel web desde cualquier lugar
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 11 }}>
               {DASH.map(f => (
                 <Bullet key={f.main} main={f.main} bold={f.bold} color={C.green} bg="#6EE7B7" />
               ))}
@@ -155,25 +151,24 @@ export default function LandingArquitectura() {
 
         {/* Sync strip */}
         <div style={{
-          maxWidth: 860, margin: "52px auto 0",
+          maxWidth: 760, margin: "28px auto 0",
           background: C.surface,
-          border: `1.5px solid ${C.border}`,
-          borderRadius: 16,
-          padding: "26px 36px",
-          display: "flex", alignItems: "center", gap: 22,
-          boxShadow: "0 4px 24px rgba(0,0,0,.06)",
+          border: `1px solid ${C.border}`,
+          borderRadius: 12,
+          padding: "16px 24px",
+          display: "flex", alignItems: "center", gap: 16,
+          boxShadow: "0 4px 16px rgba(0,0,0,.05)",
         }}>
           <div style={{
-            width: 56, height: 56, borderRadius: 14, flexShrink: 0,
+            width: 40, height: 40, borderRadius: 10, flexShrink: 0,
             background: "linear-gradient(135deg, #EEF2FE, #DBEAFE)",
             border: "1px solid #BFDBFE",
             display: "grid", placeItems: "center",
-            boxShadow: "0 4px 14px rgba(30,58,138,.12)",
           }}>
-            <RefreshCw size={24} strokeWidth={1.8} style={{ color: C.blue }} />
+            <RefreshCw size={18} strokeWidth={1.8} style={{ color: C.blue }} />
           </div>
           <div>
-            <div style={{ fontSize: 17, fontWeight: 800, color: C.text, letterSpacing: "-0.02em", lineHeight: 1.25, marginBottom: 6 }}>
+            <div style={{ fontSize: 14, fontWeight: 800, color: C.text, letterSpacing: "-0.02em", lineHeight: 1.25, marginBottom: 3 }}>
               Ambas partes se sincronizan automáticamente.
             </div>
             <div style={{ fontSize: 14, color: C.muted, fontWeight: 400, lineHeight: 1.5 }}>

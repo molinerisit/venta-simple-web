@@ -152,7 +152,7 @@ export default function LandingFeatures() {
       <div className="l-container">
 
         {/* Header */}
-        <RevealDiv style={{ marginBottom: 56 }}>
+        <RevealDiv style={{ marginBottom: 32 }}>
           <div style={{ ...T.label, marginBottom: 14 }}>Diferenciales</div>
           <h2 style={{ ...T.h2, margin: "0 0 16px", maxWidth: 560 }}>
             No es otro sistema de caja.
@@ -166,7 +166,7 @@ export default function LandingFeatures() {
         <RevealDiv delay={80} style={{ marginBottom: 14 }}>
           <div className="l-feat-mp-block" style={{
             background: C.bg, border: `1px solid ${C.border}`,
-            borderRadius: 20, padding: "36px 40px",
+            borderRadius: 20, padding: "24px 28px",
             transition: "box-shadow .25s",
           }}>
             <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 6 }}>
@@ -262,7 +262,7 @@ export default function LandingFeatures() {
           <RevealDiv delay={100}>
             <div className="l-feat-diff-card" style={{
               background: C.bg, border: `1px solid ${C.border}`,
-              borderRadius: 20, padding: "36px 32px",
+              borderRadius: 20, padding: "24px 22px",
               height: "100%", boxSizing: "border-box",
               transition: "box-shadow .2s, transform .2s",
             }}>
@@ -293,7 +293,7 @@ export default function LandingFeatures() {
           <RevealDiv delay={160}>
             <div className="l-feat-diff-card" style={{
               background: C.bg, border: `1px solid ${C.border}`,
-              borderRadius: 20, padding: "36px 32px",
+              borderRadius: 20, padding: "24px 22px",
               height: "100%", boxSizing: "border-box",
               transition: "box-shadow .2s, transform .2s",
             }}>
@@ -328,7 +328,7 @@ export default function LandingFeatures() {
         <RevealDiv delay={120} style={{ marginBottom: 48 }}>
           <div className="l-feat-updates" style={{
             background: C.heroBg, borderRadius: 20,
-            padding: "36px 40px",
+            padding: "24px 28px",
           }}>
             <div>
               <div style={{ ...T.label, color: "rgba(255,255,255,.3)", marginBottom: 12 }}>Actualizaciones</div>
