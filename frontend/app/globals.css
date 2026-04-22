@@ -336,10 +336,16 @@
 
 /* ─── RESPONSIVE LANDING ─────────────────────────────────────── */
 
+/* Padding global de secciones — desktop */
+.vs-landing section {
+  padding-top: 56px !important;
+  padding-bottom: 56px !important;
+}
+
 /* Container + section padding */
 @media (max-width: 768px) {
   .l-container { padding: 0 16px; }
-  .vs-landing section { padding-top: 56px !important; padding-bottom: 56px !important; }
+  .vs-landing section { padding-top: 40px !important; padding-bottom: 40px !important; }
 }
 
 /* NAV: ocultar links centrales en mobile */
@@ -349,15 +355,15 @@
 /* HERO grid */
 .l-hero-grid {
   display: grid;
-  grid-template-columns: 1fr 460px;
-  gap: 64px;
+  grid-template-columns: 1fr 380px;
+  gap: 52px;
   align-items: center;
 }
 .l-hero-grid > * { min-width: 0; }
-.l-hero-mockup   { width: 460px !important; min-width: 460px !important; max-width: 460px !important; }
-@media (max-width: 1060px) {
-  .l-hero-grid { grid-template-columns: 1fr 400px; gap: 48px; }
-  .l-hero-mockup { width: 400px !important; min-width: 400px !important; max-width: 400px !important; }
+.l-hero-mockup   { width: 380px !important; min-width: 380px !important; max-width: 380px !important; }
+@media (max-width: 1000px) {
+  .l-hero-grid { grid-template-columns: 1fr 340px; gap: 40px; }
+  .l-hero-mockup { width: 340px !important; min-width: 340px !important; max-width: 340px !important; }
 }
 @media (max-width: 900px) {
   .l-hero-grid { grid-template-columns: 1fr; gap: 40px; }
@@ -407,6 +413,26 @@
   transition: background .15s;
 }
 .l-cta-btn:hover { background: #EA6C00; }
+
+.l-solucion-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 16px 34px;
+  border-radius: 12px;
+  text-decoration: none;
+  background: #F97316;
+  color: #fff;
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  box-shadow: 0 6px 24px rgba(249,115,22,.45), 0 2px 6px rgba(0,0,0,.08);
+  transition: box-shadow .2s ease, transform .18s ease;
+}
+.l-solucion-cta:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 36px rgba(249,115,22,.55), 0 4px 10px rgba(0,0,0,.10);
+}
 
 /* SOLUCION */
 .l-solucion-grid {
