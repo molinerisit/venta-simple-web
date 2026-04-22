@@ -1,3 +1,4 @@
+import { type ReactElement } from "react";
 import { Monitor, Globe, RefreshCw, Check } from "lucide-react";
 import { C, T } from "./tokens";
 
@@ -16,7 +17,7 @@ const DASH: { main: string; bold: string[] }[] = [
 ];
 
 function Bullet({ main, bold, color, bg }: { main: string; bold: string[]; color: string; bg: string }) {
-  let parts: (string | JSX.Element)[] = [main];
+  let parts: (string | ReactElement)[] = [main];
   bold.forEach(b => {
     parts = parts.flatMap(p => {
       if (typeof p !== "string") return [p];
