@@ -102,7 +102,7 @@ const GUIA = [
     bdrDark: "rgba(14,165,233,.2)",
     titulo: "La app se instaló pero no abre",
     pasos: [
-      "Buscá 'Venta Simple Hub' en el menú Inicio.",
+      "Buscá 'Venta Simple' en el menú Inicio.",
       "Si no aparece, revisá en C:\\Users\\TuUsuario\\AppData\\Local\\Programs\\Venta Simple.",
       "Clic derecho en el .exe → Ejecutar como administrador.",
       "Si ves un error sobre módulos faltantes, desinstalá la app y volvé a instalar la versión más reciente desde esta página.",
@@ -230,7 +230,7 @@ export default function DescargarPage() {
           </div>
 
           <h1 className="text-3xl font-bold text-foreground mb-3" style={{ letterSpacing: "-0.03em" }}>
-            Venta Simple Hub para Windows
+            Venta Simple para Windows
           </h1>
           <p className="text-base text-muted-foreground leading-relaxed" style={{ maxWidth: 460, margin: "0 auto" }}>
             Gestioná ventas, stock y clientes sin depender de internet.
