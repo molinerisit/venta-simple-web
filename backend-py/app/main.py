@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .config import get_settings
 from .routers import auth, productos, proveedores, clientes, ventas, metricas, sync, admin
-from .routers import suscripciones, licencias, cuenta
+from .routers import suscripciones, licencias, cuenta, catalog
 
 settings = get_settings()
 
@@ -40,6 +40,7 @@ app.include_router(admin.router)
 app.include_router(suscripciones.router)
 app.include_router(licencias.router)
 app.include_router(cuenta.router)
+app.include_router(catalog.router)
 
 
 @app.get("/")
