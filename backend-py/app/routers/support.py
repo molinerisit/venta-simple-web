@@ -82,7 +82,7 @@ def create_conversation(body: ConversationCreate, db: Session = Depends(get_db))
     row = db.execute(
         text("""
             INSERT INTO support_conversations (client_id, business_name, app_version, context)
-            VALUES (:client_id, :business_name, :app_version, :context::jsonb)
+            VALUES (:client_id, :business_name, :app_version, CAST(:context AS jsonb))
             RETURNING id, created_at
         """),
         {
