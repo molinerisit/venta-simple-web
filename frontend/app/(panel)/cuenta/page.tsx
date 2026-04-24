@@ -163,7 +163,7 @@ function CuentaPageInner() {
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 16, maxWidth: 560 }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 20, maxWidth: 540 }}>
 
       {/* Toast */}
       {toast && (
@@ -184,7 +184,7 @@ function CuentaPageInner() {
       )}
 
       {/* ── Header ── */}
-      <div style={{ paddingBottom: 4 }}>
+      <div style={{ paddingBottom: 8 }}>
         <h1 style={{ fontSize: 22, fontWeight: 800, color: "#0F172A", margin: 0, letterSpacing: "-0.02em" }}>
           Mi cuenta
         </h1>
@@ -219,9 +219,10 @@ function CuentaPageInner() {
       <div style={{
         background: "#fff",
         border: "1px solid #E9EAEC",
+        borderTop: "3px solid #F97316",
         borderRadius: 16,
         padding: "22px 20px",
-        boxShadow: "0 2px 12px rgba(30,58,138,.07), 0 1px 3px rgba(0,0,0,.04)",
+        boxShadow: "0 4px 20px rgba(249,115,22,.10), 0 1px 4px rgba(0,0,0,.05)",
       }}>
         <div style={{ display: "flex", alignItems: "flex-start", gap: 14, marginBottom: 18 }}>
           <div style={{
@@ -328,8 +329,8 @@ function CuentaPageInner() {
 
       {/* ── Plan actual ── */}
       <div style={{
-        background: "#fff", border: "1px solid #E9EAEC", borderRadius: 12,
-        padding: "16px 18px", boxShadow: "0 1px 3px rgba(0,0,0,.04)",
+        background: "#FAFAFA", border: "1px solid #F1F3F5", borderRadius: 12,
+        padding: "14px 16px",
       }}>
         {loading ? (
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -404,8 +405,8 @@ function CuentaPageInner() {
       {/* ── Upgrade a PRO ── */}
       {!loading && (isActive || isPaused) && currentPlan !== "PRO" && (
         <div style={{
-          background: "#fff", border: "1px solid #E9EAEC", borderRadius: 12,
-          padding: "16px 18px", boxShadow: "0 1px 3px rgba(0,0,0,.04)",
+          background: "#FAFAFA", border: "1px solid #F1F3F5", borderRadius: 12,
+          padding: "14px 16px",
           display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap",
         }}>
           <div>
