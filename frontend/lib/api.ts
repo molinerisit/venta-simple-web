@@ -275,6 +275,45 @@ export const pausarSuscripcionMP = () =>
 export const reanudarSuscripcionMP = () =>
   http.post("/api/suscripciones/reanudar");
 
+// ── Panel de soporte (rol support / superadmin) ────────────────
+export interface SupportConversation {
+  id: string;
+  client_id: string;
+  business_name: string | null;
+  app_version: string | null;
+  status: string;
+  created_at: string;
+  updated_at: string;
+  msg_count: number;
+  last_message: string | null;
+}
+
+export interface SupportMessage {
+  id: number;
+  sender: string;
+  text: string;
+  created_at: string;
+}
+
+export const getSupportConversations = (status = "active") =>
+  http.get<SupportConversation[]>("/api/support/conversations", { params: { status } });
+
+export const getSupportMessages = (conv_id: string) =>
+  http.get<SupportMessage[]>(`/api/support/messages/${conv_id}`);
+
+export const sendSupportReply = (conversation_id: string, text: string) =>
+  http.post<{ id: number; created_at: string }>("/api/support/messages", {
+    conversation_id,
+    sender: "support",
+    text,
+  });
+
+export const resolveConversation = (conv_id: string) =>
+  http.patch(`/api/support/conversations/${conv_id}`, { status: "resolved" });
+
+export const reopenConversation = (conv_id: string) =>
+  http.patch(`/api/support/conversations/${conv_id}`, { status: "active" });
+
 // Legacy types (instalaciones Java backend)
 export interface Instalacion {
   id: string;

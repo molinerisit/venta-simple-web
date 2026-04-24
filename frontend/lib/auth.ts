@@ -18,7 +18,7 @@ export function isAuthenticated() {
 
 export interface PanelUser {
   nombre: string;
-  rol: "superadmin" | "owner" | "admin";
+  rol: "superadmin" | "owner" | "admin" | "support";
   tenant_id?: string;
 }
 
