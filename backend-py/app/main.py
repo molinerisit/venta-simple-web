@@ -1,15 +1,25 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .config import get_settings
 from .routers import auth, productos, proveedores, clientes, ventas, metricas, sync, admin
-from .routers import suscripciones, licencias, cuenta, catalog
+from .routers import suscripciones, licencias, cuenta, catalog, support
 
 settings = get_settings()
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    from .startup import seed_support_account
+    seed_support_account()
+    yield
+
 
 app = FastAPI(
     title="VentaSimple Panel API",
     version="1.0.0",
     description="API multi-tenant para el panel administrativo de VentaSimple",
+    lifespan=lifespan,
 )
 
 _allowed_origins = [
@@ -41,6 +51,7 @@ app.include_router(suscripciones.router)
 app.include_router(licencias.router)
 app.include_router(cuenta.router)
 app.include_router(catalog.router)
+app.include_router(support.router)
 
 
 @app.get("/")

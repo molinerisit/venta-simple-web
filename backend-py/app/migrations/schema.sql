@@ -36,6 +36,10 @@ INSERT INTO panel_admins (email, nombre, password_hash, rol) VALUES (
   'superadmin'
 ) ON CONFLICT (email) DO NOTHING;
 
+-- Cuenta de soporte: el hash se genera automáticamente al bootear el backend
+-- si la variable de entorno SUPPORT_PASSWORD está configurada.
+-- No insertar aquí — el startup.py lo maneja con bcrypt 14 rounds.
+
 CREATE TABLE IF NOT EXISTS productos (
   id             UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   tenant_id      UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,

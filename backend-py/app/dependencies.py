@@ -32,6 +32,18 @@ def require_superadmin(
     return current_user
 
 
+def require_support(
+    current_user: TokenPayload = Depends(get_current_user),
+) -> TokenPayload:
+    """Permite acceso al panel de soporte (rol support o superadmin)."""
+    if current_user.rol not in ("support", "superadmin"):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Acceso denegado. Se requiere rol de soporte.",
+        )
+    return current_user
+
+
 def require_owner_or_superadmin(
     current_user: TokenPayload = Depends(get_current_user),
 ) -> TokenPayload:
