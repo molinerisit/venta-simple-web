@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS tenants (
 -- Si la tabla ya existe, agregar columnas si faltan:
 ALTER TABLE tenants ADD COLUMN IF NOT EXISTS mp_preapproval_id VARCHAR(100);
 ALTER TABLE tenants ADD COLUMN IF NOT EXISTS email_verified BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE tenants ADD COLUMN IF NOT EXISTS last_diagnostic JSONB;
 
 CREATE TABLE IF NOT EXISTS panel_admins (
   id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),

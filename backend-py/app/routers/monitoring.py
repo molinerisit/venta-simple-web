@@ -47,6 +47,14 @@ def _ensure_tables(db: Session):
 
 # ── Schemas ──────────────────────────────────────────────────────────────────
 
+class PingPayload(BaseModel):
+    cpu_pct:     Optional[float] = None
+    ram_pct:     Optional[float] = None
+    disk_pct:    Optional[float] = None
+    ram_free_mb: Optional[int]   = None
+    db_ok:       Optional[bool]  = None
+    version_app: Optional[str]   = None
+
 class DayHours(BaseModel):
     day: int          # 0=Lunes … 6=Domingo
     open_time: str    # "HH:MM"
@@ -60,13 +68,17 @@ class HoursBulk(BaseModel):
 # ── Endpoints de tenant ──────────────────────────────────────────────────────
 
 @router.post("/api/tenants/me/ping")
-def ping(db: Session = Depends(get_db), user=Depends(get_current_user)):
-    """El desktop pinga para indicar que está activo."""
+def ping(body: PingPayload = PingPayload(), db: Session = Depends(get_db), user=Depends(get_current_user)):
+    """El desktop pinga con métricas del sistema."""
     _ensure_tables(db)
-    db.execute(
-        text("UPDATE tenants SET last_seen_at = NOW() WHERE id = :id"),
-        {"id": user.tenant_id}
-    )
+    import json
+    diag = {k: v for k, v in body.model_dump().items() if v is not None and k != "version_app"}
+    updates = ["last_seen_at = NOW()", "last_diagnostic = CAST(:diag AS jsonb)"]
+    params: dict = {"id": user.tenant_id, "diag": json.dumps(diag)}
+    if body.version_app:
+        updates.append("version_app = :ver")
+        params["ver"] = body.version_app
+    db.execute(text(f"UPDATE tenants SET {', '.join(updates)} WHERE id = :id"), params)
     db.commit()
     return {"ok": True}
 
@@ -135,6 +147,7 @@ def list_tenants(db: Session = Depends(get_db), _user=Depends(require_support)):
             t.last_seen_at,
             t.version_app,
             t.created_at,
+            t.last_diagnostic,
             bh.day,
             bh.open_time,
             bh.close_time,
@@ -149,13 +162,14 @@ def list_tenants(db: Session = Depends(get_db), _user=Depends(require_support)):
 
     return [
         {
-            "id":            str(r.id),
+            "id":             str(r.id),
             "nombre_negocio": r.nombre_negocio,
-            "email":         r.email,
-            "plan":          r.plan,
-            "last_seen_at":  r.last_seen_at.isoformat() if r.last_seen_at else None,
-            "version_app":   r.version_app,
-            "created_at":    r.created_at.isoformat(),
+            "email":          r.email,
+            "plan":           r.plan,
+            "last_seen_at":   r.last_seen_at.isoformat() if r.last_seen_at else None,
+            "version_app":    r.version_app,
+            "created_at":     r.created_at.isoformat(),
+            "diagnostic":     r.last_diagnostic or {},
             "hours": {
                 "configured": r.day is not None,
                 "is_open":    r.day_open,

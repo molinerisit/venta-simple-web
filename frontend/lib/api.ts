@@ -323,6 +323,14 @@ export interface TenantHours {
   close_time: string | null;
 }
 
+export interface TenantDiagnostic {
+  cpu_pct?:     number;
+  ram_pct?:     number;
+  ram_free_mb?: number;
+  disk_pct?:    number;
+  db_ok?:       boolean;
+}
+
 export interface TenantStatus {
   id: string;
   nombre_negocio: string;
@@ -332,10 +340,37 @@ export interface TenantStatus {
   version_app: string | null;
   created_at: string;
   hours: TenantHours;
+  diagnostic: TenantDiagnostic;
 }
 
-export const getSupportTenants = () =>
+export interface RemoteCommand {
+  id: string;
+  command_type: string;
+  description: string;
+  params: Record<string, unknown>;
+  status: "pending" | "done" | "error" | "skipped";
+  created_by: string;
+  created_at: string;
+  executed_at: string | null;
+  result: Record<string, unknown> | null;
+}
+
+export interface CommandCatalogItem {
+  type: string;
+  description: string;
+}
+
+export const getSupportTenants       = () =>
   http.get<TenantStatus[]>("/api/support/tenants");
+
+export const getCommandCatalog       = () =>
+  http.get<CommandCatalogItem[]>("/api/support/commands-catalog");
+
+export const sendRemoteCommand       = (tenant_id: string, command_type: string, params: Record<string, unknown> = {}) =>
+  http.post<{ id: string }>(`/api/support/commands/${tenant_id}`, { command_type, params });
+
+export const getCommandHistory       = (tenant_id: string) =>
+  http.get<RemoteCommand[]>(`/api/support/commands/${tenant_id}`);
 
 // Legacy types (instalaciones Java backend)
 export interface Instalacion {

@@ -4,7 +4,9 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import {
   getSupportConversations, getSupportMessages, sendSupportReply,
   resolveConversation, reopenConversation, getSupportTenants,
+  getCommandCatalog, sendRemoteCommand, getCommandHistory,
   type SupportConversation, type SupportMessage, type TenantStatus,
+  type CommandCatalogItem, type RemoteCommand,
 } from "@/lib/api";
 
 const C = {
@@ -264,6 +266,7 @@ function ChatPanel() {
 
 function ClientesPanel() {
   const [tenants,    setTenants]    = useState<TenantStatus[]>([]);
+  const [catalog,    setCatalog]    = useState<CommandCatalogItem[]>([]);
   const [loading,    setLoading]    = useState(true);
   const [alertedIds, setAlertedIds] = useState<Set<string>>(new Set());
   const [blink,      setBlink]      = useState(false);
@@ -297,6 +300,7 @@ function ClientesPanel() {
   }, [alertedIds]);
 
   useEffect(() => {
+    getCommandCatalog().then(({ data }) => setCatalog(data)).catch(() => {});
     loadTenants();
     pollRef.current = setInterval(loadTenants, 60000);
     return () => { if (pollRef.current) clearInterval(pollRef.current); };
@@ -342,7 +346,7 @@ function ClientesPanel() {
           <div style={{ fontSize: 11, fontWeight: 700, color: "#DC2626", textTransform: "uppercase", letterSpacing: .5, marginBottom: 8 }}>
             Sin conexión · horario comercial activo
           </div>
-          {alerts.map(t => <TenantCard key={t.id} tenant={t} />)}
+          {alerts.map(t => <TenantCard key={t.id} tenant={t} catalog={catalog} />)}
           <div style={{ height: 20 }} />
         </>
       )}
@@ -351,7 +355,7 @@ function ClientesPanel() {
       <div style={{ fontSize: 11, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: .5, marginBottom: 8 }}>
         Todos los negocios ({ok.length})
       </div>
-      {ok.map(t => <TenantCard key={t.id} tenant={t} />)}
+      {ok.map(t => <TenantCard key={t.id} tenant={t} catalog={catalog} />)}
       {!loading && tenants.length === 0 && (
         <div style={{ textAlign: "center", color: C.muted, padding: 40, fontSize: 14 }}>
           No hay negocios registrados todavía.
@@ -361,47 +365,157 @@ function ClientesPanel() {
   );
 }
 
-function TenantCard({ tenant }: { tenant: TenantStatus }) {
+function DiagBar({ label, pct, warn = 80, danger = 90 }: { label: string; pct?: number; warn?: number; danger?: number }) {
+  if (pct === undefined || pct === null) return null;
+  const color = pct >= danger ? "#EF4444" : pct >= warn ? "#F59E0B" : "#22C55E";
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+      <span style={{ fontSize: 11, color: C.muted, width: 36, flexShrink: 0 }}>{label}</span>
+      <div style={{ flex: 1, height: 6, background: "#F1F5F9", borderRadius: 3, overflow: "hidden" }}>
+        <div style={{ width: `${pct}%`, height: "100%", background: color, borderRadius: 3, transition: "width .3s" }} />
+      </div>
+      <span style={{ fontSize: 11, color, fontWeight: 600, width: 34, textAlign: "right" }}>{pct}%</span>
+    </div>
+  );
+}
+
+function TenantCard({ tenant, catalog }: { tenant: TenantStatus; catalog: CommandCatalogItem[] }) {
+  const [expanded,  setExpanded]  = useState(false);
+  const [history,   setHistory]   = useState<RemoteCommand[]>([]);
+  const [sending,   setSending]   = useState<string | null>(null);
+  const [portInput, setPortInput] = useState("");
+  const [notifMsg,  setNotifMsg]  = useState("");
+
   const { level, label } = computeStatus(tenant);
-  const statusColor = level === "alert" ? "#DC2626" : level === "ok" && label === "Conectado" ? "#16A34A" : C.muted;
-  const dot         = level === "alert" ? "#EF4444" : level === "ok" && label === "Conectado" ? "#22C55E" : "#94A3B8";
+  const statusColor = level === "alert" ? "#DC2626" : label === "Conectado" ? "#16A34A" : C.muted;
+  const dot         = level === "alert" ? "#EF4444" : label === "Conectado" ? "#22C55E" : "#94A3B8";
+  const d           = tenant.diagnostic || {};
+
+  async function loadHistory() {
+    try { const { data } = await getCommandHistory(tenant.id); setHistory(data); } catch { /* */ }
+  }
+
+  async function handleCommand(type: string) {
+    setSending(type);
+    try {
+      let params: Record<string, unknown> = {};
+      if (type === "KILL_PORT") params = { port: Number(portInput) };
+      if (type === "NOTIFY")    params = { message: notifMsg };
+      await sendRemoteCommand(tenant.id, type, params);
+      await loadHistory();
+    } catch { /* */ }
+    setSending(null);
+  }
+
+  useEffect(() => { if (expanded) loadHistory(); }, [expanded]);
 
   return (
     <div style={{
       background: "#fff", border: `1px solid ${level === "alert" ? "#FECACA" : C.border}`,
-      borderRadius: 10, padding: "12px 16px", marginBottom: 10,
-      display: "flex", alignItems: "flex-start", gap: 12,
+      borderRadius: 10, marginBottom: 10, overflow: "hidden",
     }}>
-      {/* Dot de estado */}
-      <div style={{
-        width: 10, height: 10, borderRadius: "50%", background: dot,
-        marginTop: 5, flexShrink: 0,
-        boxShadow: level === "alert" ? "0 0 0 3px #FEE2E2" : "none",
-      }} />
-
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
-          <span style={{ fontSize: 14, fontWeight: 700, color: C.text }}>{tenant.nombre_negocio}</span>
-          <span style={{ fontSize: 11, background: "#F1F5F9", color: C.muted, borderRadius: 4, padding: "1px 6px" }}>{tenant.plan}</span>
+      {/* Header */}
+      <div style={{ padding: "12px 16px", display: "flex", alignItems: "flex-start", gap: 12, cursor: "pointer" }}
+        onClick={() => setExpanded(e => !e)}>
+        <div style={{ width: 10, height: 10, borderRadius: "50%", background: dot, marginTop: 5, flexShrink: 0, boxShadow: level === "alert" ? "0 0 0 3px #FEE2E2" : "none" }} />
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
+            <span style={{ fontSize: 14, fontWeight: 700, color: C.text }}>{tenant.nombre_negocio}</span>
+            <span style={{ fontSize: 11, background: "#F1F5F9", color: C.muted, borderRadius: 4, padding: "1px 6px" }}>{tenant.plan}</span>
+          </div>
+          <div style={{ fontSize: 12, color: C.muted, marginTop: 2 }}>{tenant.email}</div>
+          <div style={{ display: "flex", gap: 16, marginTop: 6, flexWrap: "wrap" }}>
+            <span style={{ fontSize: 12, color: statusColor, fontWeight: 600 }}>{label}</span>
+            <span style={{ fontSize: 12, color: C.muted }}>Ping: {timeAgo(tenant.last_seen_at)}</span>
+            {tenant.version_app && <span style={{ fontSize: 12, color: C.muted }}>v{tenant.version_app}</span>}
+            {tenant.hours.configured && tenant.hours.is_open && <span style={{ fontSize: 12, color: C.muted }}>Hoy: {tenant.hours.open_time}–{tenant.hours.close_time}</span>}
+            {tenant.hours.configured && !tenant.hours.is_open && <span style={{ fontSize: 12, color: C.muted }}>Hoy: cerrado</span>}
+            {!tenant.hours.configured && <span style={{ fontSize: 12, color: "#F59E0B" }}>Sin horario</span>}
+            {/* Métricas rápidas */}
+            {d.cpu_pct  !== undefined && <span style={{ fontSize: 12, color: d.cpu_pct  >= 90 ? "#EF4444" : C.muted }}>CPU {d.cpu_pct}%</span>}
+            {d.ram_pct  !== undefined && <span style={{ fontSize: 12, color: d.ram_pct  >= 90 ? "#EF4444" : C.muted }}>RAM {d.ram_pct}%</span>}
+            {d.disk_pct !== undefined && <span style={{ fontSize: 12, color: d.disk_pct >= 90 ? "#EF4444" : C.muted }}>Disco {d.disk_pct}%</span>}
+          </div>
         </div>
-        <div style={{ fontSize: 12, color: C.muted, marginTop: 2 }}>{tenant.email}</div>
-        <div style={{ display: "flex", gap: 16, marginTop: 6, flexWrap: "wrap" }}>
-          <span style={{ fontSize: 12, color: statusColor, fontWeight: 600 }}>{label}</span>
-          <span style={{ fontSize: 12, color: C.muted }}>Último ping: {timeAgo(tenant.last_seen_at)}</span>
-          {tenant.version_app && <span style={{ fontSize: 12, color: C.muted }}>v{tenant.version_app}</span>}
-          {tenant.hours.configured && tenant.hours.is_open && (
-            <span style={{ fontSize: 12, color: C.muted }}>
-              Hoy: {tenant.hours.open_time} – {tenant.hours.close_time}
-            </span>
-          )}
-          {tenant.hours.configured && !tenant.hours.is_open && (
-            <span style={{ fontSize: 12, color: C.muted }}>Hoy: cerrado</span>
-          )}
-          {!tenant.hours.configured && (
-            <span style={{ fontSize: 12, color: "#F59E0B" }}>Sin horario configurado</span>
-          )}
-        </div>
+        <span style={{ fontSize: 16, color: C.muted, marginLeft: 8 }}>{expanded ? "▲" : "▼"}</span>
       </div>
+
+      {/* Panel expandido */}
+      {expanded && (
+        <div style={{ borderTop: `1px solid ${C.border}`, padding: "14px 16px", background: "#FAFBFC" }}>
+
+          {/* Diagnóstico */}
+          <div style={{ marginBottom: 14 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: .5, marginBottom: 8 }}>Diagnóstico del sistema</div>
+            {Object.keys(d).length === 0
+              ? <div style={{ fontSize: 12, color: C.muted }}>Sin datos — el negocio no ha pingado con métricas aún</div>
+              : <>
+                  <DiagBar label="CPU"   pct={d.cpu_pct}  />
+                  <DiagBar label="RAM"   pct={d.ram_pct}  />
+                  <DiagBar label="Disco" pct={d.disk_pct} />
+                  {d.ram_free_mb !== undefined && <div style={{ fontSize: 11, color: C.muted, marginTop: 4 }}>{d.ram_free_mb} MB RAM libre</div>}
+                </>
+            }
+          </div>
+
+          {/* Comandos remotos */}
+          <div>
+            <div style={{ fontSize: 11, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: .5, marginBottom: 8 }}>Acciones remotas</div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 10 }}>
+              {catalog.filter(c => c.type !== "KILL_PORT" && c.type !== "NOTIFY").map(cmd => (
+                <button key={cmd.type} onClick={() => handleCommand(cmd.type)} disabled={sending === cmd.type}
+                  title={cmd.description}
+                  style={{
+                    padding: "5px 12px", border: `1px solid ${C.border}`, borderRadius: 6,
+                    background: sending === cmd.type ? "#F1F5F9" : "#fff",
+                    color: C.text, fontSize: 12, cursor: "pointer", fontWeight: 500,
+                  }}>
+                  {sending === cmd.type ? "..." : cmd.type.replace(/_/g, " ")}
+                </button>
+              ))}
+            </div>
+
+            {/* KILL_PORT con input */}
+            <div style={{ display: "flex", gap: 6, marginBottom: 6 }}>
+              <input value={portInput} onChange={e => setPortInput(e.target.value)} placeholder="Puerto (ej: 8080)"
+                style={{ width: 130, padding: "5px 8px", border: `1px solid ${C.border}`, borderRadius: 6, fontSize: 12 }} />
+              <button onClick={() => handleCommand("KILL_PORT")} disabled={!portInput || sending === "KILL_PORT"}
+                style={{ padding: "5px 12px", border: `1px solid ${C.border}`, borderRadius: 6, background: "#fff", color: "#DC2626", fontSize: 12, cursor: "pointer", fontWeight: 600 }}>
+                {sending === "KILL_PORT" ? "..." : "Kill port"}
+              </button>
+            </div>
+
+            {/* NOTIFY con input */}
+            <div style={{ display: "flex", gap: 6, marginBottom: 14 }}>
+              <input value={notifMsg} onChange={e => setNotifMsg(e.target.value)} placeholder="Mensaje para el usuario..."
+                style={{ flex: 1, padding: "5px 8px", border: `1px solid ${C.border}`, borderRadius: 6, fontSize: 12 }} />
+              <button onClick={() => handleCommand("NOTIFY")} disabled={!notifMsg || sending === "NOTIFY"}
+                style={{ padding: "5px 12px", border: `1px solid ${C.border}`, borderRadius: 6, background: C.blue, color: "#fff", fontSize: 12, cursor: "pointer", fontWeight: 600 }}>
+                {sending === "NOTIFY" ? "..." : "Notificar"}
+              </button>
+            </div>
+
+            {/* Historial */}
+            {history.length > 0 && (
+              <div>
+                <div style={{ fontSize: 11, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: .5, marginBottom: 6 }}>Historial de acciones</div>
+                {history.slice(0, 8).map(cmd => (
+                  <div key={cmd.id} style={{ display: "flex", gap: 8, alignItems: "flex-start", padding: "5px 0", borderBottom: `1px solid ${C.border}` }}>
+                    <span style={{ fontSize: 10, background: cmd.status === "done" ? "#DCFCE7" : cmd.status === "error" ? "#FEE2E2" : "#F1F5F9", color: cmd.status === "done" ? "#15803D" : cmd.status === "error" ? "#DC2626" : C.muted, borderRadius: 4, padding: "1px 5px", flexShrink: 0 }}>
+                      {cmd.status}
+                    </span>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <span style={{ fontSize: 12, color: C.text }}>{cmd.command_type}</span>
+                      {cmd.result?.message && <span style={{ fontSize: 11, color: C.muted, marginLeft: 6 }}>{String(cmd.result.message)}</span>}
+                    </div>
+                    <span style={{ fontSize: 10, color: C.muted, flexShrink: 0 }}>{timeAgo(cmd.executed_at || cmd.created_at)}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
