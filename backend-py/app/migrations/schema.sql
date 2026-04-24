@@ -167,3 +167,36 @@ CREATE TABLE IF NOT EXISTS licencias (
   expira_at    TIMESTAMPTZ,
   created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+CREATE TABLE IF NOT EXISTS support_conversations (
+  id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  client_id     TEXT NOT NULL,
+  business_name TEXT,
+  app_version   TEXT,
+  context       JSONB,
+  status        TEXT NOT NULL DEFAULT 'active',
+  created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_sup_conv_client ON support_conversations(client_id);
+CREATE INDEX IF NOT EXISTS idx_sup_conv_status ON support_conversations(status);
+
+CREATE TABLE IF NOT EXISTS support_messages (
+  id              BIGSERIAL PRIMARY KEY,
+  conversation_id UUID NOT NULL REFERENCES support_conversations(id) ON DELETE CASCADE,
+  sender          TEXT NOT NULL,
+  text            TEXT NOT NULL,
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_sup_msg_conv ON support_messages(conversation_id, created_at);
+
+CREATE TABLE IF NOT EXISTS business_hours (
+  id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id  UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+  day        SMALLINT NOT NULL,
+  open_time  TIME NOT NULL DEFAULT '09:00',
+  close_time TIME NOT NULL DEFAULT '18:00',
+  is_open    BOOLEAN NOT NULL DEFAULT TRUE,
+  UNIQUE(tenant_id, day)
+);
+CREATE INDEX IF NOT EXISTS idx_bh_tenant ON business_hours(tenant_id);

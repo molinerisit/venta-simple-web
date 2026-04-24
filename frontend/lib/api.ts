@@ -314,6 +314,29 @@ export const resolveConversation = (conv_id: string) =>
 export const reopenConversation = (conv_id: string) =>
   http.patch(`/api/support/conversations/${conv_id}`, { status: "active" });
 
+// ── Monitoreo de negocios ────────────────────────────────────────────────────
+
+export interface TenantHours {
+  configured: boolean;
+  is_open: boolean | null;
+  open_time: string | null;
+  close_time: string | null;
+}
+
+export interface TenantStatus {
+  id: string;
+  nombre_negocio: string;
+  email: string;
+  plan: string;
+  last_seen_at: string | null;
+  version_app: string | null;
+  created_at: string;
+  hours: TenantHours;
+}
+
+export const getSupportTenants = () =>
+  http.get<TenantStatus[]>("/api/support/tenants");
+
 // Legacy types (instalaciones Java backend)
 export interface Instalacion {
   id: string;
