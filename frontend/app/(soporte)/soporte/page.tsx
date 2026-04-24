@@ -196,8 +196,8 @@ export default function SoportePage() {
                 </button>
               ) : (
                 <button onClick={handleReopen} style={{
-                  padding: "6px 14px", border: "none", borderRadius: 6, fontSize: 12, fontWeight: 600,
-                  background: "#F1F5F9", color: C.muted, cursor: "pointer", border: `1px solid ${C.border}` as string,
+                  padding: "6px 14px", borderRadius: 6, fontSize: 12, fontWeight: 600,
+                  background: "#F1F5F9", color: C.muted, cursor: "pointer", border: `1px solid ${C.border}`,
                 }}>
                   Reabrir
                 </button>
