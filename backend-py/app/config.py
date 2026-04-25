@@ -8,9 +8,13 @@ class Settings(BaseSettings):
     algorithm: str = "HS256"
     access_token_expire_minutes: int = 1440  # 24h
     frontend_url: str = "http://localhost:3000"
-    # Mercado Pago
+    # Mercado Pago — token de VentaSimple (suscripciones/preapproval)
     mp_access_token: str = ""
-    webhook_public_url: str = ""  # e.g. https://backend.vercel.app
+    webhook_public_url: str = ""
+    # Mercado Pago — OAuth de negocios clientes (cobros / QR)
+    mp_client_id: str = ""
+    mp_client_secret: str = ""
+    mp_redirect_uri: str = "https://api.ventasimple.cloud/mercadopago/oauth/callback"
     # Email (Resend)
     resend_api_key: str = ""
     from_email: str = "VentaSimple <onboarding@resend.dev>"
