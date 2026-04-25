@@ -201,3 +201,17 @@ CREATE TABLE IF NOT EXISTS business_hours (
   UNIQUE(tenant_id, day)
 );
 CREATE INDEX IF NOT EXISTS idx_bh_tenant ON business_hours(tenant_id);
+
+CREATE TABLE IF NOT EXISTS support_commands (
+  id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id    UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+  command_type TEXT NOT NULL,
+  params       JSONB NOT NULL DEFAULT '{}',
+  status       TEXT NOT NULL DEFAULT 'pending',
+  created_by   TEXT NOT NULL,
+  created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  executed_at  TIMESTAMPTZ,
+  result       JSONB
+);
+CREATE INDEX IF NOT EXISTS idx_sc_tenant  ON support_commands(tenant_id, status);
+CREATE INDEX IF NOT EXISTS idx_sc_created ON support_commands(created_at DESC);
