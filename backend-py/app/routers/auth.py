@@ -1,9 +1,11 @@
 import logging
 from datetime import timedelta
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from jose import JWTError, jwt
 from pydantic import BaseModel
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 
@@ -15,12 +17,14 @@ from ..utils.security import verify_password, hash_password, create_access_token
 from ..config import get_settings
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
+limiter = Limiter(key_func=get_remote_address)
 
 
 # ── Login ─────────────────────────────────────────────────────────────────────
 
 @router.post("/login", response_model=LoginResponse)
-def login(body: LoginRequest, db: Session = Depends(get_db)):
+@limiter.limit("10/minute")
+def login(request: Request, body: LoginRequest, db: Session = Depends(get_db)):
     # panel_admin (superadmin / admin) — sin verificación de email
     admin = db.execute(
         text("SELECT * FROM panel_admins WHERE email = :email"),
@@ -68,7 +72,8 @@ def login(body: LoginRequest, db: Session = Depends(get_db)):
 # ── Register ──────────────────────────────────────────────────────────────────
 
 @router.post("/register", status_code=201)
-def register(body: RegisterRequest, db: Session = Depends(get_db)):
+@limiter.limit("5/minute")
+def register(request: Request, body: RegisterRequest, db: Session = Depends(get_db)):
     existing = db.execute(
         text("SELECT id, email_verified FROM tenants WHERE email = :email"),
         {"email": body.email},

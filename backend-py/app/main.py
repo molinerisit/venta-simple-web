@@ -1,12 +1,19 @@
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 from .config import get_settings
 from .routers import auth, productos, proveedores, clientes, ventas, metricas, sync, admin
 from .routers import suscripciones, licencias, cuenta, catalog, support, monitoring, remote_commands
 from .routers import mp_oauth
 
 settings = get_settings()
+
+# ── Rate limiter (compartido entre routers via app.state.limiter) ─────────────
+limiter = Limiter(key_func=get_remote_address, default_limits=["200/minute"])
 
 
 @asynccontextmanager
@@ -21,7 +28,21 @@ app = FastAPI(
     version="1.0.0",
     description="API multi-tenant para el panel administrativo de VentaSimple",
     lifespan=lifespan,
+    # Deshabilitar docs en producción no es suficiente por sí solo,
+    # pero evita que OpenAPI exponga la superficie de ataque.
+    docs_url=None if not settings.secret_key.startswith("dev-") else "/docs",
+    redoc_url=None,
 )
+
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+# ── Exception handler global — nunca exponer stack traces ────────────────────
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    import logging
+    logging.getLogger("ventasimple").error("Unhandled error: %s", exc, exc_info=True)
+    return JSONResponse(status_code=500, content={"detail": "Error interno del servidor."})
 
 _allowed_origins = [
     settings.frontend_url,
@@ -36,8 +57,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=_allowed_origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type", "Accept"],
 )
 
 app.include_router(auth.router)

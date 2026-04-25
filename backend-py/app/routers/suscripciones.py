@@ -3,7 +3,11 @@ Router: /api/suscripciones
 Gestión de suscripciones Mercado Pago (preapproval) para los tenants.
 """
 
-from fastapi import APIRouter, Depends, HTTPException, Request, status
+import hashlib
+import hmac
+import logging
+
+from fastapi import APIRouter, Depends, Header, HTTPException, Request, status
 from pydantic import BaseModel
 from sqlalchemy import text
 from typing import Optional
@@ -18,6 +22,39 @@ from ..utils.mercadopago import (
     resume_preapproval,
 )
 from ..config import get_settings
+
+logger = logging.getLogger(__name__)
+
+
+def _verify_mp_webhook_signature(
+    x_signature: str,
+    x_request_id: str,
+    data_id: str,
+    secret: str,
+) -> bool:
+    """
+    Verifica la firma X-Signature de los webhooks de Mercado Pago.
+    Formato: ts=TIMESTAMP,v1=HMAC_SHA256
+    Template: "id:{data_id};request-id:{x_request_id};ts:{ts}"
+    """
+    parts = {}
+    for part in x_signature.split(","):
+        if "=" in part:
+            k, v = part.split("=", 1)
+            parts[k.strip()] = v.strip()
+
+    ts = parts.get("ts", "")
+    received = parts.get("v1", "")
+    if not ts or not received:
+        return False
+
+    signed_template = f"id:{data_id};request-id:{x_request_id};ts:{ts}"
+    expected = hmac.new(
+        secret.encode("utf-8"),
+        signed_template.encode("utf-8"),
+        hashlib.sha256,
+    ).hexdigest()
+    return hmac.compare_digest(expected, received)
 
 router = APIRouter(prefix="/api/suscripciones", tags=["suscripciones"])
 
@@ -208,16 +245,35 @@ async def reanudar_suscripcion(
 
 
 @router.post("/webhook")
-async def webhook_mp(request: Request):
+async def webhook_mp(
+    request: Request,
+    x_signature: Optional[str] = Header(None, alias="x-signature"),
+    x_request_id: Optional[str] = Header(None, alias="x-request-id"),
+):
     """
     Recibe notificaciones IPN/Webhook de Mercado Pago.
     Actualiza el plan del tenant según el estado de la preapproval.
+    Verifica la firma X-Signature cuando MP_WEBHOOK_SECRET está configurado.
     """
+    s = get_settings()
     body = await request.json()
 
     # MP envía type=subscription_preapproval y data.id
     event_type = body.get("type", "")
     resource_id = body.get("data", {}).get("id") or body.get("id")
+
+    # ── Verificación de firma ────────────────────────────────────────────────
+    if s.mp_webhook_secret:
+        if not x_signature or not x_request_id or not resource_id:
+            logger.warning("[webhook_mp] Firma MP ausente o incompleta — rechazado")
+            raise HTTPException(status_code=400, detail="Firma del webhook inválida")
+        if not _verify_mp_webhook_signature(
+            x_signature, x_request_id, str(resource_id), s.mp_webhook_secret
+        ):
+            logger.warning("[webhook_mp] Firma MP inválida — rechazado (posible webhook falso)")
+            raise HTTPException(status_code=400, detail="Firma del webhook inválida")
+    else:
+        logger.warning("[webhook_mp] MP_WEBHOOK_SECRET no configurado — verificación de firma deshabilitada")
 
     if event_type != "subscription_preapproval" or not resource_id:
         return {"received": True}
