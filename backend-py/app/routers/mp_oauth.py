@@ -41,12 +41,13 @@ router = APIRouter(prefix="/mercadopago", tags=["mercadopago-negocio"])
 
 # ── CSRF state (JWT de 10 min con claim type="mp_state") ──────────────────────
 
-def _make_state(business_id: str) -> str:
+def _make_state(business_id: str, platform: str = "web") -> str:
     s = get_settings()
     return jwt.encode(
         {
             "sub": business_id,
             "type": "mp_state",
+            "platform": platform,
             "exp": datetime.now(timezone.utc) + timedelta(minutes=10),
         },
         s.secret_key,
@@ -54,14 +55,14 @@ def _make_state(business_id: str) -> str:
     )
 
 
-def _parse_state(state: str) -> str:
-    """Devuelve business_id o lanza 400."""
+def _parse_state(state: str) -> tuple[str, str]:
+    """Devuelve (business_id, platform) o lanza 400."""
     s = get_settings()
     try:
         payload = jwt.decode(state, s.secret_key, algorithms=["HS256"])
         if payload.get("type") != "mp_state":
             raise ValueError
-        return payload["sub"]
+        return payload["sub"], payload.get("platform", "web")
     except (JWTError, ValueError, KeyError):
         raise HTTPException(status_code=400, detail="State OAuth inválido o expirado")
 
@@ -158,11 +159,14 @@ async def _valid_token(db, business_id: str) -> tuple[str, int]:
 
 @router.get("/oauth/start")
 async def oauth_start(
+    platform: str = Query("web", description="'desktop' para deep link de vuelta, 'web' para frontend"),
     current_user: TokenPayload = Depends(require_owner_or_superadmin),
 ):
     """
     Genera la URL de autorización de Mercado Pago.
-    El frontend redirige el browser a `auth_url`.
+    El frontend/desktop redirige el browser a `auth_url`.
+    platform=desktop → callback redirige a ventasimple://mp_oauth?ok=1
+    platform=web     → callback redirige a /dashboard/integraciones?mp_connected=1
     """
     s = get_settings()
     if not s.mp_client_id:
@@ -172,7 +176,7 @@ async def oauth_start(
     if not business_id:
         raise HTTPException(status_code=400, detail="Sin tenant_id en token")
 
-    state = _make_state(business_id)
+    state = _make_state(business_id, platform=platform)
     auth_url = (
         f"{MP_AUTH_URL}"
         f"?client_id={s.mp_client_id}"
@@ -197,27 +201,27 @@ async def oauth_callback(
     s = get_settings()
     frontend = s.frontend_url
 
+    business_id, platform = _parse_state(state)
+
+    def _error_redirect(reason: str) -> RedirectResponse:
+        if platform == "desktop":
+            return RedirectResponse(
+                url=f"ventasimple://mp_oauth?error={reason}", status_code=302
+            )
+        return RedirectResponse(
+            url=f"{frontend}/dashboard/integraciones?mp_error={reason}",
+            status_code=302,
+        )
+
     if error:
-        return RedirectResponse(
-            url=f"{frontend}/dashboard/integraciones?mp_error={error}",
-            status_code=302,
-        )
-
+        return _error_redirect(error)
     if not code:
-        return RedirectResponse(
-            url=f"{frontend}/dashboard/integraciones?mp_error=no_code",
-            status_code=302,
-        )
-
-    business_id = _parse_state(state)
+        return _error_redirect("no_code")
 
     try:
         tokens = await exchange_code_for_tokens(code)
-    except ValueError as e:
-        return RedirectResponse(
-            url=f"{frontend}/dashboard/integraciones?mp_error=exchange_failed",
-            status_code=302,
-        )
+    except ValueError:
+        return _error_redirect("exchange_failed")
 
     expires_at = (
         datetime.now(timezone.utc)
@@ -242,6 +246,8 @@ async def oauth_callback(
     finally:
         db.close()
 
+    if platform == "desktop":
+        return RedirectResponse(url="ventasimple://mp_oauth?ok=1", status_code=302)
     return RedirectResponse(
         url=f"{frontend}/dashboard/integraciones?mp_connected=1",
         status_code=302,
@@ -489,6 +495,46 @@ async def qr_cancel(
 
 
 # ── Webhook QR ────────────────────────────────────────────────────────────────
+
+@router.get("/tokens")
+async def get_tokens(
+    current_user: TokenPayload = Depends(require_owner_or_superadmin),
+):
+    """
+    Devuelve los tokens desencriptados para que el desktop los guarde localmente.
+    Si el POS no existe aún en MP, lo crea automáticamente.
+    Solo accesible desde el proceso principal del desktop (no desde el renderer).
+    """
+    business_id = current_user.tenant_id
+    if not business_id:
+        raise HTTPException(status_code=400, detail="Sin tenant_id en token")
+
+    db = SessionLocal()
+    try:
+        acc = _get_account(db, business_id)
+        if not acc or acc["status"] != "connected":
+            raise HTTPException(status_code=400, detail="Mercado Pago no está conectado")
+
+        access_token = decrypt_token(acc["access_token_encrypted"])
+        mp_user_id = int(acc["mp_user_id"])
+
+        pos_id = acc.get("mp_external_pos_id")
+        if not pos_id:
+            pos_id = f"VS_{business_id[:8].upper()}"
+            try:
+                store_id = await ensure_store_and_pos(access_token, mp_user_id, pos_id)
+                _save_account(db, business_id, mp_external_pos_id=pos_id, mp_store_id=store_id)
+            except Exception:
+                pos_id = None  # POS creation failed, return without it
+
+        return {
+            "access_token": access_token,
+            "user_id": mp_user_id,
+            "pos_id": pos_id,
+        }
+    finally:
+        db.close()
+
 
 @router.post("/qr/webhook")
 async def qr_webhook(request: Request):
