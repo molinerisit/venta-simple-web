@@ -14,8 +14,10 @@ class Settings(BaseSettings):
     # Mercado Pago — token de VentaSimple (suscripciones/preapproval)
     mp_access_token: str = ""
     webhook_public_url: str = ""
-    # Secreto para verificar firma de webhooks de MP (configurar en panel MP → Webhooks)
+    # Secreto del webhook de suscripciones (app principal VentaSimple)
     mp_webhook_secret: str = ""
+    # Secreto del webhook de QR/Point (app VentaSimpleClientes)
+    mp_qr_webhook_secret: str = ""
     # Mercado Pago — OAuth de negocios clientes (cobros / QR)
     mp_client_id: str = ""
     mp_client_secret: str = ""

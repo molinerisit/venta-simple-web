@@ -537,10 +537,41 @@ async def get_tokens(
 
 
 @router.post("/qr/webhook")
-async def qr_webhook(request: Request):
+async def qr_webhook(
+    request: Request,
+    x_signature: Optional[str] = Query(None, alias="x-signature", include_in_schema=False),
+    x_request_id: Optional[str] = Query(None, alias="x-request-id", include_in_schema=False),
+):
     """
-    Recibe notificaciones de pagos aprobados en el QR del negocio.
-    Payload MP: {"topic": "merchant_order", "resource": "/merchant_orders/..."}
+    Recibe notificaciones de pagos/órdenes del QR y Point del negocio.
+    Verifica firma cuando MP_QR_WEBHOOK_SECRET está configurado.
+    El desktop pollea /payment/:id para confirmar — este endpoint es el receptor oficial.
     """
-    # Aceptar sin procesar por ahora — el desktop/frontend pollea /payment/:id
+    import hashlib, hmac as _hmac, logging
+    from fastapi import Header as _Header
+
+    s = get_settings()
+    body = await request.json()
+
+    # Verificación de firma
+    if s.mp_qr_webhook_secret:
+        sig_header  = request.headers.get("x-signature", "")
+        req_id      = request.headers.get("x-request-id", "")
+        data_id     = str(body.get("data", {}).get("id") or body.get("id") or "")
+        if sig_header and req_id and data_id:
+            parts = dict(p.split("=", 1) for p in sig_header.split(",") if "=" in p)
+            ts       = parts.get("ts", "")
+            received = parts.get("v1", "")
+            template = f"id:{data_id};request-id:{req_id};ts:{ts}"
+            expected = _hmac.new(
+                s.mp_qr_webhook_secret.encode(),
+                template.encode(),
+                hashlib.sha256,
+            ).hexdigest()
+            if not _hmac.compare_digest(expected, received):
+                logging.getLogger(__name__).warning("[qr_webhook] Firma inválida — rechazado")
+                raise HTTPException(status_code=400, detail="Firma del webhook inválida")
+
+    # El desktop pollea /mercadopago/payment/:id para confirmar el estado.
+    # Aquí podríamos emitir un evento futuro (WebSocket/SSE) si se necesita push.
     return {"received": True}
