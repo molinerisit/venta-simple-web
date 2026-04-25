@@ -506,7 +506,7 @@ function TenantCard({ tenant, catalog }: { tenant: TenantStatus; catalog: Comman
                     </span>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <span style={{ fontSize: 12, color: C.text }}>{cmd.command_type}</span>
-                      {cmd.result?.message && <span style={{ fontSize: 11, color: C.muted, marginLeft: 6 }}>{String(cmd.result.message)}</span>}
+                      {cmd.result?.message ? <span style={{ fontSize: 11, color: C.muted, marginLeft: 6 }}>{String(cmd.result.message)}</span> : null}
                     </div>
                     <span style={{ fontSize: 10, color: C.muted, flexShrink: 0 }}>{timeAgo(cmd.executed_at || cmd.created_at)}</span>
                   </div>
