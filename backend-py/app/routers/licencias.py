@@ -5,8 +5,10 @@ Router: /api/panel/licencias  (gestión para superadmin)
 """
 from datetime import timedelta, timezone, datetime
 
-from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
+from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks, Request
 from pydantic import BaseModel
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 from typing import Optional
@@ -18,6 +20,9 @@ from ..utils.licencias import generar_clave
 from ..utils.security import hash_password, verify_password, create_access_token
 
 router = APIRouter(tags=["licencias"])
+limiter = Limiter(key_func=get_remote_address)
+
+PLAN_RANK: dict[str, int] = {"FREE": 0, "BASIC": 1, "PRO": 2, "ENTERPRISE": 3}
 
 
 # ── Helper: crear licencia vinculada a tenant ─────────────────────────────────
@@ -151,7 +156,9 @@ class ActivateLicenseIn(BaseModel):
 
 
 @router.post("/api/auth/activate-license")
+@limiter.limit("5/minute")
 def activate_license(
+    request: Request,
     body: ActivateLicenseIn,
     background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
@@ -202,19 +209,27 @@ def activate_license(
             raise HTTPException(401, "Contraseña incorrecta.")
         tenant_id = str(tenant["id"])
         nombre = tenant["nombre_negocio"]
-        # Actualizar plan si la licencia trae uno mejor o igual
-        db.execute(
-            text("""
-                UPDATE tenants
-                SET plan = :plan,
-                    email_verified = TRUE,
-                    plan_expires_at = CASE WHEN :plan != 'FREE'
-                        THEN NOW() + INTERVAL '365 days'
-                        ELSE plan_expires_at END
-                WHERE id = :tid
-            """),
-            {"plan": plan, "tid": tenant_id},
-        )
+        # Solo actualizar plan si la licencia trae un plan igual o mejor (evitar degradación)
+        current_rank = PLAN_RANK.get(tenant["plan"] or "FREE", 0)
+        new_rank = PLAN_RANK.get(plan, 0)
+        if new_rank >= current_rank:
+            db.execute(
+                text("""
+                    UPDATE tenants
+                    SET plan = :plan,
+                        email_verified = TRUE,
+                        plan_expires_at = CASE WHEN :plan != 'FREE'
+                            THEN NOW() + INTERVAL '365 days'
+                            ELSE plan_expires_at END
+                    WHERE id = :tid
+                """),
+                {"plan": plan, "tid": tenant_id},
+            )
+        else:
+            db.execute(
+                text("UPDATE tenants SET email_verified = TRUE WHERE id = :tid"),
+                {"tid": tenant_id},
+            )
     else:
         # Caso B: crear cuenta nueva
         if not body.nombre_negocio:
