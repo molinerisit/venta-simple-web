@@ -2,6 +2,7 @@
 Rutas exclusivas para superadmin — visibilidad global de todos los tenants.
 """
 from fastapi import APIRouter, Depends, HTTPException, Query
+from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 from typing import Optional
@@ -145,17 +146,27 @@ def metricas_tenant(
     return dict(row) if row else {}
 
 
+class ActivarLicenciaIn(BaseModel):
+    plan: str = "PRO"
+
+
 @router.post("/tenants/{tenant_id}/licencia")
 def admin_activar_licencia(
     tenant_id: str,
-    body: dict,
+    body: ActivarLicenciaIn,
     _: TokenPayload = Depends(require_superadmin),
     db: Session = Depends(get_db),
 ):
-    """Crea y vincula una licencia directamente a un tenant, actualizando su plan."""
-    plan = body.get("plan", "PRO").upper()
+    plan = body.plan.upper()
     if plan not in ("FREE", "BASIC", "PRO", "ENTERPRISE"):
         raise HTTPException(400, "Plan inválido")
+
+    exists = db.execute(
+        text("SELECT 1 FROM tenants WHERE id = :tid"),
+        {"tid": tenant_id},
+    ).fetchone()
+    if not exists:
+        raise HTTPException(404, "Negocio no encontrado")
 
     from ..routers.licencias import crear_licencia_para_tenant
 
