@@ -724,6 +724,9 @@ function AdminPanel() {
     !search || t.nombre_negocio?.toLowerCase().includes(search.toLowerCase()) || t.email?.toLowerCase().includes(search.toLowerCase())
   );
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const apiErr = (err: unknown) => (err as any)?.response?.data?.detail ?? (err as any)?.message ?? "Error desconocido";
+
   async function handleActivar(tenantId: string) {
     const plan = newPlan[tenantId] || "PRO";
     setActivating(tenantId);
@@ -731,7 +734,7 @@ function AdminPanel() {
       const { data } = await adminActivarLicencia(tenantId, plan);
       showToast(`Licencia ${plan} activada: ${data.clave}`);
       load();
-    } catch { showToast("Error al activar", false); }
+    } catch (err) { showToast(apiErr(err), false); }
     setActivating(null);
   }
 
@@ -742,7 +745,7 @@ function AdminPanel() {
       else await reactivarTenant(tenantId);
       showToast(activo ? "Cuenta suspendida" : "Cuenta reactivada");
       load();
-    } catch { showToast("Error", false); }
+    } catch (err) { showToast(apiErr(err), false); }
     setSuspending(null);
   }
 
@@ -752,7 +755,7 @@ function AdminPanel() {
       const { data } = await generarLicencia("PRO");
       showToast(`Licencia generada: ${data.claves?.[0]}`);
       load();
-    } catch { showToast("Error al generar", false); }
+    } catch (err) { showToast(apiErr(err), false); }
     setGenerating(false);
   }
 
@@ -763,7 +766,7 @@ function AdminPanel() {
       await revocarLicencia(clave);
       showToast("Licencia revocada");
       load();
-    } catch { showToast("Error al revocar", false); }
+    } catch (err) { showToast(apiErr(err), false); }
     setRevoking(null);
   }
 

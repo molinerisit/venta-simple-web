@@ -60,6 +60,10 @@ export default function LicenciasPage() {
     try {
       await generarLicencia(newPlan);
       load();
+    } catch (err: unknown) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const detail = (err as any)?.response?.data?.detail ?? "Error al generar licencia";
+      alert(detail);
     } finally {
       setGenerating(false);
     }
