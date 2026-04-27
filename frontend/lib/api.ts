@@ -125,7 +125,12 @@ export const getHeartbeats     = (id: string) => http.get<HeartbeatLog[]>(`/api/
 export const crearSuscripcion  = (id: string, plan: string, dias: number) =>
   http.post(`/api/panel/instalaciones/${id}/suscripcion`, { plan, dias });
 export const getLicencias      = ()             => http.get<Licencia[]>("/api/panel/licencias");
-export const generarLicencia   = (plan: string) => http.post<Licencia>("/api/panel/licencias", { plan });
+export const generarLicencia   = (plan: string) => http.post<{ claves: string[]; plan: string }>("/api/panel/licencias", { plan, cantidad: 1 });
+export const revocarLicencia   = (clave: string) => http.delete(`/api/panel/licencias/${clave}`);
+export const adminActivarLicencia = (tenantId: string, plan: string) =>
+  http.post<{ clave: string; plan: string; ok: boolean }>(`/api/admin/tenants/${tenantId}/licencia`, { plan });
+export const suspenderTenant   = (id: string)   => http.put(`/api/admin/tenants/${id}`, { activo: false });
+export const reactivarTenant   = (id: string)   => http.put(`/api/admin/tenants/${id}`, { activo: true });
 
 // ── Tipos ─────────────────────────────────────────────────────
 export interface Producto {
@@ -387,5 +392,10 @@ export interface Instalacion {
   installToken?: string;
 }
 export interface HeartbeatLog { id: number; timestamp: string; ipAddress: string; versionApp: string; metrics: string }
-export interface Licencia { id: string; clave: string; plan: string; estado: "DISPONIBLE" | "ACTIVA" | "EXPIRADA" | "REVOCADA"; activadaAt: string | null; expiraAt: string | null }
+export interface Licencia {
+  id: string; clave: string; plan: string;
+  estado: "DISPONIBLE" | "ACTIVA" | "EXPIRADA" | "REVOCADA";
+  activada_at: string | null; expira_at: string | null; created_at: string;
+  nombre_negocio?: string | null; tenant_email?: string | null;
+}
 export interface Stats { total: number; activas: number; online: number }

@@ -145,6 +145,36 @@ def metricas_tenant(
     return dict(row) if row else {}
 
 
+@router.post("/tenants/{tenant_id}/licencia")
+def admin_activar_licencia(
+    tenant_id: str,
+    body: dict,
+    _: TokenPayload = Depends(require_superadmin),
+    db: Session = Depends(get_db),
+):
+    """Crea y vincula una licencia directamente a un tenant, actualizando su plan."""
+    plan = body.get("plan", "PRO").upper()
+    if plan not in ("FREE", "BASIC", "PRO", "ENTERPRISE"):
+        raise HTTPException(400, "Plan inválido")
+
+    from ..routers.licencias import crear_licencia_para_tenant
+
+    clave = crear_licencia_para_tenant(db, tenant_id, plan)
+    db.execute(
+        text("""
+            UPDATE tenants
+            SET plan = :plan, email_verified = TRUE,
+                plan_expires_at = CASE WHEN :plan != 'FREE'
+                    THEN NOW() + INTERVAL '365 days'
+                    ELSE plan_expires_at END
+            WHERE id = :tid
+        """),
+        {"plan": plan, "tid": tenant_id},
+    )
+    db.commit()
+    return {"clave": clave, "plan": plan, "ok": True}
+
+
 @router.post("/admins", status_code=201)
 def crear_admin(
     body: dict,

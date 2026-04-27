@@ -146,13 +146,13 @@ export default function LicenciasPage() {
                       <Badge variant={estadoColor(lic.estado)}>{lic.estado}</Badge>
                     </td>
                     <td className="px-4 py-3 text-xs text-slate-400">
-                      {lic.activadaAt
-                        ? new Date(lic.activadaAt).toLocaleDateString("es-AR")
+                      {lic.activada_at
+                        ? new Date(lic.activada_at).toLocaleDateString("es-AR")
                         : "—"}
                     </td>
                     <td className="px-4 py-3 text-xs text-slate-400">
-                      {lic.expiraAt
-                        ? new Date(lic.expiraAt).toLocaleDateString("es-AR")
+                      {lic.expira_at
+                        ? new Date(lic.expira_at).toLocaleDateString("es-AR")
                         : "—"}
                     </td>
                     <td className="px-4 py-3">
