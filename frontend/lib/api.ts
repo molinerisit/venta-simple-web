@@ -58,7 +58,7 @@ export const activateLicense = (body: {
 );
 
 export const validateSession = () =>
-  http.get<{ valid: boolean; plan: string; plan_expires_at?: string; plan_expired: boolean }>("/api/auth/validate-session");
+  http.get<{ valid: boolean; plan: string; plan_expires_at?: string; plan_expired: boolean; tenant_id?: string }>("/api/auth/validate-session");
 
 export const getLicencia = () =>
   http.get<{ licencia: { clave: string; plan: string; estado: string; activada_at: string; expira_at: string | null } | null }>("/api/cuenta/licencia");
