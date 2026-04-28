@@ -70,8 +70,9 @@ export function UserPlanProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     fetch_();
-    window.addEventListener("focus", fetch_);
-    return () => window.removeEventListener("focus", fetch_);
+    const onVisible = () => { if (!document.hidden) fetch_(); };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => document.removeEventListener("visibilitychange", onVisible);
   }, [fetch_]);
 
   return (

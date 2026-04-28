@@ -80,9 +80,9 @@ function CuentaPageInner() {
 
   useEffect(() => {
     load();
-    const onFocus = () => load();
-    window.addEventListener("focus", onFocus);
-    return () => window.removeEventListener("focus", onFocus);
+    const onVisible = () => { if (!document.hidden) load(); };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => document.removeEventListener("visibilitychange", onVisible);
   }, []);
 
   async function load() {
@@ -485,33 +485,35 @@ function CuentaPageInner() {
             <div style={{
               display: "grid",
               gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)",
-              gap: 12, paddingBottom: 8,
+              gap: 12, paddingBottom: 8, paddingTop: 16,
             }}>
               {PLANES.map(plan => (
-                <div
-                  key={plan.id}
-                  style={{
-                    background: plan.highlight
-                      ? "linear-gradient(180deg, rgba(30,58,138,.08), rgba(30,58,138,.03))"
-                      : "#fff",
-                    border: `1px solid ${plan.highlight ? "rgba(30,58,138,.22)" : "#E9EAEC"}`,
-                    borderRadius: 14,
-                    padding: "18px 18px 16px",
-                    boxShadow: plan.highlight
-                      ? "0 2px 12px rgba(30,58,138,.10)"
-                      : "0 1px 3px rgba(0,0,0,.04)",
-                  }}
-                >
+                <div key={plan.id} style={{ position: "relative" }}>
                   {plan.highlight && (
                     <span style={{
-                      display: "inline-block", marginBottom: 10,
-                      padding: "3px 10px", borderRadius: 99, fontSize: 10, fontWeight: 800,
-                      background: "rgba(30,58,138,.12)", color: "#1E3A8A",
+                      position: "absolute", top: -12, left: "50%", transform: "translateX(-50%)",
+                      whiteSpace: "nowrap",
+                      padding: "3px 12px", borderRadius: 99, fontSize: 10, fontWeight: 800,
+                      background: "#1E3A8A", color: "#fff",
                       letterSpacing: "0.06em", textTransform: "uppercase",
+                      boxShadow: "0 2px 8px rgba(30,58,138,.30)",
                     }}>
                       Recomendado
                     </span>
                   )}
+                  <div
+                    style={{
+                      background: plan.highlight
+                        ? "linear-gradient(180deg, rgba(30,58,138,.08), rgba(30,58,138,.03))"
+                        : "#fff",
+                      border: `1px solid ${plan.highlight ? "rgba(30,58,138,.22)" : "#E9EAEC"}`,
+                      borderRadius: 14,
+                      padding: "18px 18px 16px",
+                      boxShadow: plan.highlight
+                        ? "0 2px 12px rgba(30,58,138,.10)"
+                        : "0 1px 3px rgba(0,0,0,.04)",
+                    }}
+                  >
                   <p style={{ fontSize: 16, fontWeight: 800, color: "#0F172A", margin: "0 0 4px", letterSpacing: "-0.01em" }}>
                     {plan.nombre}
                   </p>
@@ -547,7 +549,8 @@ function CuentaPageInner() {
                   >
                     {currentPlan === plan.id ? "Plan actual" : `Suscribirse · ${fmt(plan.precio)}/mes`}
                   </button>
-                </div>
+                  </div>{/* inner card */}
+                </div>{/* relative wrapper */}
               ))}
             </div>
           )}
