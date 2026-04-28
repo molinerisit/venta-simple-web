@@ -174,7 +174,7 @@ def admin_activar_licencia(
     db.execute(
         text("""
             UPDATE tenants
-            SET plan = :plan, email_verified = TRUE,
+            SET plan = :plan, email_verified = TRUE, activo = TRUE,
                 plan_expires_at = CASE WHEN :plan != 'FREE'
                     THEN NOW() + INTERVAL '365 days'
                     ELSE plan_expires_at END
