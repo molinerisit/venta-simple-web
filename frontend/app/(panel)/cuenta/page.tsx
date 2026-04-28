@@ -630,8 +630,8 @@ function CuentaPageInner() {
                         ? `Suscribirse · ${fmt(Math.round(plan.precio * (1 - cuponValido.descuento)))}/mes`
                         : `Suscribirse · ${fmt(plan.precio)}/mes`}
                   </button>
-                  </div>{/* inner card */}
-                </div>{/* relative wrapper */}
+                  </div>
+                </div>
               ))}
             </div>
             </>
