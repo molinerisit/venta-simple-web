@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Plus, Search, RefreshCw, Pencil, Trash2, Lock, Zap, Users } from "lucide-react";
-import { getSuscripcionEstado } from "@/lib/api";
+import { useUserPlan } from "@/lib/user-plan-context";
 import Link from "next/link";
 import { EmptyState, LoadingState } from "@/components/panel/EmptyState";
 
@@ -26,7 +26,7 @@ export default function ClientesPage() {
   const [items, setItems] = useState<Cliente[]>([]);
   const [filtered, setFiltered] = useState<Cliente[]>([]);
   const [loading, setLoading] = useState(true);
-  const [plan, setPlan] = useState<string>("FREE");
+  const { plan } = useUserPlan();
   const [q, setQ] = useState("");
   const [soloDeuda, setSoloDeuda] = useState(false);
   const [open, setOpen] = useState(false);
@@ -45,10 +45,6 @@ export default function ClientesPage() {
       setFiltered(data);
     } finally { setLoading(false); }
   }
-
-  useEffect(() => {
-    getSuscripcionEstado().then(r => setPlan(r.data.plan ?? "FREE")).catch(() => {});
-  }, []);
 
   useEffect(() => { load(); }, [soloDeuda]);
   useEffect(() => {

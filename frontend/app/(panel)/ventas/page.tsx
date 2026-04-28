@@ -36,7 +36,7 @@ export default function VentasPage() {
     } finally { setLoading(false); }
   }
 
-  useEffect(() => { load(); }, [desde, hasta]);
+  useEffect(() => { load(); }, []);
 
   async function handleAnular(v: Venta) {
     if (!confirm(`¿Anular venta del ${new Date(v.fecha).toLocaleDateString("es-AR")} por ${fmt(v.total)}?`)) return;

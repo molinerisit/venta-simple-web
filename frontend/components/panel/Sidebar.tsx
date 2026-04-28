@@ -3,13 +3,13 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { clearToken, getUser } from "@/lib/auth";
-import { getSuscripcionEstado, getLicencia } from "@/lib/api";
 import { useTheme } from "@/components/ThemeProvider";
+import { useUserPlan } from "@/lib/user-plan-context";
 import {
   LayoutDashboard, Monitor, Package, Truck, Users, ShoppingCart,
   BarChart2, Key, CreditCard, Shield, LogOut, Sun, Moon, Zap, Download,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 
 const OWNER_NAV = [
@@ -87,24 +87,8 @@ export default function Sidebar({ mobileOpen = false, onClose, isMobileLayout = 
   const router   = useRouter();
   const { theme, toggle } = useTheme();
 
-  const [user,     setUser]     = useState<{ nombre: string; rol: string } | null>(null);
-  const [plan,     setPlan]     = useState<string>("FREE");
-  const [daysLeft, setDaysLeft] = useState<number | null>(null);
-
-  useEffect(() => {
-    setUser(getUser());
-    loadPlan();
-  }, []);
-
-  async function loadPlan() {
-    try {
-      const [sRes, lRes] = await Promise.all([getSuscripcionEstado(), getLicencia()]);
-      setPlan(sRes.data.plan ?? "FREE");
-      if ((sRes.data.plan ?? "FREE") === "FREE") {
-        setDaysLeft(calcTrialDaysLeft(lRes.data.licencia?.activada_at ?? null));
-      }
-    } catch { /* silencioso */ }
-  }
+  const [user] = useState(() => getUser());
+  const { plan, daysLeft } = useUserPlan();
 
   const isSuperAdmin = user?.rol === "superadmin";
   const nav = isSuperAdmin ? ADMIN_NAV : OWNER_NAV;

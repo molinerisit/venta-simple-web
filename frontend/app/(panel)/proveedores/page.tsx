@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Plus, Search, RefreshCw, Pencil, Trash2, Lock, Zap, Truck } from "lucide-react";
-import { getSuscripcionEstado } from "@/lib/api";
+import { useUserPlan } from "@/lib/user-plan-context";
 import Link from "next/link";
 import { EmptyState, LoadingState } from "@/components/panel/EmptyState";
 
@@ -20,7 +20,7 @@ export default function ProveedoresPage() {
   const [items, setItems] = useState<Proveedor[]>([]);
   const [filtered, setFiltered] = useState<Proveedor[]>([]);
   const [loading, setLoading] = useState(true);
-  const [plan, setPlan] = useState<string>("FREE");
+  const { plan } = useUserPlan();
   const [q, setQ] = useState("");
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Proveedor | null>(null);
@@ -38,10 +38,6 @@ export default function ProveedoresPage() {
       setFiltered(data);
     } finally { setLoading(false); }
   }
-
-  useEffect(() => {
-    getSuscripcionEstado().then(r => setPlan(r.data.plan ?? "FREE")).catch(() => {});
-  }, []);
 
   useEffect(() => { load(); }, []);
   useEffect(() => {

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { isAuthenticated } from "@/lib/auth";
 import Sidebar from "@/components/panel/Sidebar";
 import { useTheme } from "@/components/ThemeProvider";
+import { UserPlanProvider } from "@/lib/user-plan-context";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
 
@@ -40,6 +41,7 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
   const iconColor   = isDark ? "#C4D5EC" : "#374151";
 
   return (
+    <UserPlanProvider>
     <div className="flex h-full">
 
       {/* ── Mobile topbar ── */}
@@ -105,5 +107,6 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
       </main>
 
     </div>
+    </UserPlanProvider>
   );
 }
