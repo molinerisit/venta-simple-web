@@ -68,6 +68,9 @@ function CuentaPageInner() {
   const [activation,    setActivation]   = useState<ActivationState>("idle");
   const [plansOpen,     setPlansOpen]    = useState(false);
   const [isMobile,      setIsMobile]     = useState(false);
+  const [cupon,         setCupon]        = useState("");
+  const [cuponValido,   setCuponValido]  = useState<{ descuento: number } | null>(null);
+  const [cuponError,    setCuponError]   = useState("");
   const plansRef = useRef<HTMLDivElement>(null);
 
   const fromReturn = searchParams.get("retorno") === "1";
@@ -107,11 +110,22 @@ function CuentaPageInner() {
     setTimeout(() => setToast(null), 3500);
   }
 
+  function aplicarCupon() {
+    const code = cupon.trim().toUpperCase();
+    if (!code) { setCuponError("Ingresá un código"); return; }
+    // Validación client-side (el backend valida al crear la suscripción)
+    const CUPONES_CONOCIDOS: Record<string, number> = { "MILICO": 0.90 };
+    const descuento = CUPONES_CONOCIDOS[code];
+    if (descuento === undefined) { setCuponError("Cupón inválido"); setCuponValido(null); return; }
+    setCuponValido({ descuento });
+    setCuponError("");
+  }
+
   async function handleSuscribir(planId: string) {
     setActionLoad(true);
     try {
       const back = `${window.location.origin}/cuenta?retorno=1`;
-      const { data } = await crearSuscripcionMP(planId, back);
+      const { data } = await crearSuscripcionMP(planId, back, cuponValido ? cupon.trim().toUpperCase() : undefined);
       window.location.href = data.init_point;
     } catch {
       showToast("No se pudo iniciar la suscripción. Intentá de nuevo.", false);
@@ -504,6 +518,44 @@ function CuentaPageInner() {
           </button>
 
           {plansOpen && (
+            <>
+            {/* ── Cupón de descuento ── */}
+            <div style={{ display: "flex", gap: 8, alignItems: "flex-start", marginBottom: 16 }}>
+              <div style={{ flex: 1 }}>
+                <input
+                  type="text"
+                  placeholder="Código de descuento"
+                  value={cupon}
+                  onChange={e => { setCupon(e.target.value.toUpperCase()); setCuponValido(null); setCuponError(""); }}
+                  onKeyDown={e => e.key === "Enter" && aplicarCupon()}
+                  style={{
+                    width: "100%", height: 36, padding: "0 12px", borderRadius: 8, fontSize: 13,
+                    border: `1px solid ${cuponValido ? "#86EFAC" : cuponError ? "#FCA5A5" : "#E5E7EB"}`,
+                    outline: "none", fontFamily: "monospace", fontWeight: 600, letterSpacing: "0.05em",
+                    background: cuponValido ? "#F0FDF4" : "#fff",
+                    boxSizing: "border-box",
+                  }}
+                />
+                {cuponValido && (
+                  <p style={{ fontSize: 11, color: "#16A34A", margin: "4px 0 0", fontWeight: 600 }}>
+                    ✓ {Math.round(cuponValido.descuento * 100)}% de descuento aplicado
+                  </p>
+                )}
+                {cuponError && (
+                  <p style={{ fontSize: 11, color: "#EF4444", margin: "4px 0 0" }}>{cuponError}</p>
+                )}
+              </div>
+              <button
+                onClick={aplicarCupon}
+                style={{
+                  height: 36, padding: "0 14px", borderRadius: 8, fontSize: 12, fontWeight: 700,
+                  background: "#1E3A8A", color: "#fff", border: "none", cursor: "pointer", whiteSpace: "nowrap",
+                }}
+              >
+                Aplicar
+              </button>
+            </div>
+
             <div style={{
               display: "grid",
               gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)",
@@ -545,9 +597,12 @@ function CuentaPageInner() {
                     </span>
                     <span style={{ fontSize: 11, color: "#94A3B8" }}>/mes</span>
                   </div>
-                  {"precioOriginal" in plan && (
-                    <p style={{ fontSize: 11, color: "#94A3B8", margin: "0 0 12px", textDecoration: "line-through" }}>
-                      {fmt((plan as typeof plan & { precioOriginal: number }).precioOriginal)}/mes
+                  <p style={{ fontSize: 11, color: "#94A3B8", margin: "0 0 12px", textDecoration: "line-through" }}>
+                    {fmt("precioOriginal" in plan ? (plan as typeof plan & { precioOriginal: number }).precioOriginal : plan.precio)}/mes
+                  </p>
+                  {cuponValido && (
+                    <p style={{ fontSize: 13, fontWeight: 800, color: "#16A34A", margin: "-8px 0 12px" }}>
+                      {fmt(Math.round(plan.precio * (1 - cuponValido.descuento)))}/mes con descuento
                     </p>
                   )}
                   <ul style={{ listStyle: "none", padding: 0, margin: "0 0 16px", display: "flex", flexDirection: "column", gap: 7 }}>
@@ -569,12 +624,17 @@ function CuentaPageInner() {
                       opacity: actionLoading || currentPlan === plan.id ? 0.6 : 1,
                     }}
                   >
-                    {currentPlan === plan.id ? "Plan actual" : `Suscribirse · ${fmt(plan.precio)}/mes`}
+                    {currentPlan === plan.id
+                      ? "Plan actual"
+                      : cuponValido
+                        ? `Suscribirse · ${fmt(Math.round(plan.precio * (1 - cuponValido.descuento)))}/mes`
+                        : `Suscribirse · ${fmt(plan.precio)}/mes`}
                   </button>
                   </div>{/* inner card */}
                 </div>{/* relative wrapper */}
               ))}
             </div>
+            </>
           )}
         </div>
       )}

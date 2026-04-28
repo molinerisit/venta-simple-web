@@ -65,6 +65,11 @@ PLAN_PRICES: dict[str, float] = {
     "ENTERPRISE": 120000,
 }
 
+# Cupones de descuento: código (uppercase) → porcentaje de descuento (0-1)
+CUPONES: dict[str, float] = {
+    "MILICO": 0.90,
+}
+
 
 # ── Schemas ───────────────────────────────────────────────────────────────────
 
@@ -72,6 +77,7 @@ class CrearSuscripcionIn(BaseModel):
     plan: str
     payer_email: Optional[str] = None
     back_url: Optional[str] = None
+    cupon: Optional[str] = None
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
@@ -115,6 +121,14 @@ async def crear_suscripcion(
         raise HTTPException(status_code=400, detail=f"Plan inválido. Opciones: {list(PLAN_PRICES)}")
 
     amount = PLAN_PRICES[plan]
+    descuento = 0.0
+    cupon_usado = None
+    if body.cupon:
+        descuento = CUPONES.get(body.cupon.upper(), 0.0)
+        if descuento == 0.0:
+            raise HTTPException(status_code=400, detail="Cupón inválido o expirado")
+        amount = round(amount * (1 - descuento), 2)
+        cupon_usado = body.cupon.upper()
     tenant_id = current_user.tenant_id
 
     db = SessionLocal()
@@ -142,6 +156,8 @@ async def crear_suscripcion(
             "preapproval_id": result["preapproval_id"],
             "plan": plan,
             "amount": amount,
+            "cupon": cupon_usado,
+            "descuento": descuento,
         }
     except ValueError as e:
         raise HTTPException(status_code=502, detail=str(e))

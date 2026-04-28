@@ -266,9 +266,9 @@ export interface SuscripcionEstado {
 export const getSuscripcionEstado = () =>
   http.get<SuscripcionEstado>("/api/suscripciones/estado");
 
-export const crearSuscripcionMP = (plan: string, back_url?: string) =>
-  http.post<{ init_point: string; preapproval_id: string; plan: string; amount: number }>(
-    "/api/suscripciones/crear", { plan, back_url }
+export const crearSuscripcionMP = (plan: string, back_url?: string, cupon?: string) =>
+  http.post<{ init_point: string; preapproval_id: string; plan: string; amount: number; cupon?: string; descuento?: number }>(
+    "/api/suscripciones/crear", { plan, back_url, ...(cupon ? { cupon } : {}) }
   );
 
 export const cancelarSuscripcionMP = () =>
