@@ -598,7 +598,7 @@ function CuentaPageInner() {
                     <span style={{ fontSize: 11, color: "#94A3B8" }}>/mes</span>
                   </div>
                   <p style={{ fontSize: 11, color: "#94A3B8", margin: "0 0 12px", textDecoration: "line-through" }}>
-                    {fmt("precioOriginal" in plan ? (plan as typeof plan & { precioOriginal: number }).precioOriginal : plan.precio)}/mes
+                    {fmt(plan.precioOriginal)}/mes
                   </p>
                   {cuponValido && (
                     <p style={{ fontSize: 13, fontWeight: 800, color: "#16A34A", margin: "-8px 0 12px" }}>
