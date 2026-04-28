@@ -18,15 +18,24 @@ const PLANES = [
   {
     id: "BASIC",
     nombre: "Básico",
-    precio: 2999,
+    precio: 30000,
+    precioOriginal: 45000,
     features: ["Funciones premium", "1 dispositivo", "Sincronización en la nube"],
   },
   {
     id: "PRO",
     nombre: "Pro",
-    precio: 4499,
+    precio: 55000,
+    precioOriginal: 75000,
     features: ["Funciones premium", "Hasta 3 dispositivos", "Sincronización en la nube"],
     highlight: true,
+  },
+  {
+    id: "ENTERPRISE",
+    nombre: "Enterprise",
+    precio: 120000,
+    precioOriginal: 160000,
+    features: ["Multisucursal", "POS ilimitados", "Soporte prioritario 24/7"],
   },
 ];
 
@@ -409,8 +418,8 @@ function CuentaPageInner() {
         )}
       </div>
 
-      {/* ── Upgrade a PRO ── */}
-      {!loading && (isActive || isPaused) && currentPlan !== "PRO" && (
+      {/* ── Upgrade ── */}
+      {!loading && (isActive || isPaused) && currentPlan === "BASIC" && (
         <div style={{
           background: "#FAFAFA", border: "1px solid #F1F3F5", borderRadius: 12,
           padding: "14px 16px",
@@ -418,17 +427,31 @@ function CuentaPageInner() {
         }}>
           <div>
             <p style={{ fontSize: 13, fontWeight: 700, color: "#0F172A", margin: "0 0 2px" }}>Actualizar a Pro</p>
-            <p style={{ fontSize: 12, color: "#94A3B8", margin: 0 }}>Hasta 3 dispositivos · {fmt(4499)}/mes</p>
+            <p style={{ fontSize: 12, color: "#94A3B8", margin: 0 }}>Hasta 3 dispositivos · {fmt(55000)}/mes</p>
           </div>
-          <button
-            onClick={() => handleSuscribir("PRO")}
-            disabled={actionLoading}
-            style={{
-              padding: "8px 16px", borderRadius: 8, fontSize: 12, fontWeight: 700,
-              background: "#1E3A8A", color: "#fff", border: "none", cursor: "pointer", flexShrink: 0,
-            }}
-          >
+          <button onClick={() => handleSuscribir("PRO")} disabled={actionLoading} style={{
+            padding: "8px 16px", borderRadius: 8, fontSize: 12, fontWeight: 700,
+            background: "#1E3A8A", color: "#fff", border: "none", cursor: "pointer", flexShrink: 0,
+          }}>
             Cambiar a Pro
+          </button>
+        </div>
+      )}
+      {!loading && (isActive || isPaused) && currentPlan === "PRO" && (
+        <div style={{
+          background: "#FAFAFA", border: "1px solid #F1F3F5", borderRadius: 12,
+          padding: "14px 16px",
+          display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap",
+        }}>
+          <div>
+            <p style={{ fontSize: 13, fontWeight: 700, color: "#0F172A", margin: "0 0 2px" }}>Actualizar a Enterprise</p>
+            <p style={{ fontSize: 12, color: "#94A3B8", margin: 0 }}>Multisucursal · POS ilimitados · {fmt(120000)}/mes</p>
+          </div>
+          <button onClick={() => handleSuscribir("ENTERPRISE")} disabled={actionLoading} style={{
+            padding: "8px 16px", borderRadius: 8, fontSize: 12, fontWeight: 700,
+            background: "#1E3A8A", color: "#fff", border: "none", cursor: "pointer", flexShrink: 0,
+          }}>
+            Cambiar a Enterprise
           </button>
         </div>
       )}
@@ -461,7 +484,7 @@ function CuentaPageInner() {
           {plansOpen && (
             <div style={{
               display: "grid",
-              gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+              gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)",
               gap: 12, paddingBottom: 8,
             }}>
               {PLANES.map(plan => (
@@ -492,12 +515,17 @@ function CuentaPageInner() {
                   <p style={{ fontSize: 16, fontWeight: 800, color: "#0F172A", margin: "0 0 4px", letterSpacing: "-0.01em" }}>
                     {plan.nombre}
                   </p>
-                  <div style={{ display: "flex", alignItems: "baseline", gap: 4, marginBottom: 14 }}>
+                  <div style={{ display: "flex", alignItems: "baseline", gap: 4, marginBottom: 2 }}>
                     <span style={{ fontSize: 22, fontWeight: 900, color: "#0F172A", letterSpacing: "-0.02em" }}>
                       {fmt(plan.precio)}
                     </span>
                     <span style={{ fontSize: 11, color: "#94A3B8" }}>/mes</span>
                   </div>
+                  {"precioOriginal" in plan && (
+                    <p style={{ fontSize: 11, color: "#94A3B8", margin: "0 0 12px", textDecoration: "line-through" }}>
+                      {fmt((plan as typeof plan & { precioOriginal: number }).precioOriginal)}/mes
+                    </p>
+                  )}
                   <ul style={{ listStyle: "none", padding: 0, margin: "0 0 16px", display: "flex", flexDirection: "column", gap: 7 }}>
                     {plan.features.map(f => (
                       <li key={f} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: "#64748B" }}>

@@ -68,7 +68,11 @@ export function UserPlanProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  useEffect(() => { fetch_(); }, [fetch_]);
+  useEffect(() => {
+    fetch_();
+    window.addEventListener("focus", fetch_);
+    return () => window.removeEventListener("focus", fetch_);
+  }, [fetch_]);
 
   return (
     <Ctx.Provider value={{ ...state, refresh: fetch_ }}>

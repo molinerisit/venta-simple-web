@@ -60,9 +60,9 @@ router = APIRouter(prefix="/api/suscripciones", tags=["suscripciones"])
 
 # Precios en ARS por plan
 PLAN_PRICES: dict[str, float] = {
-    "BASIC":      2999,
-    "PRO":        4499,
-    "ENTERPRISE": 8999,
+    "BASIC":      30000,
+    "PRO":        55000,
+    "ENTERPRISE": 120000,
 }
 
 
