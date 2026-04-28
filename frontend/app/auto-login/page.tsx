@@ -1,11 +1,19 @@
 "use client";
 
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { saveToken, saveUser, type PanelUser } from "@/lib/auth";
 import { validateSession } from "@/lib/api";
 
-export default function AutoLoginPage() {
+function Redirecting() {
+  return (
+    <div style={{ display: "grid", placeItems: "center", height: "100vh", fontFamily: "Inter, sans-serif", color: "#64748B", fontSize: 14 }}>
+      Redirigiendo…
+    </div>
+  );
+}
+
+function AutoLoginInner() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -35,9 +43,13 @@ export default function AutoLoginPage() {
       });
   }, []);
 
+  return <Redirecting />;
+}
+
+export default function AutoLoginPage() {
   return (
-    <div style={{ display: "grid", placeItems: "center", height: "100vh", fontFamily: "Inter, sans-serif", color: "#64748B", fontSize: 14 }}>
-      Redirigiendo…
-    </div>
+    <Suspense fallback={<Redirecting />}>
+      <AutoLoginInner />
+    </Suspense>
   );
 }
