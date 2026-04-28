@@ -177,15 +177,32 @@ async def estado_suscripcion(
         raise HTTPException(status_code=403, detail="Sin suscripción para superadmin")
 
     tenant_id = current_user.tenant_id
+    if not tenant_id:
+        raise HTTPException(status_code=400, detail="Sin tenant_id en token")
+
     db = SessionLocal()
     try:
         tenant = _get_tenant_row(db, tenant_id)
-        preapproval_id = tenant.get("mp_preapproval_id")
+
+        # mp_preapproval_id puede no existir en DBs antiguas — fallback a None
+        try:
+            preapproval_id = tenant.get("mp_preapproval_id")
+        except Exception:
+            preapproval_id = None
 
         if not preapproval_id:
             return {"plan": tenant["plan"], "mp_status": None, "preapproval_id": None}
 
-        mp_data = await get_preapproval(preapproval_id)
+        try:
+            mp_data = await get_preapproval(preapproval_id)
+        except Exception as mp_err:
+            logger.warning("[estado_suscripcion] error consultando MP: %s", mp_err)
+            return {
+                "plan": tenant["plan"],
+                "mp_status": None,
+                "preapproval_id": preapproval_id,
+            }
+
         return {
             "plan": tenant["plan"],
             "mp_status": mp_data.get("status"),
@@ -193,8 +210,11 @@ async def estado_suscripcion(
             "next_payment_date": mp_data.get("next_payment_date"),
             "last_modified": mp_data.get("last_modified"),
         }
-    except ValueError as e:
-        raise HTTPException(status_code=502, detail=str(e))
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error("[estado_suscripcion] error inesperado: %s", e, exc_info=True)
+        raise HTTPException(status_code=500, detail="Error al obtener el estado de la suscripción")
     finally:
         db.close()
 
