@@ -69,7 +69,12 @@ function CuentaPageInner() {
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+    const onFocus = () => load();
+    window.addEventListener("focus", onFocus);
+    return () => window.removeEventListener("focus", onFocus);
+  }, []);
 
   async function load() {
     setLoading(true);
@@ -155,7 +160,9 @@ function CuentaPageInner() {
   const isPaused    = estado?.mp_status === "paused";
   const currentPlan = estado?.plan ?? "FREE";
   const hasLicencia = !!licencia;
-  const allDone     = hasLicencia && (isActive || isPaused);
+  // Plan activo: via MP (authorized/paused) O activado manualmente (plan != FREE, sin preapproval)
+  const allDone     = hasLicencia && currentPlan !== "FREE" &&
+    (!estado?.preapproval_id || isActive || isPaused);
 
   function openPlans() {
     setPlansOpen(true);

@@ -62,7 +62,8 @@ export function UserPlanProvider({ children }: { children: ReactNode }) {
       const next = { plan, daysLeft, estado: sRes.data, licencia, loading: false };
       setState(next);
       writeCache(next);
-    } catch {
+    } catch (e) {
+      console.warn("[UserPlanContext] fetch failed:", e);
       setState(s => ({ ...s, loading: false }));
     }
   }, []);
