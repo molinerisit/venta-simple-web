@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getUser } from "@/lib/auth";
-import Link from "next/link";
+import { isAuthenticated } from "@/lib/auth";
+import Sidebar from "@/components/panel/Sidebar";
+import { UserPlanProvider } from "@/lib/user-plan-context";
+import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import {
   Download, Monitor, Shield, Zap, Loader2,
@@ -36,16 +38,11 @@ async function fetchLatestRelease(): Promise<Release> {
   };
 }
 
-/* ── Guía de instalación — ítems ────────────────────────────── */
 const GUIA = [
   {
     id: "smartscreen",
     icon: AlertTriangle,
     iconColor: "#D97706",
-    bgLight: "#FFFBEB",
-    bgDark:  "rgba(217,119,6,.08)",
-    bdrLight:"#FDE68A",
-    bdrDark: "rgba(217,119,6,.25)",
     titulo: "Windows bloqueó la instalación (SmartScreen)",
     pasos: [
       'Al ejecutar el instalador, Windows puede mostrar el mensaje "Windows protegió tu PC".',
@@ -59,10 +56,6 @@ const GUIA = [
     id: "antivirus",
     icon: Shield,
     iconColor: "#DC2626",
-    bgLight: "#FEF2F2",
-    bgDark:  "rgba(220,38,38,.08)",
-    bdrLight:"#FECACA",
-    bdrDark: "rgba(220,38,38,.2)",
     titulo: "El antivirus bloqueó o borró el instalador",
     pasos: [
       "Algunos antivirus eliminan archivos .exe desconocidos antes de que los ejecutes.",
@@ -77,10 +70,6 @@ const GUIA = [
     id: "instalacion",
     icon: Download,
     iconColor: "#1E3A8A",
-    bgLight: "#F5F3FF",
-    bgDark:  "rgba(30,58,138,.08)",
-    bdrLight:"#DDD6FE",
-    bdrDark: "rgba(30,58,138,.2)",
     titulo: "Pasos de instalación normales",
     pasos: [
       "Descargá el archivo .exe desde esta página.",
@@ -96,10 +85,6 @@ const GUIA = [
     id: "noapre",
     icon: Info,
     iconColor: "#0EA5E9",
-    bgLight: "#F0F9FF",
-    bgDark:  "rgba(14,165,233,.08)",
-    bdrLight:"#BAE6FD",
-    bdrDark: "rgba(14,165,233,.2)",
     titulo: "La app se instaló pero no abre",
     pasos: [
       "Buscá 'Venta Simple' en el menú Inicio.",
@@ -138,7 +123,6 @@ function GuiaItem({ item, open, onToggle }: {
           style={{ transform: open ? "rotate(180deg)" : "rotate(0deg)" }}
         />
       </button>
-
       {open && (
         <div className="px-4 pb-4 pt-2" style={{ background: "var(--card)", borderTop: "1px solid var(--border)" }}>
           <ol className="space-y-2.5">
@@ -172,192 +156,178 @@ function GuiaItem({ item, open, onToggle }: {
   );
 }
 
-/* ── Página principal ────────────────────────────────────────── */
-export default function DescargarPage() {
-  const router  = useRouter();
-  const [release, setRelease]   = useState<Release | null>(null);
-  const [loading, setLoading]   = useState(true);
-  const [openId, setOpenId]     = useState<string | null>("smartscreen");
+function DescargarContent() {
+  const router = useRouter();
+  const [release, setRelease] = useState<Release | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [openId, setOpenId]   = useState<string | null>("smartscreen");
 
   useEffect(() => {
-    const user = getUser();
-    if (!user) { router.replace("/login?next=/descargar"); return; }
     fetchLatestRelease()
       .then(setRelease)
       .catch(() => setRelease({ version: "—", downloadUrl: null, publishedAt: "", fileSize: null }))
       .finally(() => setLoading(false));
   }, [router]);
 
-  const user = typeof window !== "undefined" ? getUser() : null;
-  if (!user) return null;
-
-  function toggle(id: string) {
-    setOpenId(prev => prev === id ? null : id);
-  }
+  function toggle(id: string) { setOpenId(prev => prev === id ? null : id); }
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-
-      {/* Nav */}
-      <nav className="border-b bg-background/90 backdrop-blur sticky top-0 z-50" style={{ borderColor: "var(--border)" }}>
-        <div style={{ maxWidth: 960, margin: "0 auto", padding: "0 24px", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center" }}>
-            <Image src="/brand/logoletras.png" alt="Venta Simple" width={320} height={100}
-              style={{ height: 38, width: "auto", objectFit: "contain" }} priority />
-          </Link>
-          <Link href="/dashboard" style={{
-            fontSize: 13, fontWeight: 600, padding: "7px 16px", borderRadius: 8,
-            background: "rgba(30,58,138,.1)", border: "1px solid rgba(30,58,138,.25)",
-            color: "#1E3A8A", textDecoration: "none",
-          }}>
-            Ir al panel →
-          </Link>
+    <div style={{ maxWidth: 680, margin: "0 auto", padding: "8px 0 80px" }}>
+      <div className="text-center mb-10">
+        <div style={{
+          width: 72, height: 72, borderRadius: 20, background: "#1E3A8A",
+          display: "grid", placeItems: "center", margin: "0 auto 24px",
+          boxShadow: "0 8px 32px rgba(30,58,138,.3)",
+        }}>
+          <Monitor size={34} color="#fff" />
         </div>
-      </nav>
+        <h1 className="text-3xl font-bold text-foreground mb-3" style={{ letterSpacing: "-0.03em" }}>
+          Venta Simple para Windows
+        </h1>
+        <p className="text-base text-muted-foreground leading-relaxed" style={{ maxWidth: 460, margin: "0 auto" }}>
+          Gestioná ventas, stock y clientes sin depender de internet.
+          Sincronización automática cuando hay conexión.
+        </p>
+      </div>
 
-      <div style={{ maxWidth: 680, margin: "0 auto", padding: "64px 24px 80px" }}>
-
-        {/* Hero */}
-        <div className="text-center mb-10">
-          <div style={{
-            width: 72, height: 72, borderRadius: 20,
-            background: "#1E3A8A",
-            display: "grid", placeItems: "center",
-            margin: "0 auto 24px",
-            boxShadow: "0 8px 32px rgba(30,58,138,.3)",
-          }}>
-            <Monitor size={34} color="#fff" />
+      <div className="text-center mb-10">
+        {loading ? (
+          <div className="inline-flex items-center gap-2 text-sm text-muted-foreground">
+            <Loader2 size={16} className="animate-spin" /> Buscando versión más reciente…
           </div>
-
-          <h1 className="text-3xl font-bold text-foreground mb-3" style={{ letterSpacing: "-0.03em" }}>
-            Venta Simple para Windows
-          </h1>
-          <p className="text-base text-muted-foreground leading-relaxed" style={{ maxWidth: 460, margin: "0 auto" }}>
-            Gestioná ventas, stock y clientes sin depender de internet.
-            Sincronización automática cuando hay conexión.
-          </p>
-        </div>
-
-        {/* Botón descarga */}
-        <div className="text-center mb-10">
-          {loading ? (
-            <div className="inline-flex items-center gap-2 text-sm text-muted-foreground">
-              <Loader2 size={16} className="animate-spin" />
-              Buscando versión más reciente…
+        ) : release?.downloadUrl ? (
+          <>
+            <a href={release.downloadUrl} download style={{
+              display: "inline-flex", alignItems: "center", gap: 10,
+              padding: "15px 32px", borderRadius: 10, fontWeight: 800, fontSize: 16,
+              background: "#1E3A8A", color: "#fff", textDecoration: "none",
+              boxShadow: "0 6px 24px rgba(30,58,138,.35)", letterSpacing: "-0.01em",
+            }}>
+              <Download size={20} />
+              Descargar para Windows
+              <span style={{ fontSize: 11, fontWeight: 600, opacity: 0.7 }}>v{release.version}</span>
+            </a>
+            <p className="text-xs text-muted-foreground mt-3">
+              Windows 10 / 11 · 64-bit
+              {release.fileSize ? ` · ${release.fileSize}` : ""}
+              {release.publishedAt ? ` · ${new Date(release.publishedAt).toLocaleDateString("es-AR")}` : ""}
+            </p>
+          </>
+        ) : (
+          <>
+            <div style={{
+              display: "inline-flex", alignItems: "center", gap: 10,
+              padding: "15px 32px", borderRadius: 10, fontWeight: 800, fontSize: 16,
+              background: "rgba(30,58,138,.08)", border: "1px solid rgba(30,58,138,.2)",
+              color: "#1E3A8A", cursor: "not-allowed",
+            }}>
+              <Download size={20} /> Descarga disponible próximamente
             </div>
-          ) : release?.downloadUrl ? (
-            <>
-              <a
-                href={release.downloadUrl}
-                download
-                style={{
-                  display: "inline-flex", alignItems: "center", gap: 10,
-                  padding: "15px 32px", borderRadius: 10, fontWeight: 800, fontSize: 16,
-                  background: "#1E3A8A", color: "#fff", textDecoration: "none",
-                  boxShadow: "0 6px 24px rgba(30,58,138,.35)",
-                  letterSpacing: "-0.01em",
-                }}
-              >
-                <Download size={20} />
-                Descargar para Windows
-                <span style={{ fontSize: 11, fontWeight: 600, opacity: 0.7 }}>v{release.version}</span>
-              </a>
-              <p className="text-xs text-muted-foreground mt-3">
-                Windows 10 / 11 · 64-bit
-                {release.fileSize ? ` · ${release.fileSize}` : ""}
-                {release.publishedAt ? ` · ${new Date(release.publishedAt).toLocaleDateString("es-AR")}` : ""}
-              </p>
-            </>
-          ) : (
-            <>
-              <div style={{
-                display: "inline-flex", alignItems: "center", gap: 10,
-                padding: "15px 32px", borderRadius: 10, fontWeight: 800, fontSize: 16,
-                background: "rgba(30,58,138,.08)", border: "1px solid rgba(30,58,138,.2)",
-                color: "#1E3A8A", cursor: "not-allowed",
-              }}>
-                <Download size={20} />
-                Descarga disponible próximamente
-              </div>
-              <p className="text-xs text-muted-foreground mt-3">El instalador estará disponible en breve.</p>
-            </>
-          )}
-        </div>
+            <p className="text-xs text-muted-foreground mt-3">El instalador estará disponible en breve.</p>
+          </>
+        )}
+      </div>
 
-        {/* Features */}
-        <div className="grid grid-cols-3 gap-5 mb-12 pb-10 border-b" style={{ borderColor: "var(--border)" }}>
-          {[
-            { icon: Zap,     title: "Funciona offline",  desc: "Trabajá sin internet todo el tiempo que necesites. Sincroniza al reconectar." },
-            { icon: Shield,  title: "Backup automático", desc: "Tus datos siempre seguros en la nube." },
-            { icon: Monitor, title: "Multi-PC",          desc: "Usalo en más de una PC con el plan Pro." },
-          ].map(({ icon: Icon, title, desc }) => (
-            <div key={title} className="text-center">
-              <div style={{
-                width: 40, height: 40, borderRadius: 10, margin: "0 auto 10px",
-                background: "rgba(30,58,138,.1)", display: "grid", placeItems: "center",
-              }}>
-                <Icon size={18} style={{ color: "#1E3A8A" }} />
-              </div>
-              <p className="text-sm font-semibold text-foreground mb-1">{title}</p>
-              <p className="text-xs text-muted-foreground leading-relaxed">{desc}</p>
+      <div className="grid grid-cols-3 gap-5 mb-12 pb-10 border-b" style={{ borderColor: "var(--border)" }}>
+        {[
+          { icon: Zap,     title: "Funciona offline",  desc: "Trabajá sin internet todo el tiempo que necesites. Sincroniza al reconectar." },
+          { icon: Shield,  title: "Backup automático", desc: "Tus datos siempre seguros en la nube." },
+          { icon: Monitor, title: "Multi-PC",          desc: "Usalo en más de una PC con el plan Pro." },
+        ].map(({ icon: Icon, title, desc }) => (
+          <div key={title} className="text-center">
+            <div style={{ width: 40, height: 40, borderRadius: 10, margin: "0 auto 10px", background: "rgba(30,58,138,.1)", display: "grid", placeItems: "center" }}>
+              <Icon size={18} style={{ color: "#1E3A8A" }} />
             </div>
+            <p className="text-sm font-semibold text-foreground mb-1">{title}</p>
+            <p className="text-xs text-muted-foreground leading-relaxed">{desc}</p>
+          </div>
+        ))}
+      </div>
+
+      <div>
+        <h2 className="text-lg font-bold text-foreground mb-1" style={{ letterSpacing: "-0.02em" }}>
+          Guía de instalación y problemas comunes
+        </h2>
+        <p className="text-sm text-muted-foreground mb-5">
+          Windows puede mostrar alertas al instalar apps nuevas. Expandí el problema que tenés para ver cómo resolverlo.
+        </p>
+        <div className="space-y-2">
+          {GUIA.map(item => (
+            <GuiaItem key={item.id} item={item} open={openId === item.id} onToggle={() => toggle(item.id)} />
           ))}
         </div>
-
-        {/* Guía de instalación */}
-        <div>
-          <div className="flex items-center gap-2 mb-4">
-            <h2 className="text-lg font-bold text-foreground" style={{ letterSpacing: "-0.02em" }}>
-              Guía de instalación y problemas comunes
-            </h2>
+        <div className="mt-6 flex items-start gap-3 px-4 py-3.5 rounded-xl border" style={{ borderColor: "var(--border)", background: "var(--card)" }}>
+          <CheckCircle2 size={16} className="text-emerald-600 mt-0.5 shrink-0" />
+          <div>
+            <p className="text-sm font-semibold text-foreground mb-0.5">¿Seguís con problemas?</p>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Escribinos por WhatsApp — soporte humano 24/7.
+              También podés escribir a{" "}
+              <a href="mailto:ventas@ventasimple.app" style={{ color: "#1E3A8A", fontWeight: 600 }}>ventas@ventasimple.app</a>
+            </p>
           </div>
-          <p className="text-sm text-muted-foreground mb-5">
-            Windows puede mostrar alertas al instalar apps nuevas. Es normal. Expandí el problema que tenés para ver cómo resolverlo.
-          </p>
-
-          <div className="space-y-2">
-            {GUIA.map(item => (
-              <GuiaItem
-                key={item.id}
-                item={item}
-                open={openId === item.id}
-                onToggle={() => toggle(item.id)}
-              />
-            ))}
-          </div>
-
-          {/* ¿Necesitás más ayuda? */}
-          <div className="mt-6 flex items-start gap-3 px-4 py-3.5 rounded-xl border" style={{ borderColor: "var(--border)", background: "var(--card)" }}>
-            <CheckCircle2 size={16} className="text-emerald-600 mt-0.5 shrink-0" />
-            <div>
-              <p className="text-sm font-semibold text-foreground mb-0.5">¿Seguís con problemas?</p>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                Escribinos por WhatsApp — soporte humano 24/7, respondemos en menos de 5 minutos.
-                También podés escribir a{" "}
-                <a href="mailto:ventas@ventasimple.app" style={{ color: "#1E3A8A", fontWeight: 600 }}>
-                  ventas@ventasimple.app
-                </a>
-              </p>
-            </div>
-          </div>
-
-          {/* Link repo */}
-          <p className="text-xs text-muted-foreground text-center mt-6">
-            Código fuente disponible en{" "}
-            <a
-              href="https://github.com/molinerisit/venta-simple-pos"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1"
-              style={{ color: "#1E3A8A", fontWeight: 600 }}
-            >
-              github.com/molinerisit/venta-simple-pos
-              <ExternalLink size={11} />
-            </a>
-          </p>
         </div>
-
+        <p className="text-xs text-muted-foreground text-center mt-6">
+          Código fuente disponible en{" "}
+          <a href="https://github.com/molinerisit/venta-simple-pos" target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-1" style={{ color: "#1E3A8A", fontWeight: 600 }}>
+            github.com/molinerisit/venta-simple-pos <ExternalLink size={11} />
+          </a>
+        </p>
       </div>
     </div>
+  );
+}
+
+export default function DescargarPage() {
+  const router = useRouter();
+  const [isMobile, setIsMobile]       = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isAuthenticated()) { router.replace("/login?next=/descargar"); return; }
+    const check = () => { const m = window.innerWidth < 768; setIsMobile(m); if (!m) setSidebarOpen(false); };
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, [router]);
+
+  useEffect(() => {
+    document.body.style.overflow = isMobile && sidebarOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [isMobile, sidebarOpen]);
+
+  return (
+    <UserPlanProvider>
+      <div className="flex h-full">
+        {isMobile && (
+          <div style={{
+            position: "fixed", top: 0, left: 0, right: 0, zIndex: 60,
+            height: 56, background: "#F3F4F6", borderBottom: "1px solid #E5E7EB",
+            display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 16px",
+          }}>
+            <button onClick={() => setSidebarOpen(v => !v)} aria-label="Menú"
+              style={{ background: "none", border: "none", cursor: "pointer", padding: 6, color: "#374151", display: "flex", alignItems: "center" }}>
+              {sidebarOpen ? <X size={20} strokeWidth={2} /> : <Menu size={20} strokeWidth={2} />}
+            </button>
+            <Image src="/brand/logoletras.png" alt="VentaSimple" width={160} height={50}
+              style={{ height: 22, width: "auto", objectFit: "contain" }} />
+            <div style={{ width: 32 }} />
+          </div>
+        )}
+
+        <Sidebar mobileOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} isMobileLayout={isMobile} />
+
+        {isMobile && sidebarOpen && (
+          <div onClick={() => setSidebarOpen(false)}
+            style={{ position: "fixed", inset: 0, zIndex: 49, background: "rgba(0,0,0,.52)" }} />
+        )}
+
+        <main className="flex-1 overflow-y-auto bg-[#F8FAFC] dark:bg-transparent"
+          style={{ padding: isMobile ? "72px 16px 24px" : "32px" }}>
+          <DescargarContent />
+        </main>
+      </div>
+    </UserPlanProvider>
   );
 }
