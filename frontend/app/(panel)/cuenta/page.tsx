@@ -11,7 +11,7 @@ import { getUser } from "@/lib/auth";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
 } from "@/components/ui/dialog";
-import { Pause, Play, X, CheckCircle, AlertTriangle, Monitor, Download, ChevronDown } from "lucide-react";
+import { Pause, Play, X, CheckCircle, AlertTriangle, Monitor, Download, ChevronDown, RefreshCw } from "lucide-react";
 import Link from "next/link";
 
 const PLANES = [
@@ -61,6 +61,7 @@ function CuentaPageInner() {
   const [estado,        setEstado]       = useState<SuscripcionEstado | null>(null);
   const [licencia,      setLicencia]     = useState<Licencia | null>(null);
   const [loading,       setLoading]      = useState(true);
+  const [loadError,     setLoadError]    = useState<string | null>(null);
   const [actionLoading, setActionLoad]   = useState(false);
   const [confirmAction, setConfirm]      = useState<"cancelar" | "pausar" | null>(null);
   const [toast,         setToast]        = useState<{ msg: string; ok: boolean } | null>(null);
@@ -87,11 +88,17 @@ function CuentaPageInner() {
 
   async function load() {
     setLoading(true);
+    setLoadError(null);
     try {
       const [sRes, lRes] = await Promise.all([getSuscripcionEstado(), getLicencia()]);
       setEstado(sRes.data);
       setLicencia(lRes.data.licencia);
-    } catch { }
+    } catch (e: unknown) {
+      const msg = (e as { response?: { status?: number; data?: { detail?: string } } })?.response?.data?.detail
+        ?? (e instanceof Error ? e.message : "Error al cargar el estado de la cuenta");
+      setLoadError(msg);
+      console.error("[cuenta] load error:", e);
+    }
     finally { setLoading(false); }
   }
 
@@ -201,9 +208,24 @@ function CuentaPageInner() {
 
       {/* ── Header ── */}
       <div style={{ paddingBottom: 8 }}>
-        <h1 style={{ fontSize: 22, fontWeight: 800, color: "#0F172A", margin: 0, letterSpacing: "-0.02em" }}>
-          Mi cuenta
-        </h1>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
+          <h1 style={{ fontSize: 22, fontWeight: 800, color: "#0F172A", margin: 0, letterSpacing: "-0.02em" }}>
+            Mi cuenta
+          </h1>
+          <button onClick={load} disabled={loading} style={{
+            display: "flex", alignItems: "center", gap: 5,
+            padding: "5px 12px", borderRadius: 7, fontSize: 12, fontWeight: 600,
+            background: "#fff", border: "1px solid #E5E7EB", color: "#6B7280",
+            cursor: loading ? "default" : "pointer", opacity: loading ? 0.5 : 1,
+          }}>
+            <RefreshCw size={12} className={loading ? "animate-spin" : ""} /> Actualizar
+          </button>
+        </div>
+        {loadError && (
+          <p style={{ fontSize: 11, color: "#EF4444", margin: "4px 0 0", fontFamily: "monospace" }}>
+            Error: {loadError}
+          </p>
+        )}
         {!loading && (
           <p style={{
             fontSize: 13, fontWeight: 600, margin: "5px 0 0",
