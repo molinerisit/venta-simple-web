@@ -11,6 +11,8 @@ class ProductoBase(BaseModel):
     stock: int = 0
     stock_minimo: int = 0
     categoria: Optional[str] = None
+    departamento: Optional[str] = None
+    familia: Optional[str] = None
     descripcion: Optional[str] = None
     unidad: str = "unidad"
     codigo_barras: Optional[str] = None
@@ -32,6 +34,8 @@ class ProductoUpdate(BaseModel):
     stock: Optional[int] = None
     stock_minimo: Optional[int] = None
     categoria: Optional[str] = None
+    departamento: Optional[str] = None
+    familia: Optional[str] = None
     descripcion: Optional[str] = None
     unidad: Optional[str] = None
     activo: Optional[bool] = None

@@ -63,7 +63,7 @@ function CuentaPageInner() {
   const [loading,       setLoading]      = useState(true);
   const [loadError,     setLoadError]    = useState<string | null>(null);
   const [actionLoading, setActionLoad]   = useState(false);
-  const [confirmAction, setConfirm]      = useState<"cancelar" | "pausar" | null>(null);
+  const [confirmAction, setConfirm]      = useState<"cancelar" | "pausar" | "cancelar-manual" | null>(null);
   const [toast,         setToast]        = useState<{ msg: string; ok: boolean } | null>(null);
   const [activation,    setActivation]   = useState<ActivationState>("idle");
   const [plansOpen,     setPlansOpen]    = useState(false);
@@ -189,6 +189,7 @@ function CuentaPageInner() {
   const isActive    = estado?.mp_status === "authorized";
   const isPaused    = estado?.mp_status === "paused";
   const currentPlan = estado?.plan ?? "FREE";
+  const isManualPlan = currentPlan !== "FREE" && !estado?.preapproval_id && !isActive && !isPaused;
   const hasLicencia = !!licencia;
   // Plan activo: via MP (authorized/paused) O activado manualmente (plan != FREE, sin preapproval)
   const allDone     = hasLicencia && currentPlan !== "FREE" &&
@@ -446,7 +447,18 @@ function CuentaPageInner() {
                   padding: "7px 14px", borderRadius: 8, fontSize: 12, fontWeight: 600,
                   background: "#fff", color: "#EF4444", border: "1px solid #FCA5A5", cursor: "pointer",
                 }}>
-                  <X size={11} /> Cancelar
+                  <X size={11} /> Cancelar suscripción
+                </button>
+              </div>
+            )}
+            {isManualPlan && (
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                <button onClick={() => setConfirm("cancelar-manual")} disabled={actionLoading} style={{
+                  display: "inline-flex", alignItems: "center", gap: 5,
+                  padding: "7px 14px", borderRadius: 8, fontSize: 12, fontWeight: 600,
+                  background: "#fff", color: "#EF4444", border: "1px solid #FCA5A5", cursor: "pointer",
+                }}>
+                  <X size={11} /> Cancelar suscripción
                 </button>
               </div>
             )}
@@ -685,6 +697,51 @@ function CuentaPageInner() {
               style={{ padding: "8px 16px", borderRadius: 8, background: "#1E3A8A", color: "#fff", border: "none", fontWeight: 600, fontSize: 13, cursor: "pointer" }}
             >
               Sí, pausar
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={confirmAction === "cancelar-manual"} onOpenChange={() => setConfirm(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Cancelar suscripción</DialogTitle>
+            <DialogDescription>
+              Tu plan fue activado manualmente. Para cancelarlo, escribinos y lo gestionamos en el día.
+            </DialogDescription>
+          </DialogHeader>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10, padding: "4px 0 8px" }}>
+            <a
+              href="mailto:ventas@ventasimple.app?subject=Solicitud%20de%20cancelaci%C3%B3n%20de%20suscripci%C3%B3n"
+              style={{
+                display: "flex", alignItems: "center", justifyContent: "center",
+                padding: "10px 16px", borderRadius: 8,
+                background: "#EF4444", color: "#fff", border: "none",
+                fontWeight: 600, fontSize: 13, textDecoration: "none", textAlign: "center",
+              }}
+            >
+              Escribirnos por email
+            </a>
+            <a
+              href="https://wa.me/5493512345678?text=Hola%2C%20quiero%20cancelar%20mi%20suscripci%C3%B3n%20de%20VentaSimple"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "flex", alignItems: "center", justifyContent: "center",
+                padding: "10px 16px", borderRadius: 8,
+                background: "#fff", color: "#374151", border: "1px solid #E5E7EB",
+                fontWeight: 600, fontSize: 13, textDecoration: "none", textAlign: "center",
+              }}
+            >
+              Contactar por WhatsApp
+            </a>
+          </div>
+          <DialogFooter>
+            <button
+              onClick={() => setConfirm(null)}
+              style={{ padding: "8px 16px", borderRadius: 8, background: "#fff", border: "1px solid #E5E7EB", color: "#374151", fontWeight: 600, fontSize: 13, cursor: "pointer" }}
+            >
+              Cerrar
             </button>
           </DialogFooter>
         </DialogContent>

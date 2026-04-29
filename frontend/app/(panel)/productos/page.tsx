@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import {
   getProductos, crearProducto, actualizarProducto, eliminarProducto,
-  ajustarStock, getCategorias, type Producto, type ProductoCreate,
+  ajustarStock, getTaxonomia, type Producto, type ProductoCreate,
 } from "@/lib/api";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -22,17 +22,18 @@ import { EmptyState, LoadingState } from "@/components/panel/EmptyState";
 
 const EMPTY: ProductoCreate = {
   nombre: "", codigo: "", precio: 0, precio_costo: 0,
-  stock: 0, stock_minimo: 0, categoria: "", descripcion: "", unidad: "unidad",
+  stock: 0, stock_minimo: 0, categoria: "", departamento: "", familia: "",
+  descripcion: "", unidad: "unidad",
   codigo_barras: "", plu: "", pesable: false, acceso_rapido: false, maneja_lotes: false,
 };
 
 export default function ProductosPage() {
   const [items, setItems] = useState<Producto[]>([]);
   const [filtered, setFiltered] = useState<Producto[]>([]);
-  const [categorias, setCategorias] = useState<string[]>([]);
+  const [taxonomia, setTaxonomia] = useState<{ nombre: string; familias: string[] }[]>([]);
   const [loading, setLoading] = useState(true);
   const [q, setQ] = useState("");
-  const [catFilter, setCatFilter] = useState("_all");
+  const [deptoFilter, setDeptoFilter] = useState("_all");
 
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Producto | null>(null);
@@ -44,13 +45,15 @@ export default function ProductosPage() {
   const [stockDelta, setStockDelta] = useState(0);
   const [stockMotivo, setStockMotivo] = useState("");
 
+  const familiasDisponibles = taxonomia.find(d => d.nombre === form.departamento)?.familias ?? [];
+
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const [pRes, cRes] = await Promise.all([getProductos(), getCategorias()]);
+      const [pRes, tRes] = await Promise.all([getProductos(), getTaxonomia()]);
       setItems(pRes.data);
       setFiltered(pRes.data);
-      setCategorias(cRes.data);
+      setTaxonomia(tRes.data);
     } finally {
       setLoading(false);
     }
@@ -61,9 +64,9 @@ export default function ProductosPage() {
   useEffect(() => {
     let list = items;
     if (q) list = list.filter(p => p.nombre.toLowerCase().includes(q.toLowerCase()) || (p.codigo ?? "").toLowerCase().includes(q.toLowerCase()));
-    if (catFilter !== "_all") list = list.filter(p => p.categoria === catFilter);
+    if (deptoFilter !== "_all") list = list.filter(p => p.departamento === deptoFilter);
     setFiltered(list);
-  }, [q, catFilter, items]);
+  }, [q, deptoFilter, items]);
 
   function openNew() {
     setEditing(null);
@@ -77,6 +80,7 @@ export default function ProductosPage() {
     setForm({
       nombre: p.nombre, codigo: p.codigo ?? "", precio: p.precio, precio_costo: p.precio_costo,
       stock: p.stock, stock_minimo: p.stock_minimo, categoria: p.categoria ?? "",
+      departamento: p.departamento ?? "", familia: p.familia ?? "",
       descripcion: p.descripcion ?? "", unidad: p.unidad,
       codigo_barras: p.codigo_barras ?? "", plu: p.plu ?? "",
       pesable: p.pesable ?? false, acceso_rapido: p.acceso_rapido ?? false,
@@ -122,6 +126,10 @@ export default function ProductosPage() {
 
   const set = (k: keyof ProductoCreate, v: string | number | boolean) => setForm(f => ({ ...f, [k]: v }));
 
+  function setDepto(val: string) {
+    setForm(f => ({ ...f, departamento: val, familia: "" }));
+  }
+
   return (
     <div className="space-y-6 max-w-6xl">
       <div className="flex items-center justify-between">
@@ -145,13 +153,13 @@ export default function ProductosPage() {
           <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground/60" />
           <Input placeholder="Buscar por nombre o código…" className="pl-8" value={q} onChange={e => setQ(e.target.value)} />
         </div>
-        <Select value={catFilter} onValueChange={(v) => setCatFilter(v ?? "")}>
-          <SelectTrigger className="w-44">
-            <SelectValue placeholder="Categoría" />
+        <Select value={deptoFilter} onValueChange={(v) => setDeptoFilter(v ?? "_all")}>
+          <SelectTrigger className="w-52">
+            <SelectValue placeholder="Departamento" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="_all">Todas las categorías</SelectItem>
-            {categorias.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+            <SelectItem value="_all">Todos los departamentos</SelectItem>
+            {taxonomia.map(d => <SelectItem key={d.nombre} value={d.nombre}>{d.nombre}</SelectItem>)}
           </SelectContent>
         </Select>
       </div>
@@ -163,11 +171,11 @@ export default function ProductosPage() {
            filtered.length === 0 ? (
             <EmptyState
               icon={Package}
-              title={q || catFilter !== "_all" ? "Sin resultados" : "Todavía no cargaste productos"}
-              description={q || catFilter !== "_all"
+              title={q || deptoFilter !== "_all" ? "Sin resultados" : "Todavía no cargaste productos"}
+              description={q || deptoFilter !== "_all"
                 ? "No hay productos que coincidan con los filtros aplicados."
                 : "Creá tu primer producto para empezar a vender, controlar stock y ver métricas."}
-              action={!q && catFilter === "_all" ? (
+              action={!q && deptoFilter === "_all" ? (
                 <Button size="sm" onClick={openNew} className="gap-1.5">
                   <Plus size={13} /> Crear producto
                 </Button>
@@ -182,7 +190,7 @@ export default function ProductosPage() {
                   <th className="text-right px-4 py-3">Precio</th>
                   <th className="text-right px-4 py-3">Costo</th>
                   <th className="text-center px-4 py-3">Stock</th>
-                  <th className="text-left px-4 py-3">Categoría</th>
+                  <th className="text-left px-4 py-3">Departamento / Familia</th>
                   <th className="text-left px-4 py-3"></th>
                 </tr>
               </thead>
@@ -201,7 +209,11 @@ export default function ProductosPage() {
                         {p.stock}
                       </Badge>
                     </td>
-                    <td className="px-4 py-3 text-muted-foreground text-xs">{p.categoria ?? "—"}</td>
+                    <td className="px-4 py-3 text-muted-foreground text-xs">
+                      {p.departamento ? (
+                        <span>{p.departamento}{p.familia ? <> › <span className="text-foreground/70">{p.familia}</span></> : null}</span>
+                      ) : "—"}
+                    </td>
                     <td className="px-4 py-3">
                       <div className="flex gap-1">
                         <Button variant="ghost" size="sm" className="h-7 px-2"
@@ -242,13 +254,38 @@ export default function ProductosPage() {
                 <Input value={form.codigo ?? ""} onChange={e => set("codigo", e.target.value)} placeholder="SKU-0001" />
               </div>
               <div className="space-y-1">
-                <Label>Categoría</Label>
-                <Input value={form.categoria ?? ""} onChange={e => set("categoria", e.target.value)} />
-              </div>
-              <div className="space-y-1">
                 <Label>Código de barras</Label>
                 <Input value={form.codigo_barras ?? ""} onChange={e => set("codigo_barras", e.target.value)} placeholder="EAN-13…" />
               </div>
+
+              <div className="space-y-1">
+                <Label>Departamento</Label>
+                <Select value={form.departamento ?? ""} onValueChange={setDepto}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Seleccioná un departamento" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {taxonomia.map(d => <SelectItem key={d.nombre} value={d.nombre}>{d.nombre}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-1">
+                <Label>Familia</Label>
+                <Select
+                  value={form.familia ?? ""}
+                  onValueChange={v => set("familia", v)}
+                  disabled={!form.departamento}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={form.departamento ? "Seleccioná una familia" : "Primero elegí departamento"} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {familiasDisponibles.map(f => <SelectItem key={f} value={f}>{f}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+
               <div className="space-y-1">
                 <Label>PLU</Label>
                 <Input value={form.plu ?? ""} onChange={e => set("plu", e.target.value)} placeholder="Código PLU balanza" />

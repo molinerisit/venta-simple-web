@@ -1,0 +1,15 @@
+TAXONOMIA = [
+    {"nombre": "Carnes y Aves", "familias": ["Vacuno", "Cerdo", "Pollo y Aves", "Cordero y Cabrito", "Achuras y Menudencias", "Carne Molida y Preparados"]},
+    {"nombre": "Fiambrería y Embutidos", "familias": ["Jamones", "Salames y Salamines", "Mortadela y Fiambres Cocidos", "Embutidos Frescos", "Salchichas y Frankfurt", "Fiambres en Lata y Envasados"]},
+    {"nombre": "Lácteos y Huevos", "familias": ["Quesos", "Leche", "Yogur", "Manteca y Crema", "Huevos", "Postres y Dulce de Leche"]},
+    {"nombre": "Verduras y Frutas", "familias": ["Verduras de Hoja", "Verduras de Raíz y Tubérculos", "Tomates y Pepinos", "Verduras Varias", "Frutas de Estación", "Frutas Secas y Semillas"]},
+    {"nombre": "Almacén", "familias": ["Arroz y Cereales", "Harinas y Féculas", "Pastas Secas", "Legumbres", "Aceites y Vinagres", "Conservas y Enlatados", "Salsas y Condimentos", "Especias y Hierbas", "Azúcar y Edulcorantes"]},
+    {"nombre": "Panadería y Repostería", "familias": ["Pan", "Facturas y Masas", "Galletitas y Crackers", "Tortas y Budines", "Pastelería Seca", "Mezclas y Premezclas"]},
+    {"nombre": "Bebidas", "familias": ["Agua", "Gaseosas", "Jugos y Néctares", "Energizantes e Isotónicas", "Cervezas", "Vinos y Espumantes", "Licores y Espirituosas", "Yerba e Infusiones"]},
+    {"nombre": "Congelados", "familias": ["Carnes Congeladas", "Verduras Congeladas", "Pastas y Comidas Listas", "Helados"]},
+    {"nombre": "Limpieza y Hogar", "familias": ["Limpieza de Ropa", "Limpieza del Hogar", "Lavavajillas", "Papel y Descartables", "Artículos de Limpieza", "Insecticidas y Raticidas"]},
+    {"nombre": "Higiene y Cuidado Personal", "familias": ["Jabones y Shampoo", "Desodorantes", "Higiene Bucal", "Higiene Femenina", "Pañales y Toallitas", "Afeitado y Depilación", "Cosméticos y Perfumería"]},
+    {"nombre": "Kiosko y Golosinas", "familias": ["Chocolates", "Caramelos y Chicles", "Alfajores", "Snacks Salados", "Barras de Cereal y Granolas", "Tarjetas y Carga"]},
+    {"nombre": "Cigarrillos y Tabaco", "familias": ["Cigarrillos", "Tabaco y Accesorios", "Cigarros"]},
+    {"nombre": "Varios y Misceláneos", "familias": ["Artículos de Librería", "Pilas y Electricidad", "Medicamentos y Farmacia", "Mascotas", "Productos sin Clasificar"]},
+]

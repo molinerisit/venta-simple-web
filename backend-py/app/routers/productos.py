@@ -7,6 +7,7 @@ from ..database import get_db
 from ..dependencies import get_current_user, resolve_tenant_id
 from ..schemas.auth import TokenPayload
 from ..schemas.producto import ProductoCreate, ProductoUpdate, ProductoOut, StockAjuste
+from ..data.taxonomia import TAXONOMIA
 
 router = APIRouter(prefix="/api/productos", tags=["productos"])
 
@@ -46,6 +47,11 @@ def listar_productos(
     return [dict(r) for r in rows]
 
 
+@router.get("/taxonomia")
+def listar_taxonomia():
+    return TAXONOMIA
+
+
 @router.post("", status_code=201)
 def crear_producto(
     body: ProductoCreate,
@@ -56,11 +62,11 @@ def crear_producto(
         text("""
             INSERT INTO productos
               (tenant_id, nombre, codigo, precio, precio_costo, stock, stock_minimo,
-               categoria, descripcion, unidad, local_id,
+               categoria, departamento, familia, descripcion, unidad, local_id,
                codigo_barras, plu, pesable, acceso_rapido, maneja_lotes)
             VALUES
               (:tid, :nombre, :codigo, :precio, :precio_costo, :stock, :stock_min,
-               :cat, :desc, :unidad, :local_id,
+               :cat, :departamento, :familia, :desc, :unidad, :local_id,
                :codigo_barras, :plu, :pesable, :acceso_rapido, :maneja_lotes)
             RETURNING *
         """),
@@ -68,7 +74,8 @@ def crear_producto(
             "tid": tenant_id, "nombre": body.nombre, "codigo": body.codigo,
             "precio": body.precio, "precio_costo": body.precio_costo,
             "stock": body.stock, "stock_min": body.stock_minimo,
-            "cat": body.categoria, "desc": body.descripcion,
+            "cat": body.categoria, "departamento": body.departamento, "familia": body.familia,
+            "desc": body.descripcion,
             "unidad": body.unidad, "local_id": body.local_id,
             "codigo_barras": body.codigo_barras, "plu": body.plu,
             "pesable": body.pesable, "acceso_rapido": body.acceso_rapido,
@@ -88,6 +95,7 @@ def crear_producto(
                 "precio": float(body.precio), "precio_costo": float(body.precio_costo or 0),
                 "stock": body.stock, "stock_minimo": body.stock_minimo,
                 "unidad": body.unidad, "categoria": body.categoria,
+                "departamento": body.departamento, "familia": body.familia,
                 "codigo_barras": body.codigo_barras, "plu": body.plu,
                 "pesable": body.pesable, "acceso_rapido": body.acceso_rapido,
                 "maneja_lotes": body.maneja_lotes, "activo": True,

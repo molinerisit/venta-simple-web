@@ -143,6 +143,8 @@ export interface Producto {
   stock: number;
   stock_minimo: number;
   categoria: string | null;
+  departamento: string | null;
+  familia: string | null;
   descripcion: string | null;
   unidad: string;
   codigo_barras: string | null;
@@ -156,6 +158,7 @@ export interface Producto {
   updated_at: string;
 }
 export type ProductoCreate = Omit<Producto, "id" | "tenant_id" | "created_at" | "updated_at" | "activo">;
+export const getTaxonomia = () => http.get<{ nombre: string; familias: string[] }[]>("/api/productos/taxonomia");
 export interface ProductosParams { q?: string; categoria?: string; solo_activos?: boolean; tenant_id?: string }
 
 export interface Proveedor {
