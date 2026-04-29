@@ -126,8 +126,8 @@ export default function ProductosPage() {
 
   const set = (k: keyof ProductoCreate, v: string | number | boolean) => setForm(f => ({ ...f, [k]: v }));
 
-  function setDepto(val: string) {
-    setForm(f => ({ ...f, departamento: val, familia: "" }));
+  function setDepto(val: string | null) {
+    setForm(f => ({ ...f, departamento: val ?? "", familia: "" }));
   }
 
   return (
@@ -274,7 +274,7 @@ export default function ProductosPage() {
                 <Label>Familia</Label>
                 <Select
                   value={form.familia ?? ""}
-                  onValueChange={v => set("familia", v)}
+                  onValueChange={v => set("familia", v ?? "")}
                   disabled={!form.departamento}
                 >
                   <SelectTrigger>
