@@ -3,7 +3,7 @@ from typing import Optional
 
 
 class LoginRequest(BaseModel):
-    email: str
+    email: EmailStr
     password: str
 
 
@@ -15,7 +15,7 @@ class LoginResponse(BaseModel):
 
 
 class RegisterRequest(BaseModel):
-    email: str
+    email: EmailStr
     password: str
     nombre_negocio: str
 

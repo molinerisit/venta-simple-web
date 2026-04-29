@@ -44,14 +44,13 @@ async def global_exception_handler(request: Request, exc: Exception):
     logging.getLogger("ventasimple").error("Unhandled error: %s", exc, exc_info=True)
     return JSONResponse(status_code=500, content={"detail": "Error interno del servidor."})
 
-_allowed_origins = [
-    settings.frontend_url,
-    "http://localhost:3000",
-    # aliases Vercel del frontend
-    "https://frontend-eight-lyart-56.vercel.app",
-    "https://frontend-julianmolineris-projects.vercel.app",
-    "https://frontend-git-main-julianmolineris-projects.vercel.app",
-]
+# MEDIO-1: CORS desde variable de entorno para no hardcodear URLs de Vercel.
+# En Railway setear: ALLOWED_ORIGINS=https://ventasimple.cloud,https://www.ventasimple.cloud
+import os as _os
+_origins_env = _os.getenv("ALLOWED_ORIGINS", "http://localhost:3000")
+_allowed_origins = [o.strip() for o in _origins_env.split(",") if o.strip()]
+if settings.frontend_url and settings.frontend_url not in _allowed_origins:
+    _allowed_origins.append(settings.frontend_url)
 
 app.add_middleware(
     CORSMiddleware,

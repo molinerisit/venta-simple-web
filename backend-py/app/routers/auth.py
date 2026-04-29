@@ -1,15 +1,26 @@
 import logging
+import re
 from datetime import timedelta
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from jose import JWTError, jwt
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 
 logger = logging.getLogger(__name__)
+
+
+def _validate_password(pwd: str) -> None:
+    """MEDIO-2: Política mínima de contraseñas."""
+    if len(pwd) < 8:
+        raise HTTPException(400, "La contraseña debe tener al menos 8 caracteres.")
+    if not re.search(r"[A-Z]", pwd):
+        raise HTTPException(400, "La contraseña debe contener al menos una letra mayúscula.")
+    if not re.search(r"[0-9]", pwd):
+        raise HTTPException(400, "La contraseña debe contener al menos un número.")
 
 from ..database import get_db
 from ..schemas.auth import LoginRequest, LoginResponse, RegisterRequest
@@ -89,6 +100,7 @@ def register(request: Request, body: RegisterRequest, db: Session = Depends(get_
             )
         raise HTTPException(status_code=409, detail="El email ya está registrado.")
 
+    _validate_password(body.password)
     hashed = hash_password(body.password)
     result = db.execute(
         text("""
@@ -200,7 +212,7 @@ def verify_email(token: str, db: Session = Depends(get_db)):
 # ── Reenviar verificación ─────────────────────────────────────────────────────
 
 class ResendVerificationIn(BaseModel):
-    email: str
+    email: EmailStr
 
 @router.post("/resend-verification", status_code=200)
 def resend_verification(body: ResendVerificationIn, db: Session = Depends(get_db)):
@@ -218,7 +230,7 @@ def resend_verification(body: ResendVerificationIn, db: Session = Depends(get_db
 # ── Recuperación de contraseña ────────────────────────────────────────────────
 
 class ForgotPasswordIn(BaseModel):
-    email: str
+    email: EmailStr
 
 class ResetPasswordIn(BaseModel):
     token: str
@@ -310,8 +322,7 @@ def desktop_callback(token: str, db: Session = Depends(get_db)):
 def reset_password(body: ResetPasswordIn, db: Session = Depends(get_db)):
     settings = get_settings()
 
-    if len(body.new_password) < 6:
-        raise HTTPException(status_code=400, detail="La contraseña debe tener al menos 6 caracteres.")
+    _validate_password(body.new_password)
 
     try:
         payload = jwt.decode(body.token, settings.secret_key, algorithms=[settings.algorithm])

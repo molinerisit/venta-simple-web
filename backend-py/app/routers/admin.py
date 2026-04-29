@@ -1,8 +1,10 @@
 """
 Rutas exclusivas para superadmin — visibilidad global de todos los tenants.
 """
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from pydantic import BaseModel
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 from typing import Optional
@@ -13,10 +15,14 @@ from ..schemas.auth import TokenPayload
 from ..utils.security import hash_password
 
 router = APIRouter(prefix="/api/admin", tags=["admin"])
+# BAJO-2: Rate limiting explícito para endpoints que leen datos de todos los tenants
+limiter = Limiter(key_func=get_remote_address)
 
 
 @router.get("/stats")
+@limiter.limit("30/minute")
 def stats_globales(
+    request: Request,
     _: TokenPayload = Depends(require_superadmin),
     db: Session = Depends(get_db),
 ):
@@ -38,7 +44,9 @@ def stats_globales(
 
 
 @router.get("/tenants")
+@limiter.limit("30/minute")
 def listar_tenants(
+    request: Request,
     _: TokenPayload = Depends(require_superadmin),
     db: Session = Depends(get_db),
     q: Optional[str] = None,

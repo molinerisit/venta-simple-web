@@ -101,9 +101,10 @@ def obtener_venta(venta_id: str, tenant_id: str = Depends(_tenant), db: Session 
     ).mappings().fetchone()
     if not venta:
         raise HTTPException(404, "Venta no encontrada")
+    # MEDIO-4: tenant_id explícito en detalle_ventas para evitar IDOR ante refactors futuros
     items = db.execute(
-        text("SELECT * FROM detalle_ventas WHERE venta_id = :vid"),
-        {"vid": venta_id},
+        text("SELECT * FROM detalle_ventas WHERE venta_id = :vid AND tenant_id = :tid"),
+        {"vid": venta_id, "tid": tenant_id},
     ).mappings().fetchall()
     result = dict(venta)
     result["items"] = [dict(i) for i in items]
@@ -114,8 +115,8 @@ def obtener_venta(venta_id: str, tenant_id: str = Depends(_tenant), db: Session 
 def anular_venta(venta_id: str, tenant_id: str = Depends(_tenant), db: Session = Depends(get_db)):
     # Revertir stock
     items = db.execute(
-        text("SELECT * FROM detalle_ventas WHERE venta_id = :vid"),
-        {"vid": venta_id},
+        text("SELECT * FROM detalle_ventas WHERE venta_id = :vid AND tenant_id = :tid"),
+        {"vid": venta_id, "tid": tenant_id},
     ).mappings().fetchall()
     for item in items:
         if item["producto_id"]:
