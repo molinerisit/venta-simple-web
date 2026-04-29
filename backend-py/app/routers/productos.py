@@ -1,3 +1,4 @@
+import json
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import text
@@ -15,7 +16,6 @@ def _get_tenant(
     current_user: TokenPayload = Depends(get_current_user),
 ) -> str:
     from ..dependencies import resolve_tenant_id as r
-    # inline resolution
     if current_user.rol == "superadmin":
         if not tenant_id:
             raise HTTPException(400, "Superadmin debe proveer tenant_id")
@@ -56,10 +56,12 @@ def crear_producto(
         text("""
             INSERT INTO productos
               (tenant_id, nombre, codigo, precio, precio_costo, stock, stock_minimo,
-               categoria, descripcion, unidad, local_id)
+               categoria, descripcion, unidad, local_id,
+               codigo_barras, plu, pesable, acceso_rapido, maneja_lotes)
             VALUES
               (:tid, :nombre, :codigo, :precio, :precio_costo, :stock, :stock_min,
-               :cat, :desc, :unidad, :local_id)
+               :cat, :desc, :unidad, :local_id,
+               :codigo_barras, :plu, :pesable, :acceso_rapido, :maneja_lotes)
             RETURNING *
         """),
         {
@@ -68,10 +70,32 @@ def crear_producto(
             "stock": body.stock, "stock_min": body.stock_minimo,
             "cat": body.categoria, "desc": body.descripcion,
             "unidad": body.unidad, "local_id": body.local_id,
+            "codigo_barras": body.codigo_barras, "plu": body.plu,
+            "pesable": body.pesable, "acceso_rapido": body.acceso_rapido,
+            "maneja_lotes": body.maneja_lotes,
+        },
+    )
+    row = dict(result.mappings().fetchone())
+    db.execute(
+        text("""
+            INSERT INTO sync_log (tenant_id, tabla, registro_id, local_id, operacion, datos, origen)
+            VALUES (:tid, 'productos', :rid, :local_id, 'INSERT', :datos::jsonb, 'web')
+        """),
+        {
+            "tid": tenant_id, "rid": row["id"], "local_id": body.local_id,
+            "datos": json.dumps({
+                "nombre": body.nombre, "codigo": body.codigo,
+                "precio": float(body.precio), "precio_costo": float(body.precio_costo or 0),
+                "stock": body.stock, "stock_minimo": body.stock_minimo,
+                "unidad": body.unidad, "categoria": body.categoria,
+                "codigo_barras": body.codigo_barras, "plu": body.plu,
+                "pesable": body.pesable, "acceso_rapido": body.acceso_rapido,
+                "maneja_lotes": body.maneja_lotes, "activo": True,
+            }),
         },
     )
     db.commit()
-    return dict(result.mappings().fetchone())
+    return row
 
 
 @router.get("/{producto_id}")
@@ -110,7 +134,20 @@ def actualizar_producto(
     row = result.mappings().fetchone()
     if not row:
         raise HTTPException(404, "Producto no encontrado")
-    return dict(row)
+    row_dict = dict(row)
+    db.execute(
+        text("""
+            INSERT INTO sync_log (tenant_id, tabla, registro_id, local_id, operacion, datos, origen)
+            VALUES (:tid, 'productos', :rid, :local_id, 'UPDATE', :datos::jsonb, 'web')
+        """),
+        {
+            "tid": tenant_id, "rid": producto_id,
+            "local_id": row_dict.get("local_id"),
+            "datos": json.dumps({k: v for k, v in updates.items() if k not in ("id", "tid")}),
+        },
+    )
+    db.commit()
+    return row_dict
 
 
 @router.delete("/{producto_id}", status_code=204)
@@ -119,9 +156,20 @@ def eliminar_producto(
     tenant_id: str = Depends(_get_tenant),
     db: Session = Depends(get_db),
 ):
+    row = db.execute(
+        text("SELECT local_id FROM productos WHERE id = :id AND tenant_id = :tid"),
+        {"id": producto_id, "tid": tenant_id},
+    ).mappings().fetchone()
     db.execute(
         text("UPDATE productos SET deleted_at = NOW(), activo = FALSE WHERE id = :id AND tenant_id = :tid"),
         {"id": producto_id, "tid": tenant_id},
+    )
+    db.execute(
+        text("""
+            INSERT INTO sync_log (tenant_id, tabla, registro_id, local_id, operacion, datos, origen)
+            VALUES (:tid, 'productos', :rid, :local_id, 'DELETE', '{}', 'web')
+        """),
+        {"tid": tenant_id, "rid": producto_id, "local_id": row["local_id"] if row else None},
     )
     db.commit()
 
@@ -139,7 +187,7 @@ def ajustar_stock(
             UPDATE productos
             SET stock = stock + :delta, updated_at = NOW()
             WHERE id = :id AND tenant_id = :tid
-            RETURNING stock, nombre
+            RETURNING stock, nombre, local_id
         """),
         {"delta": body.delta, "id": producto_id, "tid": tenant_id},
     ).mappings().fetchone()
@@ -153,6 +201,16 @@ def ajustar_stock(
         """),
         {"tid": tenant_id, "pid": producto_id, "tipo": tipo,
          "cant": abs(body.delta), "motivo": body.motivo},
+    )
+    db.execute(
+        text("""
+            INSERT INTO sync_log (tenant_id, tabla, registro_id, local_id, operacion, datos, origen)
+            VALUES (:tid, 'productos', :rid, :local_id, 'UPDATE', :datos::jsonb, 'web')
+        """),
+        {
+            "tid": tenant_id, "rid": producto_id, "local_id": result["local_id"],
+            "datos": json.dumps({"stock": result["stock"]}),
+        },
     )
     db.commit()
     return {"stock_nuevo": result["stock"], "nombre": result["nombre"]}

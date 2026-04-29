@@ -13,6 +13,11 @@ class ProductoBase(BaseModel):
     categoria: Optional[str] = None
     descripcion: Optional[str] = None
     unidad: str = "unidad"
+    codigo_barras: Optional[str] = None
+    plu: Optional[str] = None
+    pesable: bool = False
+    acceso_rapido: bool = False
+    maneja_lotes: bool = False
 
 
 class ProductoCreate(ProductoBase):
@@ -30,6 +35,11 @@ class ProductoUpdate(BaseModel):
     descripcion: Optional[str] = None
     unidad: Optional[str] = None
     activo: Optional[bool] = None
+    codigo_barras: Optional[str] = None
+    plu: Optional[str] = None
+    pesable: Optional[bool] = None
+    acceso_rapido: Optional[bool] = None
+    maneja_lotes: Optional[bool] = None
 
 
 class ProductoOut(ProductoBase):

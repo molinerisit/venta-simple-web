@@ -17,12 +17,13 @@ import {
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { Plus, Search, RefreshCw, Pencil, Trash2, ArrowUpDown, Package } from "lucide-react";
+import { Plus, Search, RefreshCw, Pencil, Trash2, ArrowUpDown, Package, Scale, Zap, Layers } from "lucide-react";
 import { EmptyState, LoadingState } from "@/components/panel/EmptyState";
 
 const EMPTY: ProductoCreate = {
   nombre: "", codigo: "", precio: 0, precio_costo: 0,
   stock: 0, stock_minimo: 0, categoria: "", descripcion: "", unidad: "unidad",
+  codigo_barras: "", plu: "", pesable: false, acceso_rapido: false, maneja_lotes: false,
 };
 
 export default function ProductosPage() {
@@ -73,9 +74,14 @@ export default function ProductosPage() {
 
   function openEdit(p: Producto) {
     setEditing(p);
-    setForm({ nombre: p.nombre, codigo: p.codigo ?? "", precio: p.precio, precio_costo: p.precio_costo,
+    setForm({
+      nombre: p.nombre, codigo: p.codigo ?? "", precio: p.precio, precio_costo: p.precio_costo,
       stock: p.stock, stock_minimo: p.stock_minimo, categoria: p.categoria ?? "",
-      descripcion: p.descripcion ?? "", unidad: p.unidad });
+      descripcion: p.descripcion ?? "", unidad: p.unidad,
+      codigo_barras: p.codigo_barras ?? "", plu: p.plu ?? "",
+      pesable: p.pesable ?? false, acceso_rapido: p.acceso_rapido ?? false,
+      maneja_lotes: p.maneja_lotes ?? false,
+    });
     setFormError("");
     setOpen(true);
   }
@@ -114,7 +120,7 @@ export default function ProductosPage() {
     load();
   }
 
-  const set = (k: keyof ProductoCreate, v: string | number) => setForm(f => ({ ...f, [k]: v }));
+  const set = (k: keyof ProductoCreate, v: string | number | boolean) => setForm(f => ({ ...f, [k]: v }));
 
   return (
     <div className="space-y-6 max-w-6xl">
@@ -221,7 +227,7 @@ export default function ProductosPage() {
 
       {/* Create / Edit dialog */}
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="sm:max-w-lg">
+        <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editing ? "Editar producto" : "Nuevo producto"}</DialogTitle>
           </DialogHeader>
@@ -232,12 +238,20 @@ export default function ProductosPage() {
                 <Input value={form.nombre} onChange={e => set("nombre", e.target.value)} required />
               </div>
               <div className="space-y-1">
-                <Label>Código</Label>
-                <Input value={form.codigo ?? ""} onChange={e => set("codigo", e.target.value)} />
+                <Label>Código interno</Label>
+                <Input value={form.codigo ?? ""} onChange={e => set("codigo", e.target.value)} placeholder="SKU-0001" />
               </div>
               <div className="space-y-1">
                 <Label>Categoría</Label>
                 <Input value={form.categoria ?? ""} onChange={e => set("categoria", e.target.value)} />
+              </div>
+              <div className="space-y-1">
+                <Label>Código de barras</Label>
+                <Input value={form.codigo_barras ?? ""} onChange={e => set("codigo_barras", e.target.value)} placeholder="EAN-13…" />
+              </div>
+              <div className="space-y-1">
+                <Label>PLU</Label>
+                <Input value={form.plu ?? ""} onChange={e => set("plu", e.target.value)} placeholder="Código PLU balanza" />
               </div>
               <div className="space-y-1">
                 <Label>Precio de venta *</Label>
@@ -262,6 +276,20 @@ export default function ProductosPage() {
               <div className="col-span-2 space-y-1">
                 <Label>Descripción</Label>
                 <Input value={form.descripcion ?? ""} onChange={e => set("descripcion", e.target.value)} />
+              </div>
+              <div className="col-span-2 flex flex-wrap gap-6 pt-1">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <Switch checked={form.pesable ?? false} onCheckedChange={v => set("pesable", v)} />
+                  <span className="text-sm flex items-center gap-1"><Scale size={13} />Pesable</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <Switch checked={form.acceso_rapido ?? false} onCheckedChange={v => set("acceso_rapido", v)} />
+                  <span className="text-sm flex items-center gap-1"><Zap size={13} />Acceso rápido</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <Switch checked={form.maneja_lotes ?? false} onCheckedChange={v => set("maneja_lotes", v)} />
+                  <span className="text-sm flex items-center gap-1"><Layers size={13} />Maneja lotes</span>
+                </label>
               </div>
             </div>
             {formError && <p className="vs-alert vs-alert-error text-sm">{formError}</p>}

@@ -62,6 +62,13 @@ CREATE TABLE IF NOT EXISTS productos (
 );
 CREATE INDEX IF NOT EXISTS idx_productos_tenant ON productos(tenant_id);
 
+-- Campos extendidos para sincronización con desktop (agregar si la tabla ya existe)
+ALTER TABLE productos ADD COLUMN IF NOT EXISTS codigo_barras VARCHAR(100);
+ALTER TABLE productos ADD COLUMN IF NOT EXISTS plu VARCHAR(50);
+ALTER TABLE productos ADD COLUMN IF NOT EXISTS pesable BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE productos ADD COLUMN IF NOT EXISTS acceso_rapido BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE productos ADD COLUMN IF NOT EXISTS maneja_lotes BOOLEAN NOT NULL DEFAULT FALSE;
+
 CREATE TABLE IF NOT EXISTS proveedores (
   id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   tenant_id   UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,

@@ -145,11 +145,17 @@ export interface Producto {
   categoria: string | null;
   descripcion: string | null;
   unidad: string;
+  codigo_barras: string | null;
+  plu: string | null;
+  pesable: boolean;
+  acceso_rapido: boolean;
+  maneja_lotes: boolean;
   activo: boolean;
+  local_id?: string | null;
   created_at: string;
   updated_at: string;
 }
-export type ProductoCreate = Omit<Producto, "id" | "tenant_id" | "created_at" | "updated_at" | "activo"> & { local_id?: string };
+export type ProductoCreate = Omit<Producto, "id" | "tenant_id" | "created_at" | "updated_at" | "activo">;
 export interface ProductosParams { q?: string; categoria?: string; solo_activos?: boolean; tenant_id?: string }
 
 export interface Proveedor {

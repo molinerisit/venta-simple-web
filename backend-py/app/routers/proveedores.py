@@ -1,3 +1,4 @@
+import json
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import text
@@ -48,8 +49,23 @@ def crear(body: ProveedorCreate, tenant_id: str = Depends(_tenant), db: Session 
          "tel": body.telefono, "dir": body.direccion, "cuit": body.cuit,
          "notas": body.notas, "local_id": body.local_id},
     )
+    row = dict(result.mappings().fetchone())
+    db.execute(
+        text("""
+            INSERT INTO sync_log (tenant_id, tabla, registro_id, local_id, operacion, datos, origen)
+            VALUES (:tid, 'proveedores', :rid, :local_id, 'INSERT', :datos::jsonb, 'web')
+        """),
+        {
+            "tid": tenant_id, "rid": row["id"], "local_id": body.local_id,
+            "datos": json.dumps({
+                "nombre": body.nombre, "email": body.email,
+                "telefono": body.telefono, "direccion": body.direccion,
+                "cuit": body.cuit, "notas": body.notas,
+            }),
+        },
+    )
     db.commit()
-    return dict(result.mappings().fetchone())
+    return row
 
 
 @router.get("/{proveedor_id}")
@@ -84,13 +100,38 @@ def actualizar(
     row = result.mappings().fetchone()
     if not row:
         raise HTTPException(404, "Proveedor no encontrado")
-    return dict(row)
+    row_dict = dict(row)
+    log_datos = {k: v for k, v in updates.items() if k not in ("id", "tid")}
+    db.execute(
+        text("""
+            INSERT INTO sync_log (tenant_id, tabla, registro_id, local_id, operacion, datos, origen)
+            VALUES (:tid, 'proveedores', :rid, :local_id, 'UPDATE', :datos::jsonb, 'web')
+        """),
+        {
+            "tid": tenant_id, "rid": proveedor_id,
+            "local_id": row_dict.get("local_id"),
+            "datos": json.dumps(log_datos),
+        },
+    )
+    db.commit()
+    return row_dict
 
 
 @router.delete("/{proveedor_id}", status_code=204)
 def eliminar(proveedor_id: str, tenant_id: str = Depends(_tenant), db: Session = Depends(get_db)):
+    row = db.execute(
+        text("SELECT local_id FROM proveedores WHERE id = :id AND tenant_id = :tid"),
+        {"id": proveedor_id, "tid": tenant_id},
+    ).mappings().fetchone()
     db.execute(
         text("UPDATE proveedores SET deleted_at = NOW(), activo = FALSE WHERE id = :id AND tenant_id = :tid"),
         {"id": proveedor_id, "tid": tenant_id},
+    )
+    db.execute(
+        text("""
+            INSERT INTO sync_log (tenant_id, tabla, registro_id, local_id, operacion, datos, origen)
+            VALUES (:tid, 'proveedores', :rid, :local_id, 'DELETE', '{}', 'web')
+        """),
+        {"tid": tenant_id, "rid": proveedor_id, "local_id": row["local_id"] if row else None},
     )
     db.commit()
