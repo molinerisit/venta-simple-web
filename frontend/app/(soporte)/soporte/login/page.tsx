@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { login } from "@/lib/api";
-import { saveToken, saveUser } from "@/lib/auth";
+import { saveUser } from "@/lib/auth";
 
 const C = { blue: "#1E3A8A", border: "#E2E8F0", text: "#0F172A", muted: "#64748B" };
 
@@ -34,7 +34,6 @@ export default function SoporteLoginPage() {
         setError("Esta cuenta no tiene acceso al panel de soporte.");
         return;
       }
-      saveToken(data.token);
       saveUser({ nombre: data.nombre, rol: data.rol as "support" | "superadmin", tenant_id: data.tenant_id });
       router.push("/soporte");
     } catch {

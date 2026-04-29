@@ -1,19 +1,38 @@
+// Token vive en cookie httpOnly — no accesible desde JS.
+// Las funciones de token son stubs mantenidos por compatibilidad.
+
 export function getToken() {
-  if (typeof window === "undefined") return null;
-  return localStorage.getItem("panel_token");
+  return null;
 }
 
-export function saveToken(token: string) {
-  localStorage.setItem("panel_token", token);
+export function saveToken(_token: string) {
+  // no-op: el token se setea vía /api/auth/login o /api/auth/set-session
+}
+
+export async function setSessionCookie(token: string): Promise<void> {
+  await fetch("/api/auth/set-session", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ token }),
+  });
 }
 
 export function clearToken() {
-  localStorage.removeItem("panel_token");
-  localStorage.removeItem("panel_user");
+  if (typeof window !== "undefined") {
+    localStorage.removeItem("panel_user");
+    fetch("/api/auth/logout", { method: "POST" }).catch(() => {});
+  }
+}
+
+export async function logout(): Promise<void> {
+  if (typeof window !== "undefined") {
+    localStorage.removeItem("panel_user");
+    await fetch("/api/auth/logout", { method: "POST" }).catch(() => {});
+  }
 }
 
 export function isAuthenticated() {
-  return !!getToken();
+  return !!getUser();
 }
 
 export interface PanelUser {

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { clearToken, getUser } from "@/lib/auth";
+import { logout as authLogout, getUser } from "@/lib/auth";
 import { useTheme } from "@/components/ThemeProvider";
 import { useUserPlan } from "@/lib/user-plan-context";
 import {
@@ -95,8 +95,8 @@ export default function Sidebar({ mobileOpen = false, onClose, isMobileLayout = 
   const isDark = theme === "dark";
   const S = isDark ? S_DARK : S_LIGHT;
 
-  function logout() {
-    clearToken();
+  async function logout() {
+    await authLogout();
     router.push("/login");
   }
 

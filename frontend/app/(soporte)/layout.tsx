@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { getUser, clearToken } from "@/lib/auth";
+import { getUser, logout as authLogout } from "@/lib/auth";
 
 export default function SoporteLayout({ children }: { children: React.ReactNode }) {
   const router   = useRouter();
@@ -34,7 +34,7 @@ export default function SoporteLayout({ children }: { children: React.ReactNode 
             <span style={{ fontSize: 12, color: "#93C5FD", marginLeft: 4 }}>VentaSimple</span>
           </div>
           <button
-            onClick={() => { clearToken(); router.push("/soporte/login"); }}
+            onClick={() => { authLogout().then(() => router.push("/soporte/login")); }}
             style={{
               background: "rgba(255,255,255,.12)", border: "none", color: "#fff",
               borderRadius: 6, padding: "5px 12px", fontSize: 12, fontWeight: 600,

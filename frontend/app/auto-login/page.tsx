@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { saveToken, saveUser, type PanelUser } from "@/lib/auth";
+import { setSessionCookie, saveUser, type PanelUser } from "@/lib/auth";
 import { validateSession } from "@/lib/api";
 
 function Redirecting() {
@@ -27,9 +27,7 @@ function AutoLoginInner() {
       return;
     }
 
-    saveToken(token);
-
-    validateSession()
+    setSessionCookie(token).then(() => validateSession())
       .then(({ data }) => {
         saveUser({
           nombre:    "",

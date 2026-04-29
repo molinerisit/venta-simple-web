@@ -3,7 +3,7 @@
 import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { login, resendVerification } from "@/lib/api";
-import { saveToken, saveUser } from "@/lib/auth";
+import { saveUser } from "@/lib/auth";
 import Link from "next/link";
 import { Eye, EyeOff, ArrowRight } from "lucide-react";
 import Image from "next/image";
@@ -51,7 +51,6 @@ function LoginForm() {
     setError(""); setUnverified(false); setLoading(true);
     try {
       const { data } = await login(email, password);
-      saveToken(data.token);
       saveUser({ nombre: data.nombre, rol: data.rol as "superadmin" | "owner" | "admin", tenant_id: data.tenant_id });
       router.push(next);
     } catch (err: unknown) {

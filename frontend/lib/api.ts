@@ -8,20 +8,14 @@ const BASE = typeof window === "undefined"
 
 const http = axios.create({ baseURL: BASE });
 
-http.interceptors.request.use((cfg) => {
-  if (typeof window !== "undefined") {
-    const token = localStorage.getItem("panel_token");
-    if (token) cfg.headers.Authorization = `Bearer ${token}`;
-  }
-  return cfg;
-});
-
+// Authorization header se inyecta desde el middleware via cookie httpOnly.
+// No se usa localStorage para el token.
 http.interceptors.response.use(
   (r) => r,
   (err) => {
     if (err.response?.status === 401 && typeof window !== "undefined") {
-      localStorage.removeItem("panel_token");
       localStorage.removeItem("panel_user");
+      fetch("/api/auth/logout", { method: "POST" }).catch(() => {});
       window.location.href = "/login";
     }
     return Promise.reject(err);
@@ -30,7 +24,7 @@ http.interceptors.response.use(
 
 // ── Auth ──────────────────────────────────────────────────────
 export const login = (email: string, password: string) =>
-  http.post<{ token: string; nombre: string; rol: string; tenant_id?: string }>(
+  http.post<{ nombre: string; rol: string; tenant_id?: string }>(
     "/api/auth/login", { email, password }
   );
 

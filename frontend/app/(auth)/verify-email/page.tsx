@@ -3,7 +3,7 @@
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { verifyEmail } from "@/lib/api";
-import { saveToken, saveUser } from "@/lib/auth";
+import { setSessionCookie, saveUser } from "@/lib/auth";
 import { CheckCircle, AlertTriangle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -24,8 +24,8 @@ function VerifyEmailInner() {
       return;
     }
     verifyEmail(token)
-      .then(({ data }) => {
-        saveToken(data.token);
+      .then(async ({ data }) => {
+        await setSessionCookie(data.token);
         saveUser({ nombre: data.nombre, rol: "owner", tenant_id: data.tenant_id });
         setState("ok");
         setTimeout(() => router.push("/dashboard"), 2000);
